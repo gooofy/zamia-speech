@@ -1,0 +1,10 @@
+-lowerf __CFG_LO_FILT__
+-upperf __CFG_HI_FILT__
+-nfilt __CFG_NUM_FILT__
+-transform __CFG_TRANSFORM__
+-lifter __CFG_LIFTER__
+-feat __CFG_FEATURE__
+-svspec __CFG_SVSPEC__
+-agc __CFG_AGC__
+-cmn __CFG_CMN__
+-varnorm __CFG_VARNORM__
