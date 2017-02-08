@@ -32,23 +32,22 @@ import os
 import traceback
 import nltk
 import pickle
-from os.path import expanduser
 import StringIO
 import ConfigParser
 import codecs
+import logging
 
-from utils import compress_ws
-
+from optparse import OptionParser
 from HTMLParser import HTMLParser
 from htmlentitydefs import name2codepoint
 
-from speech_tokenizer import tokenize
+from nltools.misc import compress_ws, load_config, init_app
+from nltools.tokenizer import tokenize
 
 DEBUG_SGM_LIMIT = 0
 PUNKT_PICKLEFN  = 'data/dst/speech/de/punkt.pickle'
 SENTENCEFN      = 'data/dst/speech/de/sentences.txt'
-
-ENABLE_TRAINING = True
+SENTENCES_STATS = 1000
 
 class ParoleParser(HTMLParser):
 
@@ -99,7 +98,7 @@ class ParoleParser(HTMLParser):
                 if name in name2codepoint:
                     c = unichr(name2codepoint[name])
                 else: 
-                    print "unknown entityref: %s" % name
+                    logging.warning("unknown entityref: %s" % name)
                     c = ''
             #print "Named ent:", c
             self.buf += c
@@ -123,7 +122,7 @@ def parole_crawl (path, processfn):
         if not p.endswith ('.sgm'):
             continue
 
-        print "%3d: found sgm: %s" % (num_files, p)
+        logging.info("%8d: found sgm: %s" % (num_files, p))
         num_files += 1
 
         pp = ParoleParser(processfn)
@@ -146,47 +145,60 @@ def train_punkt (text):
     punkt_count += 1
 
     if punkt_count % 1000 == 0:
-        print "%5d train_punkt: %s" % (punkt_count, text[:80])
+        logging.info("%8d train_punkt: %s" % (punkt_count, text[:80]))
 
     punkt_trainer.train(text, finalize=False, verbose=False)
 
 def apply_punkt (text):
 
-    global tokenizer, outf
+    global tokenizer, outf, num_sentences
 
     sentncs = tokenizer.tokenize(text, realign_boundaries=True)
     for sentence in sentncs:
 
-        print "Sentence: %s" % sentence
-
+        logging.debug("sentence: %s" % sentence)
         outf.write(u'%s\n' % ' '.join(tokenize(sentence)))
 
-#
-# init terminal
-#
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
-sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+        num_sentences += 1
+        if num_sentences % SENTENCES_STATS == 0:
+            logging.info ('%8d sentences.' % num_sentences)
 
 #
-# load config, set up global variables
+# init 
 #
 
-home_path = expanduser("~")
+init_app ('speech_sentences')
 
-config = ConfigParser.RawConfigParser()
-config.read("%s/%s" % (home_path, ".nlprc"))
+config = load_config ('.speechrc')
 
 parole    = config.get("speech", "parole_de")
 europarl  = config.get("speech", "europarl_de")
 
-if ENABLE_TRAINING:
-    #
-    # punkt tokenizer training
-    #
+#
+# commandline parsing
+#
 
-    print "training punkt..."
+parser = OptionParser("usage: %prog [options] )")
+
+parser.add_option("-t", "--train-punkt", action="store_true", dest="train_punkt",
+                  help="train PUNKT tokenizer")
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
+                  help="enable verbose logging")
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+
+#
+# punkt tokenizer 
+#
+
+if options.train_punkt:
+
+    logging.info("training punkt...")
 
     punkt_trainer = nltk.tokenize.punkt.PunktTrainer()
 
@@ -194,11 +206,9 @@ if ENABLE_TRAINING:
 
     parole_crawl (parole, train_punkt)
 
-    print
-    print "Finalizing training..."
+    logging.info("finalizing punkt training...")
     punkt_trainer.finalize_training(verbose=True)
-    print "Training done. %d text segments." % punkt_count
-    print
+    logging.info("punkt training done. %d text segments." % punkt_count)
 
     params = punkt_trainer.get_params()
     # print "Params: %s" % repr(params)
@@ -207,27 +217,36 @@ if ENABLE_TRAINING:
     with open(PUNKT_PICKLEFN, mode='wb') as f:
             pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-    print '%s written.' % PUNKT_PICKLEFN
+    logging.info('%s written.' % PUNKT_PICKLEFN)
 
 else:
 
-    print "Loading %s ..." % PUNKT_PICKLEFN
+    logging.info("loading %s ..." % PUNKT_PICKLEFN)
 
     with open(PUNKT_PICKLEFN, mode='rb') as f:
         tokenizer = pickle.load(f)
 
-    print "Loading %s ... done." % PUNKT_PICKLEFN
+    logging.info("loading %s ... done." % PUNKT_PICKLEFN)
+
+#
+# sentence extraction from corpora
+#
+
+num_sentences = 0
 
 with codecs.open(SENTENCEFN, 'w', 'utf8') as outf:
 
-    print "applying punkt to parole..."
+    logging.info("applying punkt to parole...")
     parole_crawl (parole, apply_punkt)
 
-    print "adding sentences from europarl..."
+    logging.info("adding sentences from europarl...")
     with codecs.open(europarl, 'r', 'utf8') as inf:
         for line in inf:
             outf.write(u'%s\n' % ' '.join(tokenize(line)))
 
-print '%s written.' % SENTENCEFN
-print 
+            num_sentences += 1
+            if num_sentences % SENTENCES_STATS == 0:
+                logging.info ('%8d sentences.' % num_sentences)
+
+logging.info('%s written.' % SENTENCEFN)
 
