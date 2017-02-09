@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -31,51 +31,58 @@ from optparse import OptionParser
 import logging
 import codecs
 
-import utils
+from nltools import misc
+
 from speech_lexicon import ipa2xsampa, xsampa2ipa, xsampa2xarpabet, Lexicon
 from speech_transcripts import Transcripts
 
 WORKDIR_CONT = 'data/dst/speech/%s/cmusphinx_cont'
 WORKDIR_PTM  = 'data/dst/speech/%s/cmusphinx_ptm'
-LANG    = 'de'
-
-#DEBUG_LIMIT = 5000
-DEBUG_LIMIT = 0
 
 NJOBS = 8
 
-logging.basicConfig(level=logging.DEBUG)
-# logging.basicConfig(level=logging.INFO)
-
 #
-# init terminal
+# init 
 #
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-# sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+misc.init_app ('speech_sphinx_export')
+
+config = misc.load_config ('.speechrc')
 
 #
-# config
+# commandline parsing
 #
 
-config = utils.load_config()
+parser = OptionParser("usage: %prog [options] )")
 
-wav16_dir   = config.get("speech", "wav16_dir_de")
+parser.add_option ("-d", "--debug", dest="debug", type='int', default=0,
+                   help="limit number of transcripts (debug purposes only), default: 0 (unlimited)")
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+                   help="language (default: de)")
+parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
+                   help="enable verbose logging")
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+
+wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
 
 #
 # load lexicon, transcripts
 #
 
-print "loading lexicon..."
+logging.info("loading lexicon...")
 lex = Lexicon()
-print "loading lexicon...done."
+logging.info("loading lexicon...done.")
 
-print "loading transcripts..."
+logging.info("loading transcripts...")
 transcripts = Transcripts()
-ts_all, ts_train, ts_test = transcripts.split(limit=DEBUG_LIMIT)
-print "loading transcripts (%d train, %d test) ...done." % (len(ts_train),
-                                                            len(ts_test))
+ts_all, ts_train, ts_test = transcripts.split(limit=options.debug)
+logging.info("loading transcripts (%d train, %d test) ...done." % (len(ts_train), len(ts_test)))
 
 def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
@@ -83,7 +90,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
     # language model
     #
 
-    utils.mkdirs('%s' % work_dir)
+    misc.mkdirs('%s' % work_dir)
 
     fn = '%s/prompts.sent' % work_dir
 
@@ -95,8 +102,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
             outf.write ('%s\n' % transcript)
 
-    print "%s written." % fn
-    print
+    logging.info("%s written." % fn)
 
     fn = '%s/wlist.txt' % work_dir
 
@@ -106,8 +112,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
             outf.write ('%s\n' % word)
 
-    print "%s written." % fn
-    print
+    logging.info( "%s written." % fn)
 
     #
     # create work_dir structure
@@ -115,9 +120,9 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
     mfcc_dir    = "%s/mfcc" % work_dir
 
-    utils.mkdirs('%s/logs' % work_dir)
-    utils.mkdirs('%s/etc'  % work_dir)
-    utils.mkdirs('%s' % mfcc_dir)
+    misc.mkdirs('%s/logs' % work_dir)
+    misc.mkdirs('%s/etc'  % work_dir)
+    misc.mkdirs('%s' % mfcc_dir)
 
     # generate sphinx_train.cfg, featdir in there
 
@@ -129,9 +134,9 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
     # inf.close()
     # outf.close()
 
-    utils.copy_file (sphinxtrain_cfg_fn, '%s/etc/sphinx_train.cfg' % work_dir)
-    utils.copy_file ('data/src/speech/sphinx-voxforge.filler', '%s/etc/voxforge.filler' % work_dir)
-    utils.copy_file ('data/src/speech/sphinx-feat.params', '%s/etc/feat.params' % work_dir)
+    misc.copy_file (sphinxtrain_cfg_fn, '%s/etc/sphinx_train.cfg' % work_dir)
+    misc.copy_file ('data/src/speech/sphinx-voxforge.filler', '%s/etc/voxforge.filler' % work_dir)
+    misc.copy_file ('data/src/speech/sphinx-feat.params', '%s/etc/feat.params' % work_dir)
 
     # generate dict
 
@@ -153,14 +158,13 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
             for phone in phones:
 
                 if len(phone.strip()) == 0:
-                    print u"***ERROR: empty phone detected in lex entry %s %s" % (word, ipa)
+                    logging.error(u"***ERROR: empty phone detected in lex entry %s %s" % (word, ipa))
 
                 phoneset.add(phone)
         
-    print "%s written." % pdfn
-    print
+    logging.info("%s written." % pdfn)
 
-    print "Got %d phones." % len(phoneset)
+    logging.info("Got %d phones." % len(phoneset))
 
     phfn = '%s/etc/voxforge.phone' % work_dir
     with codecs.open (phfn, 'w', 'utf8') as phf:
@@ -170,8 +174,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
         phf.write (u'SIL\n')
 
-    print "%s written." % phfn
-    print
+    logging.info("%s written." % phfn)
 
     #
     # prompts
@@ -199,7 +202,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
             if cnt == 0:
                 runfeatf.write('wait\n')
 
-    print "%s written." % runfeatfn
+    logging.info("%s written." % runfeatfn)
 
     with codecs.open (train_fifn, 'w', 'utf8') as train_fif, \
          codecs.open (train_tsfn, 'w', 'utf8') as train_tsf, \
@@ -214,15 +217,15 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
             test_fif.write ('%s\n' % cfn)
             test_tsf.write (u'<s> %s </s> (%s)\n' % (ts_test[cfn]['ts'], cfn))
 
-    print "%s written." % train_tsfn
-    print "%s written." % train_fifn
-    print "%s written." % test_tsfn
-    print "%s written." % test_fifn
+    logging.info ("%s written." % train_tsfn)
+    logging.info ("%s written." % train_fifn)
+    logging.info ("%s written." % test_tsfn)
+    logging.info ("%s written." % test_fifn)
 
-    utils.copy_file ('data/src/speech/sphinx-run.sh', '%s/sphinx-run.sh' % work_dir)
+    misc.copy_file ('data/src/speech/sphinx-run.sh', '%s/sphinx-run.sh' % work_dir)
 
 # we create two different training cases in separate subdirs here, one for a continous and one for a ptm model
 
-export_sphinx_case(WORKDIR_CONT % LANG, 'data/src/speech/sphinx_train_cont.cfg')
-export_sphinx_case(WORKDIR_PTM  % LANG, 'data/src/speech/sphinx_train_ptm.cfg')
+export_sphinx_case(WORKDIR_CONT % options.lang, 'data/src/speech/sphinx_train_cont.cfg')
+export_sphinx_case(WORKDIR_PTM  % options.lang, 'data/src/speech/sphinx_train_ptm.cfg')
 

@@ -12,18 +12,20 @@ bash run-feat.sh
 # language model
 #
 
-#cat prompts.sent > all.sent
-cat prompts.sent ../sentences.txt > all.sent
+# #cat prompts.sent > all.sent
+# cat prompts.sent ../sentences.txt > all.sent
+# 
+# sed 's/^/<s> /' all.sent | sed 's/$/ <\/s>/' >all.txt
+# 
+# echo '</s>' > all.vocab
+# echo '<s>' >> all.vocab
+# cat wlist.txt >>all.vocab
+# 
+# text2idngram -vocab all.vocab -idngram voxforge.idngram < all.txt
+# idngram2lm -calc_mem -vocab_type 0 -idngram voxforge.idngram -vocab all.vocab -arpa voxforge.arpa
+# sphinx_lm_convert -i voxforge.arpa -o etc/voxforge.lm.DMP
 
-sed 's/^/<s> /' all.sent | sed 's/$/ <\/s>/' >all.txt
-
-echo '</s>' > all.vocab
-echo '<s>' >> all.vocab
-cat wlist.txt >>all.vocab
-
-text2idngram -vocab all.vocab -idngram voxforge.idngram < all.txt
-idngram2lm -calc_mem -vocab_type 0 -idngram voxforge.idngram -vocab all.vocab -arpa voxforge.arpa
-sphinx_lm_convert -i voxforge.arpa -o etc/voxforge.lm.DMP
+sphinx_lm_convert -i ../srilm/lm-pruned.arpa -o etc/voxforge.lm.bin
 
 #
 # sphintrain
