@@ -55,13 +55,7 @@ for x in train dev test ; do
     utils/fix_data_dir.sh data/$x
 done
 
-# prepare LM
-local/build_lm.sh
-
 # Here we start the AM
-
-#local/run_am.sh
-#local/run_dnn.sh
 
 testDir=test
 

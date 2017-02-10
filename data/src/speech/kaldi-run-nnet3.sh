@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright 2016 Guenter Bartsch
+# Copyright 2016, 2017 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -226,6 +226,10 @@ steps/nnet3/decode.sh --nj $nDecodeJobs --cmd "$decode_cmd" \
    exp/nnet3/nnet_tdnn_a/graph data/test_hires exp/nnet3/nnet_tdnn_a/decode || exit 1;
 
 grep WER exp/nnet3/nnet_tdnn_a/decode/scoring_kaldi/best_wer >>RESULTS.txt
+
+exit 0
+
+# FIXME: LSTM model disabled for now (too slow for my purposes)
 
 echo #############################################################################################################
 echo # LSTM
