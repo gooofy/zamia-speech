@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016 Guenter Bartsch
+# Copyright 2016, 2017 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -27,8 +27,10 @@ import logging
 import codecs
 import traceback
 
-import utils
-from speech_lexicon import ipa2xsampa, Lexicon
+from nltools                import misc
+from nltools.phonetics      import ipa2xsampa
+
+from speech_lexicon import Lexicon
 
 LANG    = 'de'
 WORKDIR = 'data/dst/speech/%s/sequitur' % LANG
@@ -40,9 +42,7 @@ logging.basicConfig(level=logging.DEBUG)
 # init terminal
 #
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-# sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+misc.init_app ('speech_sequitur_export')
 
 #
 # load lexicon
@@ -56,7 +56,7 @@ print "loading lexicon...done."
 # export
 #
 
-utils.mkdirs(WORKDIR)
+misc.mkdirs(WORKDIR)
 
 with codecs.open('%s/train.lex' % WORKDIR, 'w', 'utf8') as trainf, \
      codecs.open('%s/test.lex'  % WORKDIR, 'w', 'utf8') as testf, \
