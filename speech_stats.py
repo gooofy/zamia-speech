@@ -31,8 +31,9 @@ import wave
 import codecs
 
 from speech_transcripts import Transcripts
-from speech_lexicon import Lexicon, ipa2xsampa, xsampa2ipa
+from speech_lexicon import Lexicon
 
+from nltools.phonetics import ipa2xsampa, xsampa2ipa
 from nltools.tokenizer import tokenize
 from nltools import misc
 
@@ -42,9 +43,7 @@ LANG = 'de'
 # init terminal
 #
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+misc.init_app ('speech_stats')
 
 #
 # config
