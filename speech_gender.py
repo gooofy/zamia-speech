@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016 Guenter Bartsch
+# Copyright 2016, 2017 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -29,8 +29,8 @@ import locale
 
 from optparse import OptionParser
 
-import utils
-from tts_client import TTSClient
+from nltools import misc
+from nltools.tts_client import TTSClient
 from speech_transcripts import Transcripts
 
 def play_wav(cfn):
@@ -44,6 +44,13 @@ def play_wav(cfn):
 
     tts.play_wav(wav)
 
+#
+# init 
+#
+
+misc.init_app ('speech_gender')
+
+config = misc.load_config ('.speechrc')
 
 logging.basicConfig(level=logging.DEBUG)
 # logging.basicConfig(level=logging.INFO)
@@ -76,8 +83,6 @@ print "loading transcripts...done."
 #
 # config
 #
-
-config = utils.load_config()
 
 wav16_dir   = config.get("speech", "wav16_dir_de")
 host        = config.get('tts', 'host')
