@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016 Guenter Bartsch
+# Copyright 2016, 2017 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,7 @@ import traceback
 from optparse import OptionParser
 from StringIO import StringIO
 
-import utils
+from nltools import misc
 from speech_transcripts import Transcripts
 
 # logging.basicConfig(level=logging.DEBUG)
@@ -55,19 +55,16 @@ lang = options.lang
 # init terminal
 #
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-# sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+misc.init_app ('speech_audio_scan')
 
 #
 # config
 #
 
-config = utils.load_config()
+config = misc.load_config('.speechrc')
 
 scan_dirs = []
 if lang == 'de':
-
 
     scan_dirs.append(config.get("speech", "vf_audiodir_de"))
     scan_dirs.append(config.get("speech", "extrasdir_de"))
