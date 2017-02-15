@@ -1,18 +1,6 @@
 SHELL := /bin/bash
 
-all:	prolog 
-
-prolog:
-	./nlp_cli.py compile common_sense weather smalltalk radio
-
-kb:
-	./nlp_cli.py kb_import all
-
-cron:
-	./nlp_cli.py cron all
-
-train:
-	./nlp_cli.py train
+all:	stats
 
 kaldi:
 	rm -rf data/dst/speech/de/kaldi
@@ -33,5 +21,5 @@ stats:
 	./speech_stats.py
 
 clean:
-	./nlp_cli.py clean -a all
 	# rm -rf data/dst/*
+
