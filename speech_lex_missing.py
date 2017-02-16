@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016 Guenter Bartsch
+# Copyright 2016, 2017 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -32,10 +32,12 @@ import codecs
 
 from optparse import OptionParser
 
-import utils
+from nltools            import misc
+from nltools.tokenizer  import tokenize
+from nltools.phonetics  import ipa2xsampa, xsampa2ipa
+
 from speech_transcripts import Transcripts
-from speech_lexicon import Lexicon, ipa2xsampa, xsampa2ipa
-from speech_tokenizer import tokenize
+from speech_lexicon     import Lexicon
 
 NUM_WORDS = 50
 
@@ -47,9 +49,7 @@ logging.basicConfig(level=logging.DEBUG)
 # init terminal
 #
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-# sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+misc.init_app ('speech_lex_missing')
 
 #
 # load transcripts
