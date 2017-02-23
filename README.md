@@ -73,7 +73,11 @@ extract sentences from corpuses:
 ./speech_sentences.py
 ```
 
-language models will be built as part of the sphinx/kaldi model builds.
+train language model using SRILM for use in both sphinx and kaldi builds:
+
+```bash
+./speech_build_lm.py
+```
 
 voxforge
 ========
@@ -81,7 +85,7 @@ voxforge
 download latest audio data from voxforge, add them to submissions:
 
 ```bash
-./speech_pull_voxforge
+./speech_pull_voxforge.sh
 ./speech_audio_scan.py
 ```
 
@@ -149,12 +153,16 @@ just a sample invocation for live audio from mic:
 Kaldi Models
 ============
 
+HMM Models
+----------
+
 To build the kaldi models:
 
 ```bash
 ./speech_kaldi_export.py
 cd data/dst/speech/de/kaldi/
-./run.sh
+./run-lm.sh
+./run-am.sh
 ```
 
 Once this is finished, you can find various models in the `exp/` subdirectory. A few notes on what all those models are
@@ -187,6 +195,18 @@ ubm5a            train_ubm.sh          train              lang      tri3b_ali   
 sgmm_5a          train_sgmm2.sh        train              lang      ubm5a
 sgmm_5a_denlats  make_denlats_sgmm2.sh train              lang      sgmm_5a_ali 
 sgmm_5a_mmi_b0.1 train_mmi_sgmm2.sh    train              lang      sgmm_5a_denlats 
+```
+
+NNet3 Models
+------------
+
+To build the kaldi models:
+
+```bash
+./speech_kaldi_export.py
+cd data/dst/speech/de/kaldi/
+./run-lm.sh
+./run-nnet3.sh
 ```
 
 License
