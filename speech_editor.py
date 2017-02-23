@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -33,12 +33,14 @@ import codecs
 
 from optparse import OptionParser
 
-import utils
+from nltools                import misc
+from nltools.phonetics      import ipa2xsampa, xsampa2ipa
+from nltools.tokenizer      import tokenize
+from nltools.sequiturclient import sequitur_gen_ipa
+from nltools.tts_client     import TTSClient
+
 from speech_transcripts import Transcripts
-from speech_lexicon import Lexicon, ipa2xsampa, xsampa2ipa
-from speech_tokenizer import tokenize
-from speech_sequitur import sequitur_gen_ipa
-from tts_client import TTSClient
+from speech_lexicon     import Lexicon
 
 DEFAULT_MARY = False # switch between mary and sequitur default g2p
 
@@ -51,7 +53,7 @@ def play_wav(ts):
     with open(wavfn) as wavf:
         wav = wavf.read()
 
-    tts.play_wav(wav)
+    tts.play_wav(wav, async=True)
 
 def goto_next_ts(cur_ts):
 
@@ -271,7 +273,7 @@ def lex_edit(token):
         # edit token
         elif c == ord('t'):
 
-            token = utils.edit_popup(stdscr, ' Token ', '')
+            token = misc.edit_popup(stdscr, ' Token ', '')
 
             lex_set_token (token)
 
@@ -282,7 +284,7 @@ def lex_edit(token):
 
             xs = ipa2xsampa (lex_token, ipas, stress_to_vowels=False)
 
-            xs = utils.edit_popup(stdscr, ' X-SAMPA ', xs)
+            xs = misc.edit_popup(stdscr, ' X-SAMPA ', xs)
 
             try:
                 ipas = xsampa2ipa (lex_token, xs)
@@ -294,6 +296,7 @@ def lex_edit(token):
 
 
 logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("requests").setLevel(logging.WARNING)
 # logging.basicConfig(level=logging.INFO)
 
 #
@@ -360,7 +363,7 @@ stdscr.keypad(1)
 # config
 #
 
-config = utils.load_config()
+config = misc.load_config('.speechrc')
 
 wav16_dir   = config.get("speech", "wav16_dir_de")
 host        = config.get('tts', 'host')
@@ -526,7 +529,7 @@ try:
                     
         elif c == ord('e'):
 
-            ts['prompt'] = utils.edit_popup(stdscr, ' Prompt ', ts['prompt'])
+            ts['prompt'] = misc.edit_popup(stdscr, ' Prompt ', ts['prompt'])
             ts['ts'] = ''
 
         elif c == ord('a'):
@@ -559,7 +562,7 @@ try:
 
         elif c == ord('t'):
 
-            ts['ts'] = utils.edit_popup(stdscr, ' Transcript ', ts['ts'])
+            ts['ts'] = misc.edit_popup(stdscr, ' Transcript ', ts['ts'])
 
         elif c == ord('l'):
             if missing_token:
