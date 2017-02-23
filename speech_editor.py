@@ -43,6 +43,7 @@ from speech_transcripts import Transcripts
 from speech_lexicon     import Lexicon
 
 DEFAULT_MARY = False # switch between mary and sequitur default g2p
+SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-de-r20161117'
 
 def play_wav(ts):
 
@@ -132,7 +133,7 @@ def lex_set_token(token):
         if DEFAULT_MARY:
             ipas = tts.gen_ipa (lex_base)
         else:
-            ipas = sequitur_gen_ipa (lex_base)
+            ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
 
         lex_entry = {'ipa': ipas}
         lex[lex_token] = lex_entry
