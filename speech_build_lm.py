@@ -65,7 +65,7 @@ from speech_transcripts import Transcripts
 WORKDIR = 'data/dst/speech/%s/srilm'
 
 SOURCES = ['data/dst/speech/%s/sentences.txt',
-           'data/dst/speech/%s/nlp-sentences.txt']
+           'data/dst/speech/%s/ai-sentences.txt']
 
 SENTENCES_STATS      = 100000
 
@@ -163,7 +163,7 @@ logging.info ('done. %s written, %d sentences.' % (train_fn, num_sentences))
 # ngram-count
 #
 
-lm_fn = '%s/lm.arpa' % work_dir
+lm_fn = '%s/lm_full.arpa' % work_dir
 
 cmd = '%s -text %s -order 3 -wbdiscount -interpolate -lm %s' % (ngram_count_path, train_fn, lm_fn)
 
