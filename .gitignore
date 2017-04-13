@@ -11,3 +11,4 @@ data/models
 *.log
 TODO
 NOTES
+auto_review.py
