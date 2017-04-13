@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -32,18 +32,22 @@ import codecs
 
 from optparse import OptionParser
 
-import utils
+from nltools import misc
+
+from nltools.phonetics      import ipa2xsampa, xsampa2ipa
+from nltools.tokenizer      import tokenize
+from nltools.sequiturclient import sequitur_gen_ipa
+from nltools.tts_client     import TTSClient
+
 from speech_transcripts import Transcripts
-from speech_lexicon import Lexicon, ipa2xsampa, xsampa2ipa
-from speech_tokenizer import tokenize
-from speech_sequitur import sequitur_gen_ipa
-from tts_client import TTSClient
+from speech_lexicon     import Lexicon
 
 #
 # Lex Editor
 #
 
-TOKENIZER_ERRORS='data/src/speech/de/tokenizer_errors.txt'
+TOKENIZER_ERRORS = 'data/src/speech/de/tokenizer_errors.txt'
+SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-de-r20161117'
 
 def lex_paint_main():
 
@@ -92,7 +96,7 @@ def lex_gen_ipa (locale, engine, voice, speak=False):
     global tts
 
     if engine == 'sequitur':
-        ipas = sequitur_gen_ipa (lex_base)
+        ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
     
     else:
         tts.set_locale (locale)
@@ -104,7 +108,7 @@ def lex_gen_ipa (locale, engine, voice, speak=False):
         tts.set_locale ('de')
         tts.set_engine ('mary')
         tts.set_voice  ('dfki-pavoque-neutral-hsmm')
-        tts.say_ipa(ipas)
+        tts.say_ipa(ipas, async=True)
 
     return ipas
 
@@ -132,15 +136,16 @@ def lex_set_token(token):
     tts.set_locale ('de')
     tts.set_engine ('mary')
     tts.set_voice ('dfki-pavoque-neutral-hsmm')
-    tts.say_ipa(ipas)
+    tts.say_ipa(ipas, async=True)
 
     lex_gen['de-mary']     = lex_gen_ipa('de', 'mary',     'bits3')
     lex_gen['de-espeak']   = lex_gen_ipa('de', 'espeak',   'de')
     lex_gen['de-sequitur'] = lex_gen_ipa('de', 'sequitur', 'de')
 
 
-logging.basicConfig(level=logging.DEBUG)
-# logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 
 #
 # command line
@@ -180,7 +185,7 @@ stdscr.keypad(1)
 # config
 #
 
-config = utils.load_config()
+config = misc.load_config('.speechrc')
 
 host        = config.get('tts', 'host')
 port        = int(config.get('tts', 'port'))
@@ -245,7 +250,7 @@ try:
             tts.set_voice ('cmu-rms-hsmm')
 
             ipas = tts.gen_ipa (lex_base)
-            tts.say_ipa(ipas)
+            tts.say_ipa(ipas, async=True)
             lex_entry['ipa'] = ipas
 
         # generate fr-mary 
@@ -256,7 +261,7 @@ try:
             tts.set_voice ('upmc-pierre-hsmm')
 
             ipas = tts.gen_ipa (lex_base)
-            tts.say_ipa(ipas)
+            tts.say_ipa(ipas, async=True)
             lex_entry['ipa'] = ipas
 
         # generate de-sequitur
@@ -275,7 +280,7 @@ try:
             tts.set_engine ('mary')
             tts.set_voice ('bits3')
 
-            tts.say_ipa(ipas)
+            tts.say_ipa(ipas, async=True)
 
         # speak de mary hsmm
         elif c == ord('o'):
@@ -289,7 +294,7 @@ try:
             tts.set_engine ('mary')
             tts.set_voice ('dfki-pavoque-neutral-hsmm')
 
-            tts.say_ipa(ipas)
+            tts.say_ipa(ipas, async=True)
 
         # speak fr mary hsmm
         elif c == ord('i'):
@@ -303,7 +308,7 @@ try:
             tts.set_engine ('mary')
             tts.set_voice ('upmc-pierre-hsmm')
 
-            tts.say_ipa(ipas)
+            tts.say_ipa(ipas, async=True)
    
         # speak en mary hsmm
         elif c == ord('u'):
@@ -314,12 +319,12 @@ try:
             tts.set_engine ('mary')
             tts.set_voice ('cmu-rms-hsmm')
 
-            tts.say_ipa(ipas)
+            tts.say_ipa(ipas, async=True)
    
         # edit token
         elif c == ord('t'):
 
-            token = utils.edit_popup(stdscr, ' Token ', '')
+            token = misc.edit_popup(stdscr, ' Token ', '')
 
             lex_set_token (token)
 
@@ -330,7 +335,7 @@ try:
 
             xs = ipa2xsampa (lex_token, ipas, stress_to_vowels=False)
 
-            xs = utils.edit_popup(stdscr, ' X-SAMPA ', xs)
+            xs = misc.edit_popup(stdscr, ' X-SAMPA ', xs)
 
             try:
                 ipas = xsampa2ipa (lex_token, xs)
