@@ -211,7 +211,7 @@ def lex_edit(token):
         # generate de-sequitur
         elif c == ord('j'):
             
-            ipas = sequitur_gen_ipa (lex_base)
+            ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
             tts.set_locale ('de')
             tts.set_engine ('mary')
             tts.set_voice ('bits3')
