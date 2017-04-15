@@ -33,7 +33,8 @@ import codecs
 
 from nltools import misc
 
-from speech_lexicon import ipa2xsampa, xsampa2ipa, xsampa2xarpabet, Lexicon
+from nltools.phonetics  import ipa2xsampa, xsampa2ipa, xsampa2xarpabet
+from speech_lexicon     import Lexicon
 from speech_transcripts import Transcripts
 
 WORKDIR_CONT = 'data/dst/speech/%s/cmusphinx_cont'
