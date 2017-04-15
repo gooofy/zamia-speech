@@ -32,7 +32,7 @@ function export_kaldi_nnet3 {
 }
 
 export_kaldi_nnet3 nnet_tdnn_a  nnet_tdnn_a/graph
-export_kaldi_nnet3 lstm_ld5     lstm_ld5/graph
+# export_kaldi_nnet3 lstm_ld5     lstm_ld5/graph
 
 mkdir "$DISTDIR/$AMNAME/extractor"
 
@@ -171,9 +171,9 @@ gzip data/dist/$LMNAME
 # cmuclmtk de
 #
 
-LMNAME="cmuclmtk-voxforge-de-r$datum.arpa"
-cp data/dst/speech/de/cmusphinx_cont/voxforge.arpa $DISTDIR/$LMNAME
-gzip $DISTDIR/$LMNAME
+# LMNAME="cmuclmtk-voxforge-de-r$datum.arpa"
+# cp data/dst/speech/de/cmusphinx_cont/voxforge.arpa $DISTDIR/$LMNAME
+# gzip $DISTDIR/$LMNAME
 
 #
 # sequitur de
