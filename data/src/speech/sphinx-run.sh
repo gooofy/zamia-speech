@@ -25,7 +25,7 @@ bash run-feat.sh
 # idngram2lm -calc_mem -vocab_type 0 -idngram voxforge.idngram -vocab all.vocab -arpa voxforge.arpa
 # sphinx_lm_convert -i voxforge.arpa -o etc/voxforge.lm.DMP
 
-sphinx_lm_convert -i ../srilm/lm-pruned.arpa -o etc/voxforge.lm.bin
+sphinx_lm_convert -i ../srilm/lm.arpa -o etc/voxforge.lm.bin
 
 #
 # sphintrain
