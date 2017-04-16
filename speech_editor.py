@@ -43,7 +43,7 @@ from speech_transcripts import Transcripts
 from speech_lexicon     import Lexicon
 
 DEFAULT_MARY = False # switch between mary and sequitur default g2p
-SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-de-r20161117'
+SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-de-latest'
 
 def play_wav(ts):
 

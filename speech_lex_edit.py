@@ -47,7 +47,7 @@ from speech_lexicon     import Lexicon
 #
 
 TOKENIZER_ERRORS = 'data/src/speech/de/tokenizer_errors.txt'
-SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-de-r20161117'
+SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-de-latest'
 
 def lex_paint_main():
 
