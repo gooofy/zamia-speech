@@ -45,7 +45,7 @@ cp data/dst/speech/de/kaldi/exp/nnet3/ivectors_test/conf/splice.conf "$DISTDIR/$
 
 cp data/dst/speech/de/kaldi/RESULTS.txt $DISTDIR/$AMNAME/
 cp README.md "$DISTDIR/$AMNAME"
-cp COPYING   "$DISTDIR/$AMNAME"
+cp LICENSE   "$DISTDIR/$AMNAME"
 cp AUTHORS   "$DISTDIR/$AMNAME"
 
 mkdir "$DISTDIR/$AMNAME/conf"
@@ -98,7 +98,7 @@ export_kaldi_model tri3b_mmi_b0.05 tri3b_denlats/dengraph
 
 cp data/dst/speech/de/kaldi/RESULTS.txt $DISTDIR/$AMNAME/
 cp README.md "$DISTDIR/$AMNAME"
-cp COPYING   "$DISTDIR/$AMNAME"
+cp LICENSE   "$DISTDIR/$AMNAME"
 cp AUTHORS   "$DISTDIR/$AMNAME"
 
 mkdir "$DISTDIR/$AMNAME/conf"
@@ -126,7 +126,7 @@ cp -r data/dst/speech/de/cmusphinx_cont/model_parameters/voxforge.cd_cont_6000 "
 cp -r data/dst/speech/de/cmusphinx_cont/etc "$DISTDIR/$AMNAME"
 cp data/dst/speech/de/cmusphinx_cont/voxforge.html "$DISTDIR/$AMNAME"
 cp README.md "$DISTDIR/$AMNAME"
-cp COPYING   "$DISTDIR/$AMNAME"
+cp LICENSE   "$DISTDIR/$AMNAME"
 cp AUTHORS   "$DISTDIR/$AMNAME"
 
 pushd $DISTDIR
@@ -149,7 +149,7 @@ cp -r data/dst/speech/de/cmusphinx_ptm/model_parameters/voxforge.cd_ptm_5000 "$D
 cp -r data/dst/speech/de/cmusphinx_ptm/etc "$DISTDIR/$AMNAME"
 cp data/dst/speech/de/cmusphinx_ptm/voxforge.html "$DISTDIR/$AMNAME"
 cp README.md "$DISTDIR/$AMNAME"
-cp COPYING   "$DISTDIR/$AMNAME"
+cp LICENSE   "$DISTDIR/$AMNAME"
 cp AUTHORS   "$DISTDIR/$AMNAME"
 
 pushd $DISTDIR
@@ -164,7 +164,7 @@ rm -r "$DISTDIR/$AMNAME"
 #
 
 LMNAME="srilm-voxforge-de-r$datum.arpa"
-cp data/dst/speech/de/kaldi/data/local/lm/lm.arpa data/dist/$LMNAME
+cp data/dst/speech/de/srilm/lm.arpa data/dist/$LMNAME
 gzip data/dist/$LMNAME
 
 # 
@@ -188,7 +188,7 @@ gzip $DISTDIR/$MODELNAME
 #
 
 cp README.md "$DISTDIR"
-cp COPYING   "$DISTDIR"
+cp LICENSE   "$DISTDIR"
 cp AUTHORS   "$DISTDIR"
 
 #
