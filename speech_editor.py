@@ -31,7 +31,7 @@ import curses.textpad
 import locale
 import codecs
 
-from optparse import OptionParser
+from optparse               import OptionParser
 
 from nltools                import misc
 from nltools.phonetics      import ipa2xsampa, xsampa2ipa
@@ -39,11 +39,11 @@ from nltools.tokenizer      import tokenize
 from nltools.sequiturclient import sequitur_gen_ipa
 from nltools.tts_client     import TTSClient
 
-from speech_transcripts import Transcripts
-from speech_lexicon     import Lexicon
+from speech_transcripts     import Transcripts
+from speech_lexicon         import Lexicon
 
-DEFAULT_MARY = False # switch between mary and sequitur default g2p
-SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-de-latest'
+DEFAULT_MARY    = False # switch between mary and sequitur default g2p
+SEQUITUR_MODEL  = 'data/models/sequitur-voxforge-de-latest'
 
 def play_wav(ts):
 
