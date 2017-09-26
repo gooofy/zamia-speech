@@ -655,6 +655,7 @@ aktive;ʔak-'tiː-və
 aktiven;ʔak-'tiː-vən
 aktiver;'ʔak-tiː-fɛɐ
 aktivieren;ʔak-tiː-'viːʁ-ən
+aktiviert;'ʔak-tiː-'viːɐt
 aktivisten;'ʔak-tiː-vɪs-tən
 aktivitäten;ʔak-tiː-viː-'tɛː-tən
 aktsaal;'ʔakt-zaːl
@@ -835,6 +836,7 @@ ambulant;ʔam-buː-'lant
 ambulanten;ʔam-buː-'lan-tən
 ambulatorium;ʔam-buː-'la-toː-ʁiː-ʊm
 ameisen;'ʔaː-maɪ-zən
+american;ə-'mɛ-rə-kən
 amerika;ʔa-'meː-ʁiː-kaː
 amerikaner;ʔa-meː-ʁiː-'kaː-nɐ
 amerikanisch;ʔam-ɐ-ʁiː-'kaː-nɪʃ
@@ -1657,6 +1659,7 @@ artenvielfalt;'ʔaɐ-tən-'fiːl-falt
 arteriellen;ʔaɐ-'teː-ʁiː-'ɛ-lən
 arthritis;ʔaɐ-'tʁiː-tɪs
 arthurs;'ʔaɐ-tʊɐs
+artificial;'ɑr-tə-fɪ-ʃəl
 artig;'ʔaɐ-tɪç
 artikel;ʔaʁ-'tiː-kəl
 artikeln;ʔaɐ-'tiː-kəln
@@ -2662,6 +2665,7 @@ bad;'bæd
 bad_1;'baːt
 badebetrieb;'baː-də-bə-'tʁiːp
 baden;'baː-dən
+badezimmer;'ba-də-'tsɪ-mɐ
 bag;'bæg
 bah;'baː
 bahn;'baːn
@@ -2871,6 +2875,7 @@ beantragt;bə-'aːn-tʁakt
 beantworte;bə-'an-tvɔɐ-tə
 beantworten;bə-'ʔant-vɔʁ-tən
 beantwortend;be-'ʔant-vɔɐ-tənt
+beantwortest;bə-'ʔant-vɔɐtəst
 beantwortet;bə-'ʔant-vɔʁ-tət
 beantwortete;bə-'ʔant-vɔʁ-tə-tə
 beantwortung;bə-'an-tvɔɐ-tʊɳ
@@ -2885,6 +2890,7 @@ beaufsichtigung;bə-'ʔaʊ-fzɪç-tiː-gʊɳ
 beauftragen;bə-'ʔaʊf-tʁaː-gən
 beauftragt;bə-'ʔaʊf-tʁaːkt
 beauftragte;bə-'ʔaʊf-tʁaːk-tə
+beauty;'bju-ti
 beauté;'bo-te
 bebauen;bə-'baʊ-ən
 bebaut;bə-'baʊt
@@ -4284,6 +4290,7 @@ bildungswerk;'bɪl-dʊɳs-vɛʁk
 bildungsziele;'bɪl-dʊɳs-'tsiː-lə
 bildunterschrift;'bɪlt-ʔʊn-tɐ-ʃʁɪft
 bildwand;'bɪld-vant
+bildzeitung;'bɪlt-tsaɪ-tʊɳ
 bill;'bɪl
 billig;'bɪ-lɪç
 billige;'bɪ-liː-gə
@@ -4385,6 +4392,7 @@ blanke;'blaɳ-kə
 blankem;'blaɳ-kəm
 blanker;'blaɳ-kɐ
 blankoscheck;blaɳkoː-'ʃɛk
+blasen;'blaː-zən
 blasphemie;blaːs-feː-'miː
 blass;'blas
 blassblauen;'blas-blaʊ-ən
@@ -4483,6 +4491,7 @@ bloßem;'bloː-səm
 bloßen;'bloː-sən
 bloßer;'bloː-sɐ
 bloßes;'bloː-səs
+blubber;'blʊ-bɐ
 blue;'bluː
 blues;'bluːs
 bluetooth;'bluː-tuːθ
@@ -4541,6 +4550,7 @@ blütenknospe;'blyː-təɳ-'knɔs-pə
 blütenreich;'blyː-tən-ʁaɪç
 bmw;'beː-'ʔɛm-'veː
 bnd;'beː-'ʔɛn-'deː
+bob;'bɑb
 bobby;'boː-bpiː
 bochum;'boː-xʊm
 bock;'bɔk
@@ -4869,6 +4879,7 @@ bulgarien;bʊl-'ga-ʁiː-jɛn
 bulldogge;'bʊl-dɔg-gə
 bullenbeißer;'bʊ-lən-baɪ-sɐ
 bulletin;'bʊ-le-tɪn
+bumsen;'bʊm-zən
 bund;'bʊnt
 bundes;'bʊn-dəs
 bundesamt;'bʊn-dəs-ʔamt
@@ -5052,6 +5063,7 @@ cannae;ka-'nɛː
 canzonette;'ka-zɔ-nɛt
 capital;'kæ-pə-təl
 capitals;'kæ-pə-təlz
+captain;'kæp-tən
 car;'kɑr
 cargo;'kɑr-gəʊ
 caritas;'ka-ʁiː-taːs
@@ -5061,6 +5073,7 @@ carrarischem;kɐ-'ʁaː-ʁɪ-ʃəm
 carter;'kaɐ-tɐ
 cartoon;'kaɐ-tuːn
 cartoons;'kaʁ-tuːns
+casablanca;'kas-'ab-lan-kaː
 castlegarden;'kæs-əl-gɑr-dən
 castortransport;'kas-toːɐ-tʁans-pɔʁt
 catherine;'kɛθ-rɪn
@@ -5111,6 +5124,7 @@ chassierte;ça-'siːɐ-tə
 chat;'tʃɛt
 chatbot;'tʃɛt-bɔt
 chatterbot;'tʃɛt-ɛʁ-bɔt
+chatterbots;'tʃæ-tɜ-bɔts
 chaussee;'ʃɔs-eː
 checke;'tʃɛ-kə
 chef;'ʃɛf
@@ -5173,6 +5187,7 @@ circa;'tsɪʁ-kaː
 circirca;'tsɪʁ-'tsɪʁ-kaː
 city;'sɪ-tiː
 clap;'klɛːp
+clapton;'klæp-tən
 clara;'kla-ʁaː
 classic;'klɛ-sɪk
 claudia;'klaʊ-diː-jaː
@@ -5262,6 +5277,7 @@ cyber;'saɪ-bɐ
 da;'daː
 dabei;daː-'baɪ
 dach;'dax
+dachboden;'dax-'boː-dən
 dache;'daxə
 daches;'da-xəs
 dachfenster;'dax-fɛns-tɐ
@@ -5877,6 +5893,8 @@ dominiert;doː-miː-'niːɐt
 dominierten;doː-miː-'niːɐ-tən
 dominosteine;'doː-miː-noː-ʃtaɪ-nə
 dommage;'dɔ-maʒ
+donald;'dɑ-nəld
+donald_1;'doː-nalt
 donau;'doː-naʊ
 donaustrategie;'doː-naʊ-ʃtʁaː-teː-giː
 donc;'dok
@@ -5922,6 +5940,7 @@ dotieren;do-'tiː-ʁən
 dotierung;do-'tiː-ʁʊɳ
 down;'daʊn
 download;'daʊn-loːt
+downloaden;'daʊn-ləʊ-dən
 downloads;'daʊn-loːts
 dpa;'deː-'peː-'ʔaː
 drachen;'dʁax-ən
@@ -6079,6 +6098,7 @@ du;'duː
 dualen;duː-'aː-lən
 dualistische;duː-a-'lɪs-tɪ-ʃə
 dubstep;'dap-stɛp
+duck;'dʌk
 due;'dju
 duellieren;duː-'ɛliː-ʁən
 duett;duː-'ɛt
@@ -6253,6 +6273,7 @@ dächern;'dɛ-çɐn
 dächte;'dɛç-tə
 dächtest;'dɛç-təst
 dämlich;'dɛːm-lɪç
+dämliche;'dɛːm-lɪç-ə
 dämme;'dɛ-mə
 dämmerlicht;'dɛ-mɐ-lɪçt
 dämmerstunde;'dɛ-mɐʃ-tʊn-də
@@ -7124,6 +7145,7 @@ eltern;'ʔɛl-tɐn
 elternlos;'ʔɛl-tɐn-loːs
 elternloses;'ʔɛl-tɐn-loː-zəs
 elternteile;'ʔɛl-tɐn-taɪ-lə
+elvira;ʔɛl-'viː-ʁaː
 elvis;'ʔɛl-vɪs
 em;'ʔɛm
 email;'ʔiː-mɛɪl
@@ -7796,6 +7818,7 @@ erhöht;ʔɛɐ-'høːt
 erhöhte;ʔɛɐ-'høː-tə
 erhöhten;ʔɛɐ-'høː-tən
 erhöhung;ʔɛɐ-'høː-ʊɳ
+eric;'ɛ-rɪk
 erich;'ʔeː-ʁɪç
 erika;'ʔeː-ʁiː-kaː
 erinnere;ʔɛɐ-'ʔɪ-nɐ-ʁə
@@ -8269,6 +8292,7 @@ essen;'ʔɛ-sən
 essentials;ʔɛ-'sɛn-tʃəls
 essenzen;ʔɛs-'ɛn-tsən
 essig;'ʔɛ-sɪç
+esslingen;'ʔɛs-lɪɳ-ən
 esslöffel;'ʔɛs-lœ-fəl
 essstube;'ʔɛs-ʃtuː-bə
 esstisch;'ʔɛs-tɪʃ
@@ -8458,6 +8482,7 @@ fahrlässigkeit;'faː-ʁlɛ-sɪg-kaɪt
 fahrplan;'faːɐ-plaːn
 fahrpreise;'faːʁ-pʁaɪ-zə
 fahrrad;'faː-ʁaːt
+fahrradfahren;'faː-ʁaːt-faː-ʁən
 fahrradfahrer;'faː-ʁaːt-faː-ʁɐ
 fahrradventil;'faː-ʁat-vɛn-'tiːl
 fahrroute;'faː-ʁuː-tə
@@ -8549,6 +8574,7 @@ fand;'fant
 fanden;'fan-dən
 fange;'faɳ-ə
 fangen;'faɳ-ən
+fangfrage;'faɳ-'fʁaː-gə
 fangprämie;'faɳ-gpʁeː-miɛ
 fans;'fɛːns
 fantasie;fan-ta-'ziː
@@ -8983,6 +9009,7 @@ flatternd;'fla-tɐnt
 flatternden;'fla-tɐn-dən
 flatterte;'fla-tɐ-tə
 flatterten;'fla-tɐ-tən
+flatulenzen;'fla-tuː-'lɛn-tsən
 flausrock;'flaʊ-sʁɔk
 flautre;'flaʊt-ʁə
 flechten;'flɛç-tən
@@ -9641,6 +9668,7 @@ futteral;fʊ-tɐ-'ʁaːl
 futtermitteln;'fʊ-tɐ-mɪ-təln
 futtermittelskandale;'fʊ-tɐ-mɪ-təl-skan-'daː-lə
 fuzz;'fas
+fuzzy;'fʌ-zi
 fuß;'fuːs
 fußball;'fuːs-bal
 fußballbundesliga;'fuːs-bal-bʊn-dəs-liː-gaː
@@ -10361,6 +10389,7 @@ geistes;'gaɪs-təs
 geistesabwesenheit;'gaɪs-təs-ʔap-veː-zən-haɪt
 geistesfunke;'gaɪs-təs-fʊɳ-kə
 geistesgegenwart;'gaɪs-təs-geː-gən-vaɐt
+geisteskrank;'gaɪs-tɛs-kʁaɳk
 geistesverwirrt;'gaɪs-tɛs-fɐ-vɪʁt
 geisteswissenschaft;'gaɪs-təs-vɪ-sən-ʃaft
 geisteswissenschaften;'gaɪs-təs-vɪ-sən-ʃaf-tən
@@ -10409,6 +10438,7 @@ gekocht;gə-'kɔxt
 gekommen;gə-'kɔ-mən
 gekommene;gə-'kɔ-mə-nə
 gekonnt;gə-'kɔnt
+gekontert;gə-'kɔn-tɐt
 gekoppelt;gə-'kɔp-əlt
 gekostet;gə-'kɔs-tət
 gekreuzt;gə-'kʁɔʏtst
@@ -12079,6 +12109,7 @@ gässchen;'gɛs-çən
 gäste;'gɛs-tə
 gästehaus;'gɛs-tə-haʊs
 gästen;'gɛs-tən
+gästezimmer;'gɛs-tə-tsɪ-mɐ
 gäule;'gɔʏ-lə
 gönnen;'gœ-nən
 götterbaum;'gœ-tɐ-baʊm
@@ -12432,6 +12463,7 @@ haut;'haʊt
 hautfarbe;'haʊt-faɐ-bə
 havanna;'hava-naː
 hawaii;ha-'vaɪ
+hawking;'hɔ-kɪɳ
 hay;'haː-iː
 he;'heː
 heat;'hiːt
@@ -12932,6 +12964,7 @@ herzlichste;'hɛʁts-lɪçs-tə
 herzlos;'hɛɐts-loːs
 herzloses;'hɛɐts-loː-zəs
 herzog;'hɛɐ-tsoːk
+herzschlag;'hɛʁts-'ʃlaːk
 herzte;'hɛɐ-tstə
 herzuführen;'heːɐ-tsuː-fyː-ʁən
 herzugeben;'heːɐ-tsuː-geː-bən
@@ -13174,6 +13207,7 @@ hinkte;'hɪɳ-ktə
 hinlachend;'hɪn-la-xənt
 hinlächelnd;'hɪn-lɛ-çəlnt
 hinläuft;'hɪn-lɔʏft
+hinne;'hɪ-nə
 hinnehmen;'hɪ-neː-mən
 hinnickend;'hɪ-nɪkənd
 hinreichend;'hɪn-ʁaɪ-çənt
@@ -13420,6 +13454,7 @@ holztäfelung;'hɔl-tstɛː-fə-lʊɳ
 holzversteigerung;'hɔlts-fɛɐ-ʃtaɪ-gə-ʁʊɳ
 holzwerk;'hɔlts-vɛʁk
 homecomputer;'həʊm-kɔm-pjuː-tɐ
+homer;'həʊ-mɜ
 hommage;'ɔ-maʒ
 homogen;hoː-moː-'geːn
 homophone;'hoː-moː-foː-nə
@@ -14055,6 +14090,7 @@ interessenkollision;ʔɪn-tə-'ʁɛ-sən-kɔ-liː-zjoːn
 interessenten;'ʔɪn-tʁɛ-sɛn-tən
 interessenzonen;ʔɪn-'tʁɛ-sən-'tsoː-nən
 interesses;ʔɪn-'tʁɛ-səs
+interessiere;ʔɪn-tʁɛ-'siː-ʁə
 interessieren;ʔɪn-tə-ʁɛ-'siː-ʁən
 interessierst;ʔɪn-tʁɛ-'siːɐst
 interessiert;ʔɪn-tɐ-ʁɛ-'siːɐt
@@ -14523,6 +14559,7 @@ kannen;'kan-ən
 kannst;'kanst
 kannte;'kan-tə
 kannten;'kan-tən
+kant;'kant
 kante;'kan-tə
 kanten;'kan-tən
 kantengewichte;'kan-tən-geː-vɪç-tə
@@ -14781,6 +14818,7 @@ kinderstubenkosenamen;'kɪn-dɐʃ-tuː-bəɳ-koː-zə-naː-mən
 kinderstubentür;'kɪn-dɐ-ʃtuː-bən-tyːɐ
 kinderwärterin;kɪn-dɛʁ-'vɛːɐ-təʁɪn
 kinderzeit;'kɪn-dɐ-tsaɪt
+kinderzimmer;'kɪn-dɐ-tsɪ-mɐ
 kindes;'kɪn-dəs
 kindesherz;'kɪn-dəs-hɛɐts
 kindesstatt;kɪn-dəs-'ʃtat
@@ -14825,6 +14863,7 @@ kirchhofstür;'kɪɐ-çoːfs-tʏɐ
 kirchliche;'kɪʁç-lɪ-çə
 kirchlichen;'kɪʁç-lɪ-çən
 kirchlicher;'kɪɐ-çlɪ-çɐ
+kirk;'kɜk
 kirschbaumes;'kɪɐʃ-baʊ-məs
 kirsche;'kɪɐ-ʃə
 kirschen;'kɪɐ-ʃən
@@ -15199,6 +15238,7 @@ komplexen;kɔm-'plɛ-ksən
 komplexer;kɔm-'plɛ-ksɐ
 komplexes;kɔm-'plɛ-ksəs
 komplexität;kɔm-plɛ-ksiː-'tɛːt
+kompliment;kɔm-pli-'mɛnt
 komplimente;'koːm-pliː-mɛn-tə
 komplizen;kɔm-'pliː-tsən
 kompliziert;koːm-pliː-'tsiːɐt
@@ -15485,6 +15525,7 @@ kraftvoll;'kʁaft-fɔl
 kraftvolle;'kʁaft-fɔ-lə
 kraftvoller;'kʁaft-fɔ-lɐ
 kraftwerksbau;'kʁaft-vɛɐks-baʊ
+krakau;'kʁaː-kaʊ
 krallen;'kʁal-ən
 krallenfinger;'kʁal-ən-fɪɳ-ɐ
 krampfanfalle;'kʁampf-ʔan-fa-lə
@@ -15521,6 +15562,7 @@ kreatives;kʁeː-a-'tiː-vəs
 kreativität;kʁeː-a-tiː-viː-'tɛːt
 kreatur;kʁeː-a-'tuːɐ
 kreaturen;kʁeː-a-'tuː-ʁən
+krebs;'kʁɛːps
 krebsbekämpfung;'kʁɛːps-bə-kɛm-pfʊɳ
 kredenz;kʁɛ-'dɛnts
 kredit;kʁeː-'diːt
@@ -16371,6 +16413,7 @@ lektüre;lɛk-'tyː-ʁə
 lemaire;lə-'mɛʁ
 lenchen;'leːn-çən
 lender;'lɛn-dɐ
+lenk;'lɛɳk
 lenken;'lɛɳ-kən
 lenker;'lɛɳ-kɐ
 lenkst;'lɛɳkst
@@ -16511,14 +16554,18 @@ lieblingsbeschäftigung;'liː-blɪɳs-bə-ʃɛf-tiː-gʊɳ
 lieblingsbuch;'liː-blɪɳs-'buːx
 lieblingscocktail;'liː-blɪɳs-kɔ-kteːl
 lieblingseis;'liː-blɪɳs-ʔaɪs
+lieblingsessen;'liː-blɪɳs-ʔɛ-sən
 lieblingsfarbe;'liː-blɪɳ-sfaɐ-pə
 lieblingsfilm;'liː-blɪɳ-sfɪlm
+lieblingsgericht;'liː-blɪɳs-gə-ʁɪçt
 lieblingskneipe;'liː-blɪɳs-knaɪpə
 lieblingsland;'liː-blɪɳ-slant
 lieblingsmusik;'liːb-lɪɳs-muː-ziːk
 lieblingsplätzchen;'liːblɪɳs-plɛts-çən
+lieblingspopstar;'liː-blɪɳs-'pɔp-staːɐ
 lieblingssitz;'liːblɪɳs-zɪts
 lieblingsstelle;liː-blɪɳs-'ʃtɛl-ə
+lieblingsthema;'liː-blɪɳs-'teː-ma
 lieblingstier;'liː-blɪɳs-tiːɐ
 lieblingstrankes;'liː-blɪɳs-tʁaɳ-kəs
 liebschaft;'liːb-ʃaft
@@ -16586,6 +16633,7 @@ line;'laɪn
 lineal;liː-neː-'aːl
 linear;liː-neː-'aːɐ
 lingua;'lɪɳ-guː-aː
+linguistik;'lɪɳ-guː-ɪs-tɪk
 linguistischer;'lɪɳ-guː-ɪs-tɪ-ʃɐ
 linie;'liː-niː-jə
 linien;'liː-nɪ-ən
@@ -16667,6 +16715,7 @@ logan;'loːu-gən
 logarithmus;lo-ga-'ʁɪt-mʊs
 loge;'loː-ʒə
 logge;'lɔgə
+logic;'lɑ-dʒɪk
 logierbesuch;loː-'ʒiːɐ-bə-zʊx
 logik;'loː-gɪk
 logis;lo-'ʒiː
@@ -16710,6 +16759,7 @@ losgeht;'loːs-geːt
 losgelassen;'loːs-gə-la-sən
 loslassend;'loːs-las-ənt
 losstürzte;'loːs-ʃtʏɐts-tə
+lost;'lɔst
 loszustürzen;'loːs-tsuː-ʃtʏɐ-tsən
 lothar;'loː-taːɐ
 lotto;'lɔ-toː
@@ -17042,6 +17092,7 @@ margell;'maɐ-gɛl
 marginalien;maʁ-gi-'naː-lɪən
 margot;'maɐ-gɔt
 maria;ma-'ʁiː-jaː
+marianne;ma-'ʁiː-a-nə
 marie;ma-'ʁiː
 mariechen;ma-'ʁiː-çən
 marien;'ma-ʁiː-ən
@@ -17078,6 +17129,7 @@ marktwirtschaftlich;'maɐkt-vɪɐt-ʃaft-lɪç
 marktwirtschaftliches;'maɐkt-vɪɐt-ʃaft-lɪ-çəs
 marktüberblick;'maɐkt-ʔʏ-bɐ-'blɪk
 markus;'maɐ-kʊs
+marley;'mɑ-rli
 marmelade;maʁ-mə-'laː-də
 marmeladen;'maɐ-mə-laː-dən
 marmor;'maɐ-moːʁ
@@ -17128,6 +17180,7 @@ materie;ma-'teː-ʁɪ-ə
 materielle;maː-teː-ʁiː-'ɛ-lə
 materiellen;maː-teː-ʁiː-'ɛ-lən
 materielles;ma-te-'ʁi-ɛləs
+mathe;'ma-tə
 mathematik;ma-tə-ma-'tiːk
 mathematiker;ma-tə-'maː-tɪ-kɐ
 mathematisch;ma-te-'maː-tɪʃ
@@ -17262,6 +17315,7 @@ meinet;'maɪ-nət
 meinetwegen;'maɪ-nə-tveː-gən
 meinige;'maɪ-nɪ-gə
 meinigen;'maɪ-nɪ-gən
+meins;'maɪns
 meinst;'maɪnst
 meint;'maɪnt
 meinte;'maɪn-tə
@@ -17565,6 +17619,7 @@ missverständliche;'mɪs-fɐ-'ʃtɛnt-lɪç-ə
 missverständnis;'mɪs-fɐ-ʃtɛnt-nɪs
 missverständnisse;'mɪs-fɛɐ-ʃtɛnt-nɪ-sə
 missverständnissen;'mɪs-fɐ-ʃtɛnt-nɪs-zɛn
+mist;'mɪst
 mister;'mɪs-tɐ
 misunderstanding;'miːz-an-dɐ-stæn-dɪɳ
 mit;'mɪt
@@ -17855,6 +17910,7 @@ movie;muː-vi
 moviepilot;'muːviː-pɪ-loːt
 mozart;'moː-tsaɐt
 mozilla;mɔt-'sɪl-aː
+mp3;'ʔɛm-'peː-'dʁaɪ
 msx;'ʔɛm-'ʔɛs-'ʔɪks
 mubarak;mʊ-'baː-ʁak
 muc;'mʊk
@@ -18025,6 +18081,7 @@ mühte;'myː-tə
 müll;'mʏl
 müllbeseitigung;'mʏl-bə-zaɪ-tiː-gʊɳ
 müller;'mʏ-lɐ
+mülltonne;'mʏl-'tɔ-nə
 mülltonnen;'mʏl-tɔ-nən
 münchen;'mʏn-çən
 münchner;'mʏnç-nɐ
@@ -18163,6 +18220,7 @@ nachmittagen;'naːx-mɪt-taː-gən
 nachmittags;'naːx-mɪ-taks
 nachmittagsgottesdienstes;'naːx-mɪ-taːks-gɔ-təs-diːns-təs
 nachmittagsspaziergang;'naːx-mɪ-taːks-ʃpa-'tsiːɐ-gaɳ
+nachnamen;'naːx-naː-mən
 nachprüfen;'naːx-pʁyː-fən
 nachrede;'naːx-ʁeː-də
 nachricht;'naːx-ʁɪçt
@@ -18488,6 +18546,7 @@ neujahr;'nɔʏ-jaɐ
 neujahrsempfang;'nɔʏ-jaːɐs-ʔɛm-pfaɳ
 neujahrspanne;'nɔʏ-jaɐs-pa-nə
 neulich;'nɔʏ-lɪç
+neumann;'nɔʏ-man
 neun;'nɔʏn
 neunhundert;'nɔʏn-hʊn-dɐt
 neunhundertdrei;'nɔʏn-hʊn-dɐt-dʁaɪ
@@ -18815,6 +18874,7 @@ novize;noː-'viː-tsə
 novizenblick;noː-'viː-tsən-blɪk
 now;'naʊ
 nrw;'ʔɛn-'ʔɛɐ-'veː
+nspc;#
 ntv;'ʔɛn-'teː-'faʊ
 nu;'nʊ
 nuancen;nuː-'ɔ-sən
@@ -18933,6 +18993,7 @@ oberförster;'ʔoːbɐ-føːʁstɐ
 oberförsterei;'ʔɔ-bɐ-føːɐs-tɐ-aɪ
 oberförsters;ʔoː-bɐ-'fœʁs-tɐs
 oberförsterstochter;ʔoː-bɐ-'fœʁs-tɐs-tɔx-tɐ
+obergeschoss;'ʔoː-bɐ-gə-'ʃɔs
 obergrenze;'ʔoː-bɐ-gʁɛn-tsə
 oberhalb;'ʔoː-bɐ-halp
 oberhand;'ʔoː-bɐ-hant
@@ -19562,6 +19623,8 @@ phönix;'føː-nɪks
 pi;'piː
 piano;piː-'aː-noː
 pianoforte;piː-'aː-noː-fɔɐ-tə
+picard;pɪ-'kɑr
+pickel;'pɪ-kəl
 pickert;'pɪkɐt
 picknicks;'pɪk-nɪks
 pickten;'pɪk-tən
@@ -19583,6 +19646,7 @@ pilotprojekten;piː-'loːt-pʁoː-'jɛk-tən
 pilze;'pɪl-tsə
 pilzen;'pɪl-tsən
 pineapple;'paɪn-æp-əl
+ping;'pɪɳ
 pinsel;'pɪn-zəl
 pipette;'piː-pɛt-ə
 pipps;'pɪps
@@ -19956,6 +20020,7 @@ programme;pʁoː-'gʁa-mə
 programmen;pʁoː-'gʁa-mən
 programmfehler;pʁoː-'gʁam-feː-lɐ
 programmierbare;pʁoː-'gʁa-miːɐ-baː-ʁə
+programmieren;pʁoː-gʁa-'miː-ʁən
 programmierer;pʁoː-gʁa-'miː-ʁɐ
 programmiererin;pʁo-gʁa-'miː-ʁɐ-ʁɪn
 programmiersprache;pʁoː-gʁa-'miːɐ-ʃpʁa-xə
@@ -20375,6 +20440,7 @@ rauch;'ʁaʊx
 rauchen;'ʁaʊ-xən
 rauchgefüllte;'ʁaʊx-gə-fʏl-tə
 rauchorgien;'ʁaʊ-xɔɐ-giː-ən
+rauchst;'ʁaʊxst
 rauchte;'ʁaʊx-tə
 rauchten;'ʁaʊx-tən
 rauchwolken;'ʁaʊx-vɔl-kən
@@ -20433,6 +20499,7 @@ rechenexempeln;'ʁɛç-ən-ʔɛk-sɛm-pəln
 rechenintensiv;'ʁɛ-çən-ʔɪn-tən-ziːv
 rechenkapazität;ʁɛçəɳ-ka-pa-tsiː-'tɛːt
 rechenkünstler;'ʁɛçəɳ-kʏns-tlɐ
+rechenleistung;'ʁɛ-çən-laɪs-tʊɳ
 rechenschaft;'ʁɛ-çən-ʃaft
 rechnen;'ʁɛç-nən
 rechner;'ʁɛç-nɐ
@@ -21009,6 +21076,7 @@ rock;'ʁɔk
 rockabilly;'rɔk-a-bɪ-liː
 rockes;'ʁɔk-əs
 rocknroll;'ʁɔkn-ʁɔl
+rocky;'rɑ-ki
 rockärmel;'ʁɔk-ʔɛʁməl
 roden;'ʁoː-dən
 roggen;'ʁɔ-gən
@@ -21059,6 +21127,7 @@ rosa;'ʁoː-zaː
 rosafarben;'ʁoː-zaː-faɐ-bən
 rose;'ʁoː-zə
 rosen;'ʁoː-zən
+rosenberg;'ʁoː-zən-bɛɐk
 rosenbonbons;'ʁoː-zən-bɔɳ-bɔɳs
 rosenbusch;'ʁoː-zən-bʊʃ
 rosenfarbigem;'ʁoː-zən-faɐ-bɪ-gəm
@@ -21454,6 +21523,7 @@ scatcherd;'ʃat-çɐt
 scatcherds;'ʃat-çɐts
 schaal;'ʃaːl
 schaar;'ʃaːɐ
+schach;'ʃax
 schachtel;'ʃax-təl
 schachteln;'ʃax-təln
 schade;'ʃaː-də
@@ -22703,6 +22773,7 @@ seufzte;'zɔʏf-tstə
 seulement;'sœ-lə-ma
 severn;'siː-vɜːrn
 sex;'sɛks
+sexleben;'sɛks-'leː-bən
 sexual;'sɛk-ʃu-əl
 sexual_1;zɛ-ksu-'aːl
 sexuell;zɛ-ksuː-'ɛl
@@ -22713,6 +22784,7 @@ sharp;'ʃɑrp
 shaun;'ʃɔn
 shawl;'ʃɔːl
 shell;'ʃɛl
+shelley;'ʃɛ-li
 shepherd;'ʃɛ-pɜd
 sherlock;'ʃɛʁ-lɔk
 shire;'ʃɑɪr
@@ -23115,6 +23187,7 @@ sorten;'zɔɐ-tən
 sortiert;zɔʁ-'tiːɐt
 sortierung;'zɔɐ-tiː-ʁʊɳ
 sortierungen;'zɔɐ-tiː-ʁʊ-ɳən
+soso;'zoː-zoː
 sotto;'zɔ-toː
 soul;'soʊl
 souliers;zuː-'liːɐs
@@ -23175,6 +23248,7 @@ sozialwissenschaftlichen;zo-'tsjaːl-vɪ-sən-ʃaft-lɪ-çən
 sozialwort;zo-'tsjaːl-vɔʁt
 soziologie;zoː-tsjoː-loː-'giː
 sozusagen;zoː-tsuː-'zaː-gən
+space;s-'pɛɪs
 spaghetti;ʃpa-'gɛ-ti
 spalierkirschenbaumes;ʃpa-'liːɐ-kɪɐ-ʃən-baʊ-məs
 spalte;'ʃpal-tə
@@ -23252,6 +23326,7 @@ spezial;ʃpeː-'tsjaːl
 spezialanwendungen;ʃpeː-'tsjaːl-ʔan-vɛn-dʊ-ɳən
 spezialfall;ʃpeː-'tsjaːl-fal
 spezialfett;ʃpeː-'tsjaːl-fɛt
+spezialgebiet;ʃpeː-'tsjaːl-gə-biːt
 spezialisiert;ʃpeː-tsja-liː-'ziːɐt
 spezialisierten;ʃpeː-tsja-liː-'ziːɐ-tən
 spezialisten;ʃpeː-tsja-'lɪs-tən
@@ -23278,6 +23353,7 @@ spiegelt;'ʃpiː-gəlt
 spiegelte;'ʃpiː-gɛl-tə
 spiegle;'ʃpiː-glə
 spiel;'ʃpiːl
+spielberg;s-'pil-bɜg
 spiele;'ʃpiː-lə
 spielen;'ʃpiː-lən
 spielend;'ʃpiː-lənt
@@ -23297,6 +23373,7 @@ spielregeln;'ʃpiːl-ʁeː-gəln
 spielräume;'ʃpiːl-ʁɔʏ-mə
 spiels;'ʃpiːls
 spielsachen;'ʃpiːl-za-xən
+spielst;'ʃpiːlst
 spielstunde;'ʃpiːl-ʃtʊn-də
 spielt;'ʃpiːlt
 spielte;'ʃpiːl-tə
@@ -23421,6 +23498,7 @@ sprühenden;'ʃpʁyː-ən-dən
 sprühregen;'ʃpʁyː-ʁeː-gən
 sprühte;'ʃpʁyː-tə
 sprühten;'ʃpʁyː-tən
+sprünge;'ʃpʁʏɳ-ə
 sprüngen;'ʃpʁʏɳ-ən
 spucken;'ʃpʊ-kən
 spuk;'ʃpuːk
@@ -23723,6 +23801,7 @@ stellvertreter;'ʃtɛl-fɛɐ-tʁeː-tɐ
 stemmend;'ʃtɛm-ənt
 stemmte;'ʃtɛm-tə
 stephan;'ʃtɛ-fan
+stephen;s-'ti-vən
 sterbe;'ʃtɛɐ-bə
 sterben;'ʃtɛʁ-bən
 sterbend;'ʃtɛʁ-bənd
@@ -23732,6 +23811,7 @@ sterbliche;'ʃtɛɐ-blɪ-çə
 sterblichen;'ʃtɛɐp-lɪ-çən
 stereoanlage;'ʃteː-ʁeː-oː-ʔan-laː-gə
 stereotype;'ʃteː-ʁeː-oː-tyː-pə
+stereotypen;'ʃteː-ʁeː-oː-'tyː-pən
 sterling;ʃtɐ-'lɪɳ
 stern;'ʃtɛɐn
 sternchen;'ʃtɛʁn-çən
@@ -23768,6 +23848,7 @@ steuert;'ʃtɔʏ-ɐt
 steuerung;'ʃtɔʏ-ə-ʁʊɳ
 steuerzahler;'ʃtɔʏ-ɐ-tsaː-lɐ
 steuerzahlers;'ʃtɔʏ-ɐ-tsaː-lɐs
+steven;s-'ti-vən
 stewart;s-'tu-ɜt
 steyr;ʃtaɪ-'ɐ
 stgb;'ʔɛs-'teː-'geː-'beː
@@ -24254,6 +24335,7 @@ systematisch;zʏs-tə-'ma-tɪʃ
 systematische;zʏs-teː-'maː-tɪ-ʃə
 systematischen;zʏs-tə-'maː-tɪ-ʃən
 systeme;zʏs-'teː-mə
+systemelektroniker;zʏs-'teː-m-ɛl-ɛk-'tʁoː-ni-kɐ
 systemen;zʏs-'teː-mən
 systems;zʏs-'teːms
 systemsettings;zʏs-'teːm-zɛt-ɪɳs
@@ -24528,6 +24610,7 @@ technische;'tɛç-nɪ-ʃə
 technischen;'tɛç-nɪ-ʃən
 technischer;'tɛç-nɪ-ʃɐ
 technisches;'tɛç-nɪ-ʃəs
+techno;'tɛk-noː
 technologie;tɛç-no-loː-'giː
 technologien;tɛç-noː-loː-'giːən
 technologisch;'tɛç-noː-loː-gɪʃ
@@ -24896,6 +24979,7 @@ tour;'tuːɐ
 touren;'tuː-ʁən
 tourismus;tuː-'ʁɪs-mʊs
 touristen;tuː-'ʁɪs-tən
+tournament;'tʊr-nə-mənt
 town;'taʊn
 tracht;tʁ'axt
 tradition;tʁa-diː-'tsjoːn
@@ -25132,6 +25216,7 @@ tryphon;'tʁyː-foːn
 träge;'tʁɛː-gə
 träger;'tʁɛ-gɐ
 trägerverein;'tʁɛː-gɐ-fɛɐ-'ʔaɪn
+trägst;'tʁɛkst
 trägt;'tʁɛːkt
 träne;'tʁɛː-nə
 tränen;'tʁɛː-nən
@@ -25554,6 +25639,7 @@ unaufmerksam;'ʔʊn-ʔaʊf-mɛɐk-zaːm
 unaufmerksamkeit;'ʔʊn-ʔaʊf-mɛɐk-zam-kaɪt
 unausgefüllten;'ʔʊn-ʔaus-gə-fʏl-tən
 unausgeglichenen;'ʔʊn-ʔaʊs-gə-glɪ-çə-nən
+unausgelastet;'ʔʊn-ʔaʊs-gə-'las-tət
 unausgesetzt;'ʔʊn-ʔaʊs-gə-zɛtst
 unauslöschlich;'ʔʊn-ʔaʊs-'lœʃ-lɪç
 unaussprechlicher;'ʔʊn-ʔaʊs-ʃpʁɛ-çlɪ-çɐ
@@ -25939,6 +26025,7 @@ unpraktisch;'ʔʊn-pʁak-tɪʃ
 unproblematisch;'ʔʊn-pʁoː-blə-maː-tɪʃ
 unpräziser;'ʔʊn-pʁɛ-tsiː-zɐ
 unqualifiziert;'ʔʊn-kva-liː-fiː-tsiːɐt
+unreal;ə-'nril
 unrealistisch;'ʔʊn-ʁeː-a-lɪs-tɪʃ
 unrecht;'ʔʊn-ʁɛçt
 unrechte;'ʔʊn-ʁɛç-tə
@@ -26332,6 +26419,7 @@ uwe;'ʔʊ-və
 v;'faʊ
 vag;'vaːk
 vage;'vaː-gə
+vagina;'vaː-giː-naː
 vai;'vaɪ
 vail;'vɛɪl
 vais;'vɛ
@@ -26417,6 +26505,7 @@ verarmen;fɛɐ-'ʔaʁ-mən
 verarmt;fɛɐ-'ʔaːʁmt
 verarmtem;fɛʁ-'ʔaɐm-təm
 verarmung;fɐ-'aɐ-mʊɳ
+verarscht;fɛɐ-'ʔaɐʃt
 verband;fɛɐ-'bant
 verbanden;fɛɐ-'ban-dən
 verbannen;fɛɐ-'banən
@@ -26936,6 +27025,7 @@ verleugneten;fɛɐ-'lɔʏ-gnə-tən
 verlieben;fɛɐ-'liː-bən
 verliebt;fɛɐ-'liːpt
 verliebten;'fɛɐ-liː-btən
+verliebtheit;fɛɐ-'liːpt-haɪt
 verlief;fɛɐ-'liːf
 verliefen;fɛɐ-'liː-fən
 verlieh;fɛɐ-'liː
@@ -27159,6 +27249,7 @@ verschiedenartigsten;fɛɐ-'ʃiː-dən-ʔaɐ-tɪç-stən
 verschiedene;fɛɐ-'ʃiː-də-nə
 verschiedenen;fɛɐ-'ʃiː-də-nən
 verschiedener;fɛɐ-'ʃiː-də-nɐ
+verschiedenes;fɛɐ-'ʃiː-dən-əs
 verschiedensten;fɛɐ-'ʃiː-'dəns-tən
 verschiedenster;fɛɐ-'ʃiː-dəns-tɛʁ
 verschlagenes;fɐ-'ʃlaː-gə-nəs
@@ -29034,6 +29125,7 @@ windeseile;vɪn-dəs-'ʔaɪ-lə
 windhauch;'vɪnt-haʊx
 windhund;'vɪnt-hʊnt
 windig;'vɪn-dɪç
+windows;'wɪn-dəʊz
 windrichtung;'vɪnt-ʁɪç-tʊɳ
 windseite;'vɪnt-zaɪ-tə
 windstille;'vɪnt-ʃtɪ-lə
@@ -30440,6 +30532,7 @@ zwerg;'tsvɛɐk
 zwieback;'tsviː-bak
 zwiebeln;'tsviː-bəln
 zwiegespräch;'tsviː-gəʃ-pʁɛç
+zwilling;'tsvɪl-ɪɳ
 zwillingsbruder;tsvɪ-lɪɳs-'bʁuː-dɐ
 zwinge;'tsvɪ-ɳə
 zwingen;'tsvɪ-ɳən
@@ -30861,6 +30954,7 @@ zürnen;'tsʏʁ-nən
 überselig;'ʔyː-bɐ-zeː-lɪç
 übersetze;ʔyː-bɐ-'zɛ-tsə
 übersetzen;ʔyː-bɐ-'zɛ-tsən
+übersetzer;ʔyː-bɐ-'zɛ-tsɐ
 übersetzt;ʔyː-bɐ-'zɛtst
 übersetzte;ʔy-bɐ-'zɛts-tə
 übersetzung;ʔyː-bɐ-'zɛ-tsʊɳ
