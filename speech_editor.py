@@ -141,9 +141,10 @@ def lex_set_token(token):
 
     ipas = lex_entry['ipa']
 
-    tts.say_ipa(ipas)
-
-
+    try:
+        tts.say_ipa(ipas)
+    except:
+        logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
 
 
 def lex_edit(token):
@@ -578,12 +579,15 @@ try:
             ts['ts'] = misc.edit_popup(stdscr, ' Transcript ', ts['ts'])
 
         elif c == ord('l'):
-            if missing_token:
-                t = missing_token
-            else:
-                t = tokenize(ts['ts'])[0]
 
-            lex_edit(t)
+            if len(ts['ts'])>0 or missing_token:
+
+                if missing_token:
+                    t = missing_token
+                else:
+                    t = tokenize(ts['ts'])[0]
+
+                lex_edit(t)
 
 
     #
