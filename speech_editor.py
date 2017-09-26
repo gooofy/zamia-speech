@@ -42,6 +42,7 @@ from nltools.tts_client     import TTSClient
 from speech_transcripts     import Transcripts
 from speech_lexicon         import Lexicon
 
+PROC_TITLE      = 'speech_editor'
 DEFAULT_MARY    = False # switch between mary and sequitur default g2p
 SEQUITUR_MODEL  = 'data/models/sequitur-voxforge-de-latest'
 
@@ -152,153 +153,155 @@ def lex_edit(token):
     lex_set_token (token)
 
     while True:
-    
-        lex_paint_main()
-    
-        c = stdscr.getch()
-        if c == ord('q'):
-            lex.save()
-            break  
-    
-        # generate de-mary
-        elif c == ord('g'):
-            
-            tts.set_locale ('de')
-            tts.set_engine ('mary')
-            tts.set_voice ('bits3')
-
-            ipas = tts.gen_ipa (lex_base)
-            tts.say_ipa(ipas)
-            lex_entry['ipa'] = ipas
    
-        # generate de-espeak
-        elif c == ord('h'):
-            
-            tts.set_locale ('de')
-            tts.set_engine ('espeak')
-            tts.set_voice  ('de')
-            ipas = tts.gen_ipa (lex_base)
+        try:
 
-            tts.set_locale ('de')
-            tts.set_engine ('mary')
-            tts.set_voice ('bits3')
-            tts.say_ipa(ipas)
+            lex_paint_main()
+        
+            c = stdscr.getch()
+            if c == ord('q'):
+                lex.save()
+                break  
+        
+            # generate de-mary
+            elif c == ord('g'):
+                
+                tts.set_locale ('de')
+                tts.set_engine ('mary')
+                tts.set_voice ('bits3')
 
-            lex_entry['ipa'] = ipas
-    
-        # generate en-mary 
-        elif c == ord('l'):
-            
-            tts.set_locale ('en-US')
-            tts.set_engine ('mary')
-            tts.set_voice ('cmu-rms-hsmm')
-
-            ipas = tts.gen_ipa (lex_base)
-            tts.say_ipa(ipas)
-            lex_entry['ipa'] = ipas
-
-        # generate fr-mary 
-        elif c == ord('k'):
-            
-            tts.set_locale ('fr')
-            tts.set_engine ('mary')
-            tts.set_voice ('upmc-pierre-hsmm')
-
-            ipas = tts.gen_ipa (lex_base)
-            tts.say_ipa(ipas)
-            lex_entry['ipa'] = ipas
-
-        # generate de-sequitur
-        elif c == ord('j'):
-            
-            ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
-            tts.set_locale ('de')
-            tts.set_engine ('mary')
-            tts.set_voice ('bits3')
-            tts.say_ipa(ipas)
-            lex_entry['ipa'] = ipas
-
-        # speak de mary unitsel 
-        elif c == ord('p'):
-    
-            if len(lex_entry['ipa']) == 0:
-                continue
-    
-            ipas = lex_entry['ipa']
-
-            tts.set_locale ('de')
-            tts.set_engine ('mary')
-            tts.set_voice ('bits3')
-
-            tts.say_ipa(ipas)
-
-        # speak de mary hsmm
-        elif c == ord('o'):
-    
-            if len(lex_entry['ipa']) == 0:
-                continue
-    
-            ipas = lex_entry['ipa']
-
-            tts.set_locale ('de')
-            tts.set_engine ('mary')
-            tts.set_voice ('dfki-pavoque-neutral-hsmm')
-
-            tts.say_ipa(ipas)
-
-        # speak fr mary hsmm
-        elif c == ord('i'):
-   
-            if len(lex_entry['ipa']) == 0:
-                continue
-    
-            ipas = lex_entry['ipa']
-
-            tts.set_locale ('fr')
-            tts.set_engine ('mary')
-            tts.set_voice ('pierre-voice-hsmm')
-
-            tts.say_ipa(ipas)
-   
-        # speak en mary hsmm
-        elif c == ord('u'):
-    
-            ipas = lex_entry['ipa']
-
-            tts.set_locale ('en-US')
-            tts.set_engine ('mary')
-            tts.set_voice ('cmu-rms-hsmm')
-
-            tts.say_ipa(ipas)
-   
-        # edit token
-        elif c == ord('t'):
-
-            token = misc.edit_popup(stdscr, ' Token ', '')
-
-            lex_set_token (token)
-
-        # edit XS
-        elif c == ord('e'):
-    
-            ipas = lex_entry['ipa']
-
-            xs = ipa2xsampa (lex_token, ipas, stress_to_vowels=False)
-
-            xs = misc.edit_popup(stdscr, ' X-SAMPA ', xs)
-
-            try:
-                ipas = xsampa2ipa (lex_token, xs)
-    
+                ipas = tts.gen_ipa (lex_base)
+                tts.say_ipa(ipas)
                 lex_entry['ipa'] = ipas
-            except:
-                pass
+       
+            # generate de-espeak
+            elif c == ord('h'):
+                
+                tts.set_locale ('de')
+                tts.set_engine ('espeak')
+                tts.set_voice  ('de')
+                ipas = tts.gen_ipa (lex_base)
+                lex_entry['ipa'] = ipas
 
+                tts.set_locale ('de')
+                tts.set_engine ('mary')
+                tts.set_voice ('bits3')
+                tts.say_ipa(ipas)
 
+        
+            # generate en-mary 
+            elif c == ord('l'):
+                
+                tts.set_locale ('en-US')
+                tts.set_engine ('mary')
+                tts.set_voice ('cmu-rms-hsmm')
 
-logging.basicConfig(level=logging.DEBUG)
-logging.getLogger("requests").setLevel(logging.WARNING)
-# logging.basicConfig(level=logging.INFO)
+                ipas = tts.gen_ipa (lex_base)
+                tts.say_ipa(ipas)
+                lex_entry['ipa'] = ipas
+
+            # generate fr-mary 
+            elif c == ord('k'):
+                
+                tts.set_locale ('fr')
+                tts.set_engine ('mary')
+                tts.set_voice ('upmc-pierre-hsmm')
+
+                ipas = tts.gen_ipa (lex_base)
+                tts.say_ipa(ipas)
+                lex_entry['ipa'] = ipas
+
+            # generate de-sequitur
+            elif c == ord('j'):
+                
+                ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
+                tts.set_locale ('de')
+                tts.set_engine ('mary')
+                tts.set_voice ('bits3')
+                tts.say_ipa(ipas)
+                lex_entry['ipa'] = ipas
+
+            # speak de mary unitsel 
+            elif c == ord('p'):
+        
+                if len(lex_entry['ipa']) == 0:
+                    continue
+        
+                ipas = lex_entry['ipa']
+
+                tts.set_locale ('de')
+                tts.set_engine ('mary')
+                tts.set_voice ('bits3')
+
+                tts.say_ipa(ipas)
+
+            # speak de mary hsmm
+            elif c == ord('o'):
+        
+                if len(lex_entry['ipa']) == 0:
+                    continue
+        
+                ipas = lex_entry['ipa']
+
+                tts.set_locale ('de')
+                tts.set_engine ('mary')
+                tts.set_voice ('dfki-pavoque-neutral-hsmm')
+
+                tts.say_ipa(ipas)
+
+            # speak fr mary hsmm
+            elif c == ord('i'):
+       
+                if len(lex_entry['ipa']) == 0:
+                    continue
+        
+                ipas = lex_entry['ipa']
+
+                tts.set_locale ('fr')
+                tts.set_engine ('mary')
+                tts.set_voice ('pierre-voice-hsmm')
+
+                tts.say_ipa(ipas)
+       
+            # speak en mary hsmm
+            elif c == ord('u'):
+        
+                ipas = lex_entry['ipa']
+
+                tts.set_locale ('en-US')
+                tts.set_engine ('mary')
+                tts.set_voice ('cmu-rms-hsmm')
+
+                tts.say_ipa(ipas)
+       
+            # edit token
+            elif c == ord('t'):
+
+                token = misc.edit_popup(stdscr, ' Token ', '')
+
+                lex_set_token (token)
+
+            # edit XS
+            elif c == ord('e'):
+        
+                ipas = lex_entry['ipa']
+
+                xs = ipa2xsampa (lex_token, ipas, stress_to_vowels=False)
+
+                xs = misc.edit_popup(stdscr, ' X-SAMPA ', xs)
+
+                ipas = xsampa2ipa (lex_token, xs)
+        
+                lex_entry['ipa'] = ipas
+
+        except:
+            logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
+
+#
+# init
+#
+
+misc.init_app(PROC_TITLE)
 
 #
 # command line
@@ -312,6 +315,9 @@ parser.add_option("-p", "--prompts", dest="promptsfn",
 parser.add_option("-m", "--missing-words", action="store_true", dest="missing_words", 
                   help="only work on submissions that have at least one missing word")
 
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
+                  help="enable debug output")
+
 
 (options, args) = parser.parse_args()
 
@@ -320,21 +326,27 @@ ts_filter = None
 if len(args)==1:
     ts_filter = args[0].decode('utf8')
 
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+else:
+    logging.basicConfig(level=logging.INFO)
+
 #
 # load transcripts
 #
 
-print "loading transcripts..."
+logging.info("loading transcripts...")
 transcripts = Transcripts()
-print "loading transcripts...done."
+logging.info("loading transcripts...done.")
 
 #
 # load lexicon
 #
 
-print "loading lexicon..."
+logging.info("loading lexicon...")
 lex = Lexicon()
-print "loading lexicon...done."
+logging.info("loading lexicon...done.")
 
 #
 # load prompts
@@ -347,7 +359,7 @@ if options.promptsfn:
         for line in promptsf:
             prompt_tokens.extend(tokenize(line))
 
-    print "%s read. %d tokens." % (options.promptsfn, len(prompt_tokens))
+    logging.info("%s read. %d tokens." % (options.promptsfn, len(prompt_tokens)))
 
 #
 # curses
@@ -374,7 +386,7 @@ port        = int(config.get('tts', 'port'))
 # TTS Client
 #
 
-tts = TTSClient (host, port, locale='de', voice='bits3')
+tts = TTSClient (host, port, locale='de', voice='bits3', engine='espeak')
 
 def paint_main(stdscr, cur_ts):
 
@@ -582,18 +594,14 @@ try:
     curses.endwin()
 
     transcripts.save()
-    print "new transcripts saved."
-    print
+    logging.info("new transcripts saved.")
 
     lex.save()
-    print "new lexicon saved."
-    print
+    logging.info("new lexicon saved.")
 
 except:
     curses.nocbreak(); stdscr.keypad(0); curses.echo()
     curses.endwin()
 
-    print u"*** ERROR: Unexpected error:", sys.exc_info()[0]
-    traceback.print_exc()
-    #raise
+    logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
 
