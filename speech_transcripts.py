@@ -65,6 +65,9 @@ class Transcripts(object):
 
                 self.ts[cfn] = v
 
+    def keys(self):
+        return self.ts.keys()
+
     def __len__(self):
         return len(self.ts)
 
