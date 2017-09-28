@@ -177,7 +177,8 @@ os.system(cmd)
 
 lm_pruned_fn = '%s/lm.arpa' % work_dir
 
-cmd = '%s -prune 1e-9 -lm %s -write-lm %s' % (ngram_path, lm_fn, lm_pruned_fn)
+# cmd = '%s -prune 1e-9 -lm %s -write-lm %s' % (ngram_path, lm_fn, lm_pruned_fn)
+cmd = '%s -prune 0.0000001 -lm %s -write-lm %s' % (ngram_path, lm_fn, lm_pruned_fn)
 
 logging.info (cmd)
 
