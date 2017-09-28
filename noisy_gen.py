@@ -233,7 +233,7 @@ for ts in transcripts:
         #        [gain [initial-volume-dB [delay]]]
 
 
-        cmd = 'sox -m "|sox --norm=%f %s/%s %s %s/%s -p compand 0.01,0.2 -90,-10 -5 reverb %f" "|sox --norm=%f %s/%s -p trim %f %f" %s' % \
+        cmd = 'sox -b 16 -r 16000 -m "|sox --norm=%f %s/%s %s %s/%s -p compand 0.01,0.2 -90,-10 -5 reverb %f" "|sox --norm=%f %s/%s -p trim %f %f" %s' % \
               (fg_level, fg_dir, fgfn_1, infn, fg_dir, fgfn_2, reverb_level, bg_level, bg_dir, bgfn, bg_off, fg_len, outfn)
 
         logging.debug('   cmd: %s' % cmd)
