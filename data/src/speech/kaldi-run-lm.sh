@@ -46,7 +46,8 @@ fi
 export LC_ALL=C
 
 #Prepare phoneme data for Kaldi
-utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
+# utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
+utils/prepare_lang.sh data/local/dict "nspc" data/local/lang data/lang
 
 lmdir=data/local/lm
 lang=data/lang_test
