@@ -37,7 +37,7 @@ from nltools                import misc
 from nltools.phonetics      import ipa2xsampa, xsampa2ipa
 from nltools.tokenizer      import tokenize
 from nltools.sequiturclient import sequitur_gen_ipa
-from nltools.tts_client     import TTSClient
+from nltools.tts            import TTS
 
 from speech_transcripts     import Transcripts
 from speech_lexicon         import Lexicon
@@ -384,10 +384,10 @@ host        = config.get('tts', 'host')
 port        = int(config.get('tts', 'port'))
 
 #
-# TTS Client
+# TTS
 #
 
-tts = TTSClient (host, port, locale='de', voice='bits3', engine='espeak')
+tts = TTS (host, port, locale='de', voice='bits3', engine='espeak')
 
 def paint_main(stdscr, cur_ts):
 
