@@ -43,7 +43,8 @@ fi
 echo "Runtime configuration is: nJobs $nJobs, nDecodeJobs $nDecodeJobs. If this is not what you want, edit cmd.sh"
 
 # Prepare phoneme data for Kaldi
-utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
+# utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
+utils/prepare_lang.sh data/local/dict "nspc" data/local/lang data/lang
 
 # At this script level we don't support not running on GPU, as it would be painfully slow.
 # If you want to run without GPU you'd have to call train_tdnn.sh with --gpu false,

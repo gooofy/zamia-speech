@@ -220,9 +220,9 @@ with open (dictfn2, 'w') as dictf:
 
     dictf.write('!SIL SIL\n')
 
-    # FIXME: re-enable once we have noise tokens in our transcripts
+    # FIXME: remove as we have a special nspc word in our dict now
     # dictf.write('<SPOKEN_NOISE> SPN\n')
-    dictf.write('<UNK> SPN\n')
+    # dictf.write('<UNK> SPN\n')
     # dictf.write('<NOISE> NSN\n')
 
     for token in sorted(utt_dict):
