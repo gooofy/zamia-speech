@@ -44,7 +44,8 @@ echo "Runtime configuration is: nJobs $nJobs, nDecodeJobs $nDecodeJobs. If this 
 export LC_ALL=C
 
 #Prepare phoneme data for Kaldi
-utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
+# utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
+utils/prepare_lang.sh data/local/dict "nspc" data/local/lang data/lang
 
 # Now make MFCC features.
 for x in train dev test ; do
