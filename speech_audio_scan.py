@@ -120,13 +120,13 @@ def audio_convert (cfn, subdir, fn, audiodir):
             print "%-20s: converting %s => %s" % (cfn, flacfilename, '/tmp/foo.wav')
             os.system ("flac -s -f -d '%s' -o /tmp/foo.wav" % flacfilename)
             print "%-20s: converting /tmp/foo.wav => %s (16kHz mono)" % (cfn, w16filename)
-            os.system ("sox /tmp/foo.wav -r 16000 -c 1 %s" % w16filename)
+            os.system ("sox /tmp/foo.wav -r 16000 -b 16 -c 1 %s" % w16filename)
             os.system ("rm /tmp/foo.wav")
         
         else:
 
             print "%-20s: converting %s => %s (16kHz mono)" % (cfn, wavfilename, w16filename)
-            os.system ("sox '%s' -r 16000 -c 1 %s" % (wavfilename, w16filename))
+            os.system ("sox '%s' -r 16000 -b 16 -c 1 %s" % (wavfilename, w16filename))
 
     return True
 
