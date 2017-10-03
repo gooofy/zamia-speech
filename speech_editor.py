@@ -37,7 +37,7 @@ from nltools                import misc
 from nltools.phonetics      import ipa2xsampa, xsampa2ipa
 from nltools.tokenizer      import tokenize
 from nltools.sequiturclient import sequitur_gen_ipa
-from nltools.tts_client     import TTSClient
+from nltools.tts            import TTS
 
 from speech_transcripts     import Transcripts
 from speech_lexicon         import Lexicon
@@ -118,9 +118,9 @@ def lex_set_token(token):
 
     global lex, lex_token, lex_entry, lex_base
 
-    tts.set_locale ('de')
-    tts.set_engine ('mary')
-    tts.set_voice ('bits3')
+    tts.locale = 'de'
+    tts.engine = 'mary'
+    tts.voice  = 'bits3'
 
     lex_token = token
     lex_base  = token.split('_')[0]
@@ -167,9 +167,9 @@ def lex_edit(token):
             # generate de-mary
             elif c == ord('g'):
                 
-                tts.set_locale ('de')
-                tts.set_engine ('mary')
-                tts.set_voice ('bits3')
+                tts.locale = 'de'
+                tts.engine = 'mary'
+                tts.voice  = 'bits3'
 
                 ipas = tts.gen_ipa (lex_base)
                 tts.say_ipa(ipas)
@@ -178,24 +178,24 @@ def lex_edit(token):
             # generate de-espeak
             elif c == ord('h'):
                 
-                tts.set_locale ('de')
-                tts.set_engine ('espeak')
-                tts.set_voice  ('de')
+                tts.locale ='de'
+                tts.engine ='espeak'
+                tts.voice  ='de'
                 ipas = tts.gen_ipa (lex_base)
                 lex_entry['ipa'] = ipas
 
-                tts.set_locale ('de')
-                tts.set_engine ('mary')
-                tts.set_voice ('bits3')
+                tts.locale ='de'
+                tts.engine ='mary'
+                tts.voice  ='bits3'
                 tts.say_ipa(ipas)
 
         
             # generate en-mary 
             elif c == ord('l'):
                 
-                tts.set_locale ('en-US')
-                tts.set_engine ('mary')
-                tts.set_voice ('cmu-rms-hsmm')
+                tts.locale ='en-US'
+                tts.engine ='mary'
+                tts.voice  ='cmu-rms-hsmm'
 
                 ipas = tts.gen_ipa (lex_base)
                 tts.say_ipa(ipas)
@@ -204,9 +204,9 @@ def lex_edit(token):
             # generate fr-mary 
             elif c == ord('k'):
                 
-                tts.set_locale ('fr')
-                tts.set_engine ('mary')
-                tts.set_voice ('upmc-pierre-hsmm')
+                tts.locale ='fr'
+                tts.engine ='mary'
+                tts.voice  ='upmc-pierre-hsmm'
 
                 ipas = tts.gen_ipa (lex_base)
                 tts.say_ipa(ipas)
@@ -216,9 +216,9 @@ def lex_edit(token):
             elif c == ord('j'):
                 
                 ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
-                tts.set_locale ('de')
-                tts.set_engine ('mary')
-                tts.set_voice ('bits3')
+                tts.locale ='de'
+                tts.engine ='mary'
+                tts.voice  ='bits3'
                 tts.say_ipa(ipas)
                 lex_entry['ipa'] = ipas
 
@@ -230,9 +230,9 @@ def lex_edit(token):
         
                 ipas = lex_entry['ipa']
 
-                tts.set_locale ('de')
-                tts.set_engine ('mary')
-                tts.set_voice ('bits3')
+                tts.locale = 'de'
+                tts.engine = 'mary'
+                tts.voice  = 'bits3'
 
                 tts.say_ipa(ipas)
 
@@ -244,9 +244,9 @@ def lex_edit(token):
         
                 ipas = lex_entry['ipa']
 
-                tts.set_locale ('de')
-                tts.set_engine ('mary')
-                tts.set_voice ('dfki-pavoque-neutral-hsmm')
+                tts.locale = 'de'
+                tts.engine = 'mary'
+                tts.voice  = 'dfki-pavoque-neutral-hsmm'
 
                 tts.say_ipa(ipas)
 
@@ -258,9 +258,9 @@ def lex_edit(token):
         
                 ipas = lex_entry['ipa']
 
-                tts.set_locale ('fr')
-                tts.set_engine ('mary')
-                tts.set_voice ('pierre-voice-hsmm')
+                tts.locale = 'fr'
+                tts.engine = 'mary'
+                tts.voice  = 'pierre-voice-hsmm'
 
                 tts.say_ipa(ipas)
        
@@ -269,9 +269,9 @@ def lex_edit(token):
         
                 ipas = lex_entry['ipa']
 
-                tts.set_locale ('en-US')
-                tts.set_engine ('mary')
-                tts.set_voice ('cmu-rms-hsmm')
+                tts.locale = 'en-US'
+                tts.engine = 'mary'
+                tts.voice  = 'cmu-rms-hsmm'
 
                 tts.say_ipa(ipas)
        
@@ -384,10 +384,10 @@ host        = config.get('tts', 'host')
 port        = int(config.get('tts', 'port'))
 
 #
-# TTS Client
+# TTS
 #
 
-tts = TTSClient (host, port, locale='de', voice='bits3', engine='espeak')
+tts = TTS (host, port, locale='de', voice='bits3', engine='espeak')
 
 def paint_main(stdscr, cur_ts):
 

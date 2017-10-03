@@ -30,7 +30,7 @@ import locale
 from optparse           import OptionParser
 
 from nltools            import misc
-from nltools.tts_client import TTSClient
+from nltools.tts        import TTS
 from speech_transcripts import Transcripts
 
 def play_wav(cfn):
@@ -102,10 +102,10 @@ host        = config.get('tts', 'host')
 port        = int(config.get('tts', 'port'))
 
 #
-# TTS Client
+# TTS
 #
 
-tts = TTSClient (host, port, locale='de', voice='bits3')
+tts = TTS (host, port, locale='de', voice='bits3')
 
 #
 # count
