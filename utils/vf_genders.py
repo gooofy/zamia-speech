@@ -110,5 +110,5 @@ for submission in os.listdir (VFDIR):
 
 for speaker in sorted(gender_map):
 
-    print '%-20s: %s' % (speaker, gender_map[speaker])
+    print '%s %s' % (speaker, gender_map[speaker])
 
