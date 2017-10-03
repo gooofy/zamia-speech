@@ -146,7 +146,12 @@ for cfn in transcripts:
     print '%5d/%5d' % (cnt, num_unk), ts['spk'], cfn
     play_wav(cfn)
 
-    spk2gender[ts['spk']] = raw_input('m/f >')
+    reply = raw_input('m/f/q >')
+
+    if reply == 'q' or reply=='Q':
+        break
+
+    spk2gender[ts['spk']] = reply
 
     with open(SPK2GENDERFN, 'w') as f:
 
