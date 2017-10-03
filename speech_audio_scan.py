@@ -77,6 +77,7 @@ if lang == 'de':
 elif lang == 'en':
 
     scan_dirs.append(config.get("speech", "vf_audiodir_en"))
+    scan_dirs.append(config.get("speech", "librivoxdir"))
 
     wav16_dir   = config.get("speech", "wav16_dir_en")
 
@@ -117,11 +118,8 @@ def audio_convert (cfn, subdir, fn, audiodir):
                 print "   WAV file '%s' does not exist, neither does FLAC file '%s' => skipping submission." % (wavfilename, flacfilename)
                 return False
 
-            print "%-20s: converting %s => %s" % (cfn, flacfilename, '/tmp/foo.wav')
-            os.system ("flac -s -f -d '%s' -o /tmp/foo.wav" % flacfilename)
-            print "%-20s: converting /tmp/foo.wav => %s (16kHz mono)" % (cfn, w16filename)
-            os.system ("sox /tmp/foo.wav -r 16000 -b 16 -c 1 %s" % w16filename)
-            os.system ("rm /tmp/foo.wav")
+            print "%-20s: converting %s => %s (16kHz mono)" % (cfn, flacfilename, w16filename)
+            os.system ("sox '%s' -r 16000 -b 16 -c 1 %s" % (flacfilename, w16filename))
         
         else:
 
