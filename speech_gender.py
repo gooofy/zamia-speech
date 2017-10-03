@@ -42,7 +42,7 @@ def play_wav(cfn):
     with open(wavfn) as wavf:
         wav = wavf.read()
 
-    tts.play_wav(wav)
+    tts.play_wav(wav, async=True)
 
 #
 # init 
@@ -52,8 +52,8 @@ misc.init_app ('speech_gender')
 
 config = misc.load_config ('.speechrc')
 
-logging.basicConfig(level=logging.DEBUG)
-# logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 #
 # commandline
@@ -90,7 +90,7 @@ print "loading %s ...done." % SPK2GENDERFN
 #
 
 print "loading transcripts..."
-transcripts = Transcripts()
+transcripts = Transcripts(lang=lang)
 print "loading transcripts...done."
 
 #
@@ -119,13 +119,16 @@ num_unk = 0
 for cfn in transcripts:
 
     ts = transcripts[cfn]
+    spk = ts['spk']
 
-    if ts['spk'] in known:
+    if spk in known:
         continue
 
     num_unk += 1
 
-    known.add(ts['spk'])
+    print '%5d %s' % (num_unk, spk)
+
+    known.add(spk)
 
 #
 # main 
@@ -140,7 +143,7 @@ for cfn in transcripts:
         continue
 
     cnt += 1
-    print '%5d/%5d' % (cnt, num_unk), ts['spk']
+    print '%5d/%5d' % (cnt, num_unk), ts['spk'], cfn
     play_wav(cfn)
 
     spk2gender[ts['spk']] = raw_input('m/f >')
@@ -151,5 +154,4 @@ for cfn in transcripts:
             f.write('%s %s\n' % (spk, spk2gender[spk]))
 
     print "%s written." % SPK2GENDERFN
-
 
