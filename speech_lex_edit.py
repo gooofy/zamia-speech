@@ -99,15 +99,15 @@ def lex_gen_ipa (locale, engine, voice, speak=False):
         ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
     
     else:
-        tts.set_locale (locale)
-        tts.set_engine (engine)
-        tts.set_voice  (voice)
+        tts.locale = locale
+        tts.engine = engine
+        tts.voice  = voice
         ipas = tts.gen_ipa (lex_base)
 
     if speak:
-        tts.set_locale ('de')
-        tts.set_engine ('mary')
-        tts.set_voice  ('dfki-pavoque-neutral-hsmm')
+        tts.locale = 'de'
+        tts.engine = 'mary'
+        tts.voice  = 'dfki-pavoque-neutral-hsmm'
         tts.say_ipa(ipas, async=True)
 
     return ipas
@@ -133,9 +133,9 @@ def lex_set_token(token):
 
     ipas = lex_entry['ipa']
 
-    tts.set_locale ('de')
-    tts.set_engine ('mary')
-    tts.set_voice ('dfki-pavoque-neutral-hsmm')
+    tts.locale ='de'
+    tts.engine ='mary'
+    tts.voice  ='dfki-pavoque-neutral-hsmm'
     tts.say_ipa(ipas, async=True)
 
     lex_gen['de-mary']     = lex_gen_ipa('de', 'mary',     'bits3')
@@ -245,9 +245,9 @@ try:
         # generate en-mary 
         elif c == ord('l'):
             
-            tts.set_locale ('en-US')
-            tts.set_engine ('mary')
-            tts.set_voice ('cmu-rms-hsmm')
+            tts.locale ='en-US'
+            tts.engine ='mary'
+            tts.voice  ='cmu-rms-hsmm'
 
             ipas = tts.gen_ipa (lex_base)
             tts.say_ipa(ipas, async=True)
@@ -256,9 +256,9 @@ try:
         # generate fr-mary 
         elif c == ord('k'):
             
-            tts.set_locale ('fr')
-            tts.set_engine ('mary')
-            tts.set_voice ('upmc-pierre-hsmm')
+            tts.locale ='fr'
+            tts.engine ='mary'
+            tts.voice  ='upmc-pierre-hsmm'
 
             ipas = tts.gen_ipa (lex_base)
             tts.say_ipa(ipas, async=True)
@@ -276,9 +276,9 @@ try:
     
             ipas = lex_entry['ipa']
 
-            tts.set_locale ('de')
-            tts.set_engine ('mary')
-            tts.set_voice ('bits3')
+            tts.locale ='de'
+            tts.engine ='mary'
+            tts.voice  ='bits3'
 
             tts.say_ipa(ipas, async=True)
 
@@ -290,9 +290,9 @@ try:
     
             ipas = lex_entry['ipa']
 
-            tts.set_locale ('de')
-            tts.set_engine ('mary')
-            tts.set_voice ('dfki-pavoque-neutral-hsmm')
+            tts.locale = 'de'
+            tts.engine = 'mary'
+            tts.voice  = 'dfki-pavoque-neutral-hsmm'
 
             tts.say_ipa(ipas, async=True)
 
@@ -304,9 +304,9 @@ try:
     
             ipas = lex_entry['ipa']
 
-            tts.set_locale ('fr')
-            tts.set_engine ('mary')
-            tts.set_voice ('upmc-pierre-hsmm')
+            tts.locale ='fr'
+            tts.engine ='mary'
+            tts.voice  ='upmc-pierre-hsmm'
 
             tts.say_ipa(ipas, async=True)
    
@@ -315,9 +315,9 @@ try:
     
             ipas = lex_entry['ipa']
 
-            tts.set_locale ('en-US')
-            tts.set_engine ('mary')
-            tts.set_voice ('cmu-rms-hsmm')
+            tts.locale = 'en-US'
+            tts.engine = 'mary'
+            tts.voice  = 'cmu-rms-hsmm'
 
             tts.say_ipa(ipas, async=True)
    
