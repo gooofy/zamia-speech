@@ -27,9 +27,9 @@ import logging
 import traceback
 import locale
 
-from optparse import OptionParser
+from optparse           import OptionParser
 
-from nltools import misc
+from nltools            import misc
 from nltools.tts_client import TTSClient
 from speech_transcripts import Transcripts
 
@@ -55,7 +55,20 @@ config = misc.load_config ('.speechrc')
 logging.basicConfig(level=logging.DEBUG)
 # logging.basicConfig(level=logging.INFO)
 
-SPK2GENDERFN = 'data/src/speech/de/spk2gender'
+#
+# commandline
+#
+
+parser = OptionParser("usage: %prog [options] ")
+
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+           help="language (default: de)")
+
+(options, args) = parser.parse_args()
+
+lang = options.lang
+
+SPK2GENDERFN = 'data/src/speech/%s/spk2gender' % lang
 
 #
 # load spk2gender
@@ -84,7 +97,7 @@ print "loading transcripts...done."
 # config
 #
 
-wav16_dir   = config.get("speech", "wav16_dir_de")
+wav16_dir   = config.get("speech", "wav16_dir_%s" % lang)
 host        = config.get('tts', 'host')
 port        = int(config.get('tts', 'port'))
 
