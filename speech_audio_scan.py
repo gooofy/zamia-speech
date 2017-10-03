@@ -138,6 +138,10 @@ def scan_audiodir(audiodir):
 
     for subdir in os.listdir(audiodir):
 
+        if not '-' in subdir:
+            logging.warn('skipping %s as it does not match our naming scheme' % subdir)
+            continue
+
         logging.debug ("scanning %s in %s" % (subdir, audiodir))
 
         subdirfn  = '%s/%s'   % (audiodir, subdir)
