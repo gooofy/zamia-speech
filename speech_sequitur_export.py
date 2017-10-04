@@ -27,16 +27,11 @@ import logging
 import codecs
 import traceback
 
-from nltools                import misc
-from nltools.phonetics      import ipa2xsampa
+from optparse           import OptionParser
+from nltools            import misc
+from nltools.phonetics  import ipa2xsampa
 
-from speech_lexicon import Lexicon
-
-LANG    = 'de'
-WORKDIR = 'data/dst/speech/%s/sequitur' % LANG
-
-logging.basicConfig(level=logging.DEBUG)
-# logging.basicConfig(level=logging.INFO)
+from speech_lexicon     import Lexicon
 
 #
 # init terminal
@@ -45,22 +40,43 @@ logging.basicConfig(level=logging.DEBUG)
 misc.init_app ('speech_sequitur_export')
 
 #
+# commandline
+#
+
+parser = OptionParser("usage: %prog [options] ")
+
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+           help="language (default: de)")
+parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
+                   help="verbose output")
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+lang = options.lang
+workdir = 'data/dst/speech/%s/sequitur' % lang
+
+
+#
 # load lexicon
 #
 
-print "loading lexicon..."
-lex = Lexicon()
-print "loading lexicon...done."
+logging.info("loading lexicon...")
+lex = Lexicon(lang=lang)
+logging.info("loading lexicon...done.")
 
 #
 # export
 #
 
-misc.mkdirs(WORKDIR)
+misc.mkdirs(workdir)
 
-with codecs.open('%s/train.lex' % WORKDIR, 'w', 'utf8') as trainf, \
-     codecs.open('%s/test.lex'  % WORKDIR, 'w', 'utf8') as testf, \
-     codecs.open('%s/all.lex'  % WORKDIR, 'w', 'utf8') as allf :
+with codecs.open('%s/train.lex' % workdir, 'w', 'utf8') as trainf, \
+     codecs.open('%s/test.lex'  % workdir, 'w', 'utf8') as testf, \
+     codecs.open('%s/all.lex'  % workdir, 'w', 'utf8') as allf :
 
     cnt = 0
 
@@ -78,4 +94,5 @@ with codecs.open('%s/train.lex' % WORKDIR, 'w', 'utf8') as trainf, \
 
         cnt += 1
 
+logging.info('sequitur workdir %s done.' % workdir)
 

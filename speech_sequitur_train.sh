@@ -1,7 +1,14 @@
 #!/bin/bash
 
+if [ $# -ne 1 ] ; then
+    echo "usage: $0 lang"
+    exit 1
+fi
+
+LANG=$1
+
 SEQUITUR_ROOT=/apps/sequitur
-WORKDIR=data/dst/speech/de/sequitur
+WORKDIR=data/dst/speech/${LANG}/sequitur
 
 export PYTHONPATH="$SEQUITUR_ROOT/lib64/python2.7/site-packages/:$PYTHONPATH"
 export PATH="$SEQUITUR_ROOT/bin:$PATH"
