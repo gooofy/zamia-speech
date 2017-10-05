@@ -41,9 +41,9 @@ from speech_transcripts     import Transcripts
 
 PROC_TITLE      = 'noisy_gen'
 
-LANG            = 'de'
+LANG            = 'en'
 DEBUG_LIMIT     = 0
-OUT_DIR         = 'tmp/noisy_de' # FIXME
+OUT_DIR         = 'tmp/noisy_%s' % LANG # FIXME
 FRAMERATE       = 16000
 MIN_QUALITY     = 2
 
@@ -76,7 +76,7 @@ else:
 #
 
 logging.info("loading transcripts...")
-transcripts = Transcripts()
+transcripts = Transcripts(lang=LANG)
 logging.info("loading transcripts...done.")
 
 #
