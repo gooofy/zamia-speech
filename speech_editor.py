@@ -313,6 +313,9 @@ parser = OptionParser("usage: %prog [options] [filter])")
 parser.add_option("-p", "--prompts", dest="promptsfn",
                   help="read prompts from FILE", metavar="FILE")
 
+parser.add_option("-l", "--lang", dest="lang", type = "str", default='de',
+                  help="language (default: de)")
+
 parser.add_option("-m", "--missing-words", action="store_true", dest="missing_words", 
                   help="only work on submissions that have at least one missing word")
 
@@ -338,7 +341,7 @@ else:
 #
 
 logging.info("loading transcripts...")
-transcripts = Transcripts()
+transcripts = Transcripts(lang=options.lang)
 logging.info("loading transcripts...done.")
 
 #
@@ -346,7 +349,7 @@ logging.info("loading transcripts...done.")
 #
 
 logging.info("loading lexicon...")
-lex = Lexicon()
+lex = Lexicon(lang=options.lang)
 logging.info("loading lexicon...done.")
 
 #

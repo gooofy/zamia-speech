@@ -23,47 +23,59 @@
 
 # quality: 0=not reviewed, 1=poor, 2=fair, 3=good
 
+import os
+import codecs
+
 from nltools.tokenizer import tokenize
 
+TSDIR    = 'data/src/speech/%s'
+MAXLINES = 100000
+ 
 class Transcripts(object):
 
     def __init__(self, lang='de'):
 
-        self.lang = lang
-        self.ts   = {}
+        self.lang  = lang
+        self.ts    = {}
+        self.tsdir = TSDIR % lang
 
-        with open('data/src/speech/%s/transcripts.csv' % self.lang, 'r') as f:
+        for tsfn in os.listdir(self.tsdir):
 
-            while True:
+            if not tsfn.startswith('transcripts') or not tsfn.endswith('.csv'):
+                continue
 
-                line = f.readline().rstrip().decode('utf8')
+            with codecs.open('%s/%s' % (self.tsdir, tsfn), 'r', 'utf8') as f:
 
-                if not line:
-                    break
+                while True:
 
-                parts = line.split(';')
-                # print repr(parts)
+                    line = f.readline().rstrip()
 
-                if len(parts) != 6:
-                    raise Exception("***ERROR in transcripts: %s" % line)
-                    
-                cfn     = parts[0]
-                dirfn   = parts[1]
-                audiofn = parts[2]
-                prompt  = parts[3]
-                ts      = parts[4]
-                quality = int(parts[5])
-                spk     = cfn.split('-')[0]
+                    if not line:
+                        break
 
-                v = { 'cfn'     : cfn,
-                      'dirfn'   : dirfn,
-                      'audiofn' : audiofn,
-                      'prompt'  : prompt,
-                      'ts'      : ts,
-                      'quality' : quality,
-                      'spk'     : spk}
+                    parts = line.split(';')
+                    # print repr(parts)
 
-                self.ts[cfn] = v
+                    if len(parts) != 6:
+                        raise Exception("***ERROR in transcripts: %s" % line)
+                        
+                    cfn     = parts[0]
+                    dirfn   = parts[1]
+                    audiofn = parts[2]
+                    prompt  = parts[3]
+                    ts      = parts[4]
+                    quality = int(parts[5])
+                    spk     = cfn.split('-')[0]
+
+                    v = { 'cfn'     : cfn,
+                          'dirfn'   : dirfn,
+                          'audiofn' : audiofn,
+                          'prompt'  : prompt,
+                          'ts'      : ts,
+                          'quality' : quality,
+                          'spk'     : spk}
+
+                    self.ts[cfn] = v
 
     def keys(self):
         return self.ts.keys()
@@ -84,10 +96,25 @@ class Transcripts(object):
         return key in self.ts
 
     def save(self):
-        with open('data/src/speech/%s/transcripts.csv' % self.lang, 'w') as f:
-            for cfn in sorted(self.ts):
-                v = self.ts[cfn]
-                f.write((u"%s;%s;%s;%s;%s;%d\n" % (cfn, v['dirfn'], v['audiofn'], v['prompt'], v['ts'], v['quality'])).encode('utf8'))
+
+        cnt = 0
+        fn = self.tsdir + '/transcripts.csv'
+        # f = codecs.open(fn, 'w', 'utf8')
+        f = None
+
+        for cfn in sorted(self.ts):
+            v = self.ts[cfn]
+
+            if cnt % MAXLINES == 0:
+                if f:
+                    f.close()
+                fn = self.tsdir + '/transcripts_%02d.csv' % (cnt / MAXLINES)
+                f = codecs.open(fn, 'w', 'utf8')
+
+            f.write(u"%s;%s;%s;%s;%s;%d\n" % (cfn, v['dirfn'], v['audiofn'], v['prompt'], v['ts'], v['quality']))
+            cnt += 1
+
+        f.close()
 
     def split(self, p_test=5, limit=0, min_quality=2, add_all=False):
 
