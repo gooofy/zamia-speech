@@ -361,7 +361,7 @@ prompt_token_idx = 0
 if options.promptsfn:
     with codecs.open(options.promptsfn, 'r', 'utf8') as promptsf:
         for line in promptsf:
-            prompt_tokens.extend(tokenize(line))
+            prompt_tokens.extend(tokenize(line, lang=options.lang))
 
     logging.info("%s read. %d tokens." % (options.promptsfn, len(prompt_tokens)))
 
@@ -382,7 +382,7 @@ stdscr.keypad(1)
 
 config = misc.load_config('.speechrc')
 
-wav16_dir   = config.get("speech", "wav16_dir_de")
+wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
 host        = config.get('tts', 'host')
 port        = int(config.get('tts', 'port'))
 
@@ -426,7 +426,7 @@ def paint_main(stdscr, cur_ts):
     stdscr.insstr(3, 0, ts['prompt'].encode('utf8'))
 
     if len(ts['ts']) == 0:
-        ts['ts'] = ' '.join(tokenize(ts['prompt']))
+        ts['ts'] = ' '.join(tokenize(ts['prompt'], lang=options.lang))
 
     cy = 5
     cx = 0
@@ -501,7 +501,7 @@ try:
 
                 t = ts['ts']
                 if len(t) == 0:
-                    t = ' '.join(tokenize(ts['prompt']))
+                    t = ' '.join(tokenize(ts['prompt'], lang=options.lang))
                     
                 for token in t.split(' '):
 
@@ -569,7 +569,7 @@ try:
 
                 prompt_token_idx -= 1
 
-                cur_tokens = tokenize(ts['ts'])
+                cur_tokens = tokenize(ts['ts'], lang=options.lang)
 
                 if len(cur_tokens)>1:
                     ts['prompt'] = ' '.join(cur_tokens[0:len(cur_tokens)-1])
@@ -588,7 +588,7 @@ try:
                 if missing_token:
                     t = missing_token
                 else:
-                    t = tokenize(ts['ts'])[0]
+                    t = tokenize(ts['ts'], lang=options.lang)[0]
 
                 lex_edit(t)
 
