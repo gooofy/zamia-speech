@@ -30,6 +30,7 @@ import curses
 import curses.textpad
 import locale
 import codecs
+import random
 
 from optparse               import OptionParser
 
@@ -59,9 +60,26 @@ def play_wav(ts):
 
 def goto_next_ts(cur_ts):
 
-    global edit_ts
+    global edit_ts, options
 
-    cur_ts = (cur_ts + 1) % len(edit_ts)
+    if options.random:
+
+        # still un-reviewed ts left?
+        ur = False
+        for ts in edit_ts:
+            if ts['quality']==0:
+                ur = True
+                break
+
+        if ur:
+            cur_ts = random.randint(0, len(edit_ts)-1)
+            while edit_ts[cur_ts]['quality'] > 0:
+                cur_ts = (cur_ts + 1) % len(edit_ts)
+
+
+    else:
+        cur_ts = (cur_ts + 1) % len(edit_ts)
+
     missing_token = paint_main(stdscr, cur_ts)
     ts = edit_ts[cur_ts]
     play_wav(ts)
@@ -319,6 +337,9 @@ parser.add_option("-l", "--lang", dest="lang", type = "str", default='de',
 parser.add_option("-m", "--missing-words", action="store_true", dest="missing_words", 
                   help="only work on submissions that have at least one missing word")
 
+parser.add_option("-r", "--random", action="store_true", dest="random", 
+                  help="random mode")
+
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
 
@@ -513,8 +534,11 @@ try:
 
             else:
                 edit_ts.append(ts)
-
-        cur_ts = 0
+        
+        if options.random and len(edit_ts)>0:
+            cur_ts = random.randint(0, len(edit_ts)-1)
+        else:
+            cur_ts = 0
 
     if len(edit_ts) == 0:
         raise Exception ('no submissions found!')
