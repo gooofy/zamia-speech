@@ -143,7 +143,8 @@ for cfn in transcripts:
         continue
 
     cnt += 1
-    print '%5d/%5d' % (cnt, num_unk), ts['spk'], cfn
+    wavfn = '%s/%s.wav' % (wav16_dir, cfn)
+    print '%5d/%5d' % (cnt, num_unk), ts['spk'], wavfn
     play_wav(cfn)
 
     reply = raw_input('m/f/q >')
