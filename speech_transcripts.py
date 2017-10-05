@@ -23,6 +23,7 @@
 
 # quality: 0=not reviewed, 1=poor, 2=fair, 3=good
 
+<<<<<<< HEAD
 import os
 import codecs
 
@@ -31,10 +32,15 @@ from nltools.tokenizer import tokenize
 TSDIR    = 'data/src/speech/%s'
 MAXLINES = 100000
  
+=======
+from nltools.tokenizer import tokenize
+
+>>>>>>> a4ff60894e0924350603a0c36fadcd49a26d485b
 class Transcripts(object):
 
     def __init__(self, lang='de'):
 
+<<<<<<< HEAD
         self.lang  = lang
         self.ts    = {}
         self.tsdir = TSDIR % lang
@@ -76,6 +82,43 @@ class Transcripts(object):
                           'spk'     : spk}
 
                     self.ts[cfn] = v
+=======
+        self.lang = lang
+        self.ts   = {}
+
+        with open('data/src/speech/%s/transcripts.csv' % self.lang, 'r') as f:
+
+            while True:
+
+                line = f.readline().rstrip().decode('utf8')
+
+                if not line:
+                    break
+
+                parts = line.split(';')
+                # print repr(parts)
+
+                if len(parts) != 6:
+                    raise Exception("***ERROR in transcripts: %s" % line)
+                    
+                cfn     = parts[0]
+                dirfn   = parts[1]
+                audiofn = parts[2]
+                prompt  = parts[3]
+                ts      = parts[4]
+                quality = int(parts[5])
+                spk     = cfn.split('-')[0]
+
+                v = { 'cfn'     : cfn,
+                      'dirfn'   : dirfn,
+                      'audiofn' : audiofn,
+                      'prompt'  : prompt,
+                      'ts'      : ts,
+                      'quality' : quality,
+                      'spk'     : spk}
+
+                self.ts[cfn] = v
+>>>>>>> a4ff60894e0924350603a0c36fadcd49a26d485b
 
     def keys(self):
         return self.ts.keys()
@@ -96,6 +139,7 @@ class Transcripts(object):
         return key in self.ts
 
     def save(self):
+<<<<<<< HEAD
 
         cnt = 0
         fn = self.tsdir + '/transcripts.csv'
@@ -115,6 +159,12 @@ class Transcripts(object):
             cnt += 1
 
         f.close()
+=======
+        with open('data/src/speech/%s/transcripts.csv' % self.lang, 'w') as f:
+            for cfn in sorted(self.ts):
+                v = self.ts[cfn]
+                f.write((u"%s;%s;%s;%s;%s;%d\n" % (cfn, v['dirfn'], v['audiofn'], v['prompt'], v['ts'], v['quality'])).encode('utf8'))
+>>>>>>> a4ff60894e0924350603a0c36fadcd49a26d485b
 
     def split(self, p_test=5, limit=0, min_quality=2, add_all=False):
 
