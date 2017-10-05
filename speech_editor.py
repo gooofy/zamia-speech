@@ -326,7 +326,7 @@ misc.init_app(PROC_TITLE)
 # command line
 #
 
-parser = OptionParser("usage: %prog [options] [filter])")
+parser = OptionParser("usage: %prog [options] [filters])")
 
 parser.add_option("-p", "--prompts", dest="promptsfn",
                   help="read prompts from FILE", metavar="FILE")
@@ -346,10 +346,10 @@ parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
 
 (options, args) = parser.parse_args()
 
-ts_filter = None
+ts_filters = []
 
-if len(args)==1:
-    ts_filter = args[0].decode('utf8')
+for a in args:
+    ts_filters.append(a.decode('utf8'))
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
@@ -514,7 +514,12 @@ try:
         if ts['quality'] != 0:
             continue
 
-        if not ts_filter or (ts_filter in cfn) or (ts_filter in ts['prompt'].lower()):
+        tsf_matched = False
+        for tsf in ts_filters:
+            if (tsf in cfn) or (tsf in ts['prompt'].lower()):
+                tsf_matched = True 
+
+        if not ts_filters or tsf_matched:
 
             if options.missing_words:
 
