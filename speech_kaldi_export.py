@@ -88,11 +88,11 @@ wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
 #
 
 logging.info ( "loading lexicon...")
-lex = Lexicon()
+lex = Lexicon(lang=options.lang)
 logging.info ( "loading lexicon...done.")
 
 logging.info ( "loading transcripts...")
-transcripts = Transcripts()
+transcripts = Transcripts(lang=options.lang)
 ts_all, ts_train, ts_test = transcripts.split(limit=options.debug, add_all=options.add_all)
 logging.info ( "loading transcripts (%d train, %d test) ...done." % (len(ts_train), len(ts_test)))
 
