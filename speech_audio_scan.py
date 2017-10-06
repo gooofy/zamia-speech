@@ -77,6 +77,7 @@ if lang == 'de':
 elif lang == 'en':
 
     scan_dirs.append(config.get("speech", "vf_audiodir_en"))
+    scan_dirs.append(config.get("speech", "extrasdir_en"))
     scan_dirs.append(config.get("speech", "librivoxdir"))
 
     wav16_dir   = config.get("speech", "wav16_dir_en")
