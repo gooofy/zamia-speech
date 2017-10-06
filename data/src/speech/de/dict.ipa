@@ -1496,6 +1496,7 @@ apprentice;'ʔə-prɛ-ntɪs
 april;ʔap-'ʁɪl
 apropos;ʔapʁo-'poː
 aquakultur;ʔa-'kvaː-kʊl-tuːɐ
+aquarium;ʔa-'kvaː-ʁiː-ʊm
 aquarius;ʔa-'kvaː-ʁiː-ʊs
 aquilinae;'ak-viː-liː-nɛː
 arabisch;ʔa-'ʁaː-bɪʃ
@@ -6081,6 +6082,7 @@ drohte;'dʁoː-tə
 drohten;'dʁoː-tən
 drohung;'dʁoː-ʊɳ
 drohungen;'dʁoː-ʊɳ-ən
+drollig;'dʁɔ-lɪç
 dromedar;'dʁoː-me-daːɐ
 dromedars;'dʁoː-me-daːɐs
 dromedarzielobjektes;'dʁoː-me-daːɐ-tsiːl-ʔɔb-'jɛk-təs
@@ -8980,6 +8982,8 @@ fingerhuts;'fɪ-ɳɐ-huːts
 fingern;'fɪ-ɳɐn
 fingerspitzen;'fɪ-ɳɐ-ʃpɪ-tsən
 fingerung;'fɪɳ-ə-ʁʊɳ
+fink;'fɪɳk
+finken;'fɪɳ-kən
 finnische;'fɪ-nɪ-ʃə
 finnischen;'fɪn-ɪʃ-ən
 finnland;'fɪn-lant
@@ -12284,6 +12288,7 @@ halts;'halts
 haltung;'hal-tʊɳ
 hamburg;'ham-bʊɐk
 hamburger;'ham-bʊɐ-gɐ
+hamster;'haːms-tɐ
 hand;'hant
 handarbeit;'hant-ʔaɐ-baɪt
 handarbeiten;'hant-ʔaɐ-baɪ-tən
@@ -12385,7 +12390,9 @@ hartnäckigen;'haɐ-tnɛ-kɪ-gən
 hartnäckiger;'haɐ-tnɛ-kɪ-gɐ
 harzgeruch;'haɐts-gə-ʁʊç
 hasche;'haʃ-ə
+hase;'haː-zə
 haselnussbüsche;'haː-zəl-'nʊs-'bʏʃ-ə
+hasen;'haː-zən
 hash;'haʃ
 hash_1;'hɛːʃ
 haspen;'has-pən
@@ -12487,6 +12494,8 @@ hausrat;'haʊs-ʁaːt
 hausregel;'haʊs-ʁeː-gəl
 hausrock;'haʊs-ʁɔk
 hausstande;'haʊs-'ʃtan-də
+haustier;'haʊs-tiːɐ
+haustiere;'haʊs-tiː-ʁə
 haustür;'haʊs-tʏɐ
 haustürglocke;'haʊs-tʏɐ-glɔ-kə
 hauswesen;'haʊs-veː-zən
@@ -14590,6 +14599,7 @@ kanalbelegung;ka-'naːl-bə-leː-gʊɳ
 kanals;ka-'naːls
 kanapee;'ka-naː-peː
 kanapees;'ka-naː-peːs
+kanarienvogel;'ka-na-ʁiː-ɛn-foː-gəl
 kandidat;kan-diː-'daːt
 kandidaten;kan-diː-'daː-tən
 kandidatin;kan-diː-'daː-tɪn
@@ -15017,6 +15027,7 @@ kleinste;'klaɪns-tə
 kleinsten;'klaɪn-stən
 kleinstlebewesen;'klaɪnst-'leː-bə-veː-zən
 kleinsttransportern;'klaɪnst-tʁans-pɔɐ-tɐn
+kleintiere;'klaɪn-tiː-ʁə
 kleinvorhaben;'klaɪn-'foːɐ-haː-bən
 kleister;'klaɪs-tɐ
 klemme;'klɛ-mə
@@ -17328,6 +17339,7 @@ meeresbodens;'meː-ʁɛs-boː-dəns
 meeresbrandung;'meː-ʁɛs-bʁan-dʊɳ
 meeresgespenster;'meː-ʁəs-gə-'ʃpɛns-tɐ
 meergespenster;'meːɐ-gə-'ʃpɛns-tɐ
+meerschweinchen;'meːɐʃ-vaɪn-çən
 megamind;'mɛga-maɪnd
 mehl;'meːl
 mehlbeeren;'meːl-beː-ʁən
@@ -19328,6 +19340,7 @@ paar;'paːɐ
 paaren;'paː-ʁən
 paares;'paː-ʁəs
 paarmal;'paːɐ-maːl
+paarweise;'paːɐ-vaɪ-zə
 pack;'pak
 packe;'pa-kə
 packen;'pa-kən
@@ -19355,6 +19368,8 @@ panzer;'pan-tsɐ
 panzram;'pants-ʁaːm
 papa;'pa-paː
 papachen;'pa-paː-çən
+papagei;pa-paː-'gaɪ
+papageien;pa-pa-'gaɪ-ən
 papas;'pa-paːs
 papier;pa-'piːɐ
 papiere;pa-'piːɐ-ʁə
@@ -22353,6 +22368,7 @@ schwanz;'ʃvants
 schwanze;'ʃvan-tsə
 schwanzwirbeln;'ʃvants-vɪʁ-bəln
 schwarm;'ʃvaɐm
+schwarmvögel;'ʃvaɐm-'føː-gəl
 schwarz;'ʃvaɐts
 schwarzbrot;'ʃvaɐ-tsbʁoːt
 schwarze;'ʃvaɐ-tsə
@@ -28909,6 +28925,8 @@ welle;'vɛ-lə
 wellen;'vɛ-lən
 wellenhaar;'vɛ-lən-haːɐ
 wellenschaum;'vɛ-lən-ʃaʊm
+wellensittich;'vɛ-lən-zɪ-tɪç
+wellensittiche;'vɛ-lən-zɪ-tɪ-çə
 welpen;'vɛl-pən
 welser;'vɛl-zɐ
 welt;'vɛlt
