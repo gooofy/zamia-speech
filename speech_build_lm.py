@@ -106,7 +106,7 @@ work_dir = WORKDIR % options.lang
 logging.info ('work_dir: %s' % work_dir)
 
 logging.info ("loading transcripts...")
-transcripts = Transcripts()
+transcripts = Transcripts(lang=options.lang)
 logging.info ("loading transcripts... done.")
 
 #
