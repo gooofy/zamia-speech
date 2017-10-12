@@ -29,21 +29,40 @@ import StringIO
 import ConfigParser
 import wave
 import codecs
+import logging
 
+from optparse           import OptionParser
 from speech_transcripts import Transcripts
-from speech_lexicon import Lexicon
+from speech_lexicon     import Lexicon
+from nltools            import misc
 
-from nltools.phonetics import ipa2xsampa, xsampa2ipa
-from nltools.tokenizer import tokenize
-from nltools import misc
-
-LANG = 'de'
+PROC_TITLE = 'speech_stats'
 
 #
 # init terminal
 #
 
-misc.init_app ('speech_stats')
+misc.init_app (PROC_TITLE)
+
+#
+# command line
+#
+
+parser = OptionParser("usage: %prog [options])")
+
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+                   help="language (default: de)")
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
+                  help="enable debug output")
+
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+else:
+    logging.basicConfig(level=logging.INFO)
 
 #
 # config
@@ -51,31 +70,30 @@ misc.init_app ('speech_stats')
 
 config = misc.load_config('.speechrc')
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % LANG)
+wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
 
 
 #
 # load transcripts
 #
 
-print "loading transcripts..."
-transcripts = Transcripts(lang=LANG)
-print "loading transcripts...done."
+logging.info("loading transcripts...")
+transcripts = Transcripts(lang=options.lang)
+logging.info("loading transcripts...done.")
 
 #
 # load lexicon
 #
 
-print "loading lexicon..."
-lex = Lexicon(lang=LANG)
-print "loading lexicon...done."
+logging.info("loading lexicon...")
+lex = Lexicon(lang=options.lang)
+logging.info("loading lexicon...done.")
 
 #
 # lexicon stats
 #
 
-print
-print "%d lexicon entries." % len(lex)
+logging.info("%d lexicon entries." % len(lex))
 
 #
 # audio stats
@@ -86,8 +104,11 @@ def format_duration(duration):
     h, m = divmod(m, 60)
     return "%3d:%02d:%02d" % (h, m, s)
 
-total_duration = 0.0
+logging.info ('calculating audio duration...')
+
+total_duration   = 0.0
 duration_per_spk = {}
+cnt              = 0
 
 for cfn in transcripts:
 
@@ -117,52 +138,48 @@ for cfn in transcripts:
 
     wavef.close()
 
-print
-print "total duration of all good submissions: %s" % format_duration(total_duration)
-print
-print "good submissions per user:"
-print
+    cnt += 1
+
+    if cnt % 1000 == 0:
+       logging.info ('%6d/%6d: duration=%s' % (cnt, len(transcripts), format_duration(total_duration)))
+
+
+logging.info( "total duration of all good submissions: %s" % format_duration(total_duration))
+logging.info( "good submissions per user:")
 for spk in sorted(duration_per_spk):
-    print "%-42s %s" % (spk, format_duration(duration_per_spk[spk]))
-print
+    logging.info( "%-42s %s" % (spk, format_duration(duration_per_spk[spk])))
 
 #
 # sphinx model stats
 #
 
-print
-with codecs.open('data/dst/speech/%s/cmusphinx_cont/logs/sphinxtrain_run.log' % LANG, 'r', 'utf8') as logf:
+with codecs.open('data/dst/speech/%s/cmusphinx_cont/logs/sphinxtrain_run.log' % options.lang, 'r', 'utf8') as logf:
     for line in logf:
         if 'WORD ERROR RATE' in line:
-            print "cmusphinx cont model: %s" % line.strip()
-print
+            logging.info( "cmusphinx cont model: %s" % line.strip())
 
-print
-with codecs.open('data/dst/speech/%s/cmusphinx_ptm/logs/sphinxtrain_run.log' % LANG, 'r', 'utf8') as logf:
+with codecs.open('data/dst/speech/%s/cmusphinx_ptm/logs/sphinxtrain_run.log' % options.lang, 'r', 'utf8') as logf:
     for line in logf:
         if 'WORD ERROR RATE' in line:
-            print "cmusphinx ptm model: %s" % line.strip()
-print
+            logging.info( "cmusphinx ptm model: %s" % line.strip())
 
 #
 # kaldi model stats
 #
 
-print "kaldi models: "
-with codecs.open('data/dst/speech/%s/kaldi/RESULTS.txt' % LANG, 'r', 'utf8') as logf:
+logging.info( "kaldi models: ")
+with codecs.open('data/dst/speech/%s/kaldi/RESULTS.txt' % options.lang, 'r', 'utf8') as logf:
     for line in logf:
-        print line.strip()
-print
+        logging.info( line.strip())
 
 #
 # sequitur model stats
 #
 
-print "sequitur g2p model:"
-with codecs.open('data/dst/speech/%s/sequitur/model-6.test' % LANG, 'r', 'utf8', 'ignore') as logf:
+logging.info( "sequitur g2p model:")
+with codecs.open('data/dst/speech/%s/sequitur/model-6.test' % options.lang, 'r', 'utf8', 'ignore') as logf:
     for line in logf:
         if not line.startswith('   '):
             continue
-        print line.rstrip()
-print
+        logging.info( line.rstrip())
 
