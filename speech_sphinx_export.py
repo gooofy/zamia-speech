@@ -183,6 +183,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
             phf.write (u'%s\n' % phone)
 
         phf.write (u'SIL\n')
+        phf.write (u'#\n')
 
     logging.info("%s written." % phfn)
 
