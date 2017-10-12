@@ -41,6 +41,7 @@ WORKDIR_CONT = 'data/dst/speech/%s/cmusphinx_cont'
 WORKDIR_PTM  = 'data/dst/speech/%s/cmusphinx_ptm'
 
 NJOBS = 8
+NOISE_WORD = 'nspc'
 
 #
 # init 
@@ -77,11 +78,11 @@ wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
 #
 
 logging.info("loading lexicon...")
-lex = Lexicon()
+lex = Lexicon(lang=options.lang)
 logging.info("loading lexicon...done.")
 
 logging.info("loading transcripts...")
-transcripts = Transcripts()
+transcripts = Transcripts(lang=options.lang)
 ts_all, ts_train, ts_test = transcripts.split(limit=options.debug)
 logging.info("loading transcripts (%d train, %d test) ...done." % (len(ts_train), len(ts_test)))
 
@@ -110,6 +111,10 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
     with codecs.open(fn, 'w', 'utf8') as outf:
 
         for word in lex:
+
+            if word == NOISE_WORD:
+                logging.debug ('skipping noise word')
+                continue
 
             outf.write ('%s\n' % word)
 
@@ -148,6 +153,10 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
         for word in lex:
 
+            if word == NOISE_WORD:
+                logging.debug ('skipping noise word')
+                continue
+
             ipa = lex[word]['ipa']
 
             xs  = ipa2xsampa(word, ipa)
@@ -174,6 +183,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
             phf.write (u'%s\n' % phone)
 
         phf.write (u'SIL\n')
+        phf.write (u'#\n')
 
     logging.info("%s written." % phfn)
 
