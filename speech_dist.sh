@@ -22,12 +22,13 @@ function export_kaldi_nnet3 {
 
     mkdir "$DISTDIR/$AMNAME/$EXPNAME"
 
-    cp data/dst/speech/de/kaldi/exp/nnet3/$EXPNAME/final.mdl   $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/de/kaldi/exp/nnet3/$EXPNAME/cmvn_opts   $DISTDIR/$AMNAME/$EXPNAME/          2>/dev/null 
+    cp data/dst/speech/de/kaldi/exp/nnet3/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/de/kaldi/exp/nnet3/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
 
-    cp data/dst/speech/de/kaldi/exp/nnet3/$GRAPHNAME/HCLG.fst  $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/de/kaldi/exp/nnet3/$GRAPHNAME/words.txt $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/de/kaldi/exp/nnet3/$GRAPHNAME/num_pdfs  $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/de/kaldi/exp/nnet3/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/de/kaldi/exp/nnet3/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/de/kaldi/exp/nnet3/$GRAPHNAME/num_pdfs                 $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/de/kaldi/exp/nnet3/$GRAPHNAME/phones/align_lexicon.int $DISTDIR/$AMNAME/$EXPNAME/
 
 }
 
