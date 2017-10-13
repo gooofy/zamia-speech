@@ -41,6 +41,8 @@ WORKDIR_CONT = 'data/dst/speech/%s/cmusphinx_cont'
 WORKDIR_PTM  = 'data/dst/speech/%s/cmusphinx_ptm'
 
 NJOBS = 8
+
+ENABLE_NOISE_FILLER = False # CMU Sphinx decoding seems to become unstable otherwise
 NOISE_WORD = 'nspc'
 
 #
@@ -112,9 +114,10 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
         for word in lex:
 
-            if word == NOISE_WORD:
-                logging.debug ('skipping noise word')
-                continue
+            if ENABLE_NOISE_FILLER:
+                if word == NOISE_WORD:
+                    logging.debug ('skipping noise word')
+                    continue
 
             outf.write ('%s\n' % word)
 
@@ -141,7 +144,10 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
     # outf.close()
 
     misc.copy_file (sphinxtrain_cfg_fn, '%s/etc/sphinx_train.cfg' % work_dir)
-    misc.copy_file ('data/src/speech/sphinx-voxforge.filler', '%s/etc/voxforge.filler' % work_dir)
+    if ENABLE_NOISE_FILLER:
+        misc.copy_file ('data/src/speech/sphinx-voxforge-noise.filler', '%s/etc/voxforge.filler' % work_dir)
+    else:
+        misc.copy_file ('data/src/speech/sphinx-voxforge.filler', '%s/etc/voxforge.filler' % work_dir)
     misc.copy_file ('data/src/speech/sphinx-feat.params', '%s/etc/feat.params' % work_dir)
 
     # generate dict
@@ -153,9 +159,10 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
         for word in lex:
 
-            if word == NOISE_WORD:
-                logging.debug ('skipping noise word')
-                continue
+            if ENABLE_NOISE_FILLER:
+                if word == NOISE_WORD:
+                    logging.debug ('skipping noise word')
+                    continue
 
             ipa = lex[word]['ipa']
 
@@ -183,7 +190,8 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
             phf.write (u'%s\n' % phone)
 
         phf.write (u'SIL\n')
-        phf.write (u'NSPC\n')
+        if ENABLE_NOISE_FILLER:
+            phf.write (u'NSPC\n')
 
     logging.info("%s written." % phfn)
 
