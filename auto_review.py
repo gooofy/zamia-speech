@@ -29,9 +29,9 @@ import readline
 import atexit
 import traceback
 
-from time import time
-from optparse import OptionParser
-from StringIO import StringIO
+from time               import time
+from optparse           import OptionParser
+from StringIO           import StringIO
 
 from nltools            import misc
 from nltools.phonetics  import ipa2xsampa
@@ -60,17 +60,36 @@ config = misc.load_config ('.speechrc')
 
 parser = OptionParser("usage: %prog [options] [filter])")
 
-parser.add_option("-a", "--all", action="store_true", dest="do_all", 
-                  help="do not use ASR but auto-rate all matching submissions")
+parser.add_option ("-a", "--all", action="store_true", dest="do_all", 
+                   help="do not use ASR but auto-rate all matching submissions")
 
 parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
-                  help="language (default: de)")
+                   help="language (default: de)")
 
-parser.add_option("-r", "--rating", dest="rating", type="int", default=2,
-                  help="rating to apply (1=Poor 2=Fair 3=Good), default: 2 (fair)")
+parser.add_option ("-R", "--result-file", dest="outfn", type = "str", default='review-result.csv',
+                   help="result file (default: review-result.csv)")
 
-parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
-                  help="enable debug output")
+parser.add_option ("-r", "--rating", dest="rating", type="int", default=2,
+                   help="rating to apply (1=Poor 2=Fair 3=Good), default: 2 (fair)")
+
+#
+# offset and step are meant for multi-processor operation:
+# start one review process per CPU, offsetting them properly, e.g. on a 4 CPU system:
+#
+# auto_review -s 4 -o 0 &
+# auto_review -s 4 -o 1 &
+# auto_review -s 4 -o 2 &
+# auto_review -s 4 -o 3 &
+#
+
+parser.add_option ("-s", "--step", dest="step", type="int", default=1,
+                   help="transcript step (default: 1")
+
+parser.add_option ("-o", "--offset", dest="offset", type="int", default=0,
+                   help="transcript offset to start from (default: 0")
+
+parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
+                   help="enable debug output")
 
 (options, args) = parser.parse_args()
 
@@ -112,66 +131,60 @@ if not options.do_all:
 #
 
 num_rated = 0
-cnt       = 0
+idx       = 0
+next_idx  = options.offset
 decoder   = KaldiNNet3OnlineDecoder (kaldi_model)
 
-for utt_id in transcripts:
+with open (options.outfn, 'w') as outf:
 
-    ts = transcripts[utt_id]
+    for utt_id in transcripts:
 
-    if ts['quality'] != 0:
-        continue
+        ts = transcripts[utt_id]
 
-    if ts_filter and not (ts_filter in utt_id):
-        continue
-
-    cnt += 1
-
-    wavfn = '%s/%s.wav' % (wav16_dir, utt_id)
-
-    prompt = ' '.join(tokenize(ts['prompt']))
-
-    print "%7d, # rated: %5d %s" % (cnt, num_rated, wavfn)
-
-    if not options.do_all:
-        if decoder.decode_wav_file(wavfn):
-
-            s, l = decoder.get_decoded_string()
-
-            hyp = ' '.join(tokenize(s))
-
-            print
-            print "*****************************************************************"
-            print "**", wavfn
-            print "**", hyp
-            print "**", prompt
-            print "**"
-            if hyp == prompt:
-                print "** ++++++++++++++ MATCH ++++++++++++++"
-            else:
-                print "**              MISMATCH              "
-                
-            print "**"
-            print "*****************************************************************"
-            print
-            if hyp != prompt:
-                continue
-
-        else:
-            print 'decoding did not work :('
+        if ts['quality'] != 0:
             continue
 
-    ts['ts']      = prompt
-    ts['quality'] = options.rating
+        if ts_filter and not (ts_filter in utt_id):
+            continue
 
-    num_rated += 1
+        idx += 1
+        if idx != next_idx + 1:
+            continue
+
+        next_idx += options.step
+
+        wavfn = '%s/%s.wav' % (wav16_dir, utt_id)
+
+        prompt = ' '.join(tokenize(ts['prompt']))
+
+        if not prompt:
+            logging.info("%7d, # rated: %5d %-20s not prompt." % (idx, num_rated, utt_id))
+            continue
+
+        if options.do_all:
+
+            logging.info("%7d, # rated: %5d %-20s manual rating: %d" % (idx, num_rated, utt_id, options.rating))
     
-    if num_rated % SAVE_RATE == 0:
-        logging.info("saving transcripts...")
-        transcripts.save()
-        logging.info("saving transcripts...done.")
+            outf.write ('%s;%d\n' % (utt_id, options.rating))
+    
+        else:    
 
-logging.info("saving transcripts...")
-transcripts.save()
-logging.info("saving transcripts...done.")
+            if decoder.decode_wav_file(wavfn):
+
+                s, l = decoder.get_decoded_string()
+
+                hyp = ' '.join(tokenize(s))
+
+                if hyp == prompt:
+                    logging.info("%7d, # rated: %5d %-20s *** MATCH ***" % (idx, num_rated, utt_id))
+                    outf.write ('%s;%d\n' % (utt_id, options.rating))
+                    outf.flush()
+                    logging.debug ('    %s written.' % options.outfn)
+                else:
+                    logging.info("%7d, # rated: %5d %-20s no match" % (idx, num_rated, utt_id))
+                    logging.debug("    hyp   : %s" % repr(hyp))
+                    logging.debug("    prompt: %s" % repr(prompt))
+                    
+            else:
+                logging.info("%7d, # rated: %5d %-20s decoder failed" % (idx, num_rated, utt_id))
 
