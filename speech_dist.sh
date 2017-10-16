@@ -171,8 +171,8 @@ rm -r "$DISTDIR/$AMNAME"
 #
 
 LMNAME="srilm-voxforge-${LANG}-r$datum.arpa"
-cp data/dst/speech/${LANG}/srilm/lm.arpa data/dist/$LMNAME
-gzip data/dist/$LMNAME
+cp data/dst/speech/${LANG}/srilm/lm.arpa ${DISTDIR}/$LMNAME
+gzip ${DISTDIR}/$LMNAME
 
 # 
 # cmuclmtk
