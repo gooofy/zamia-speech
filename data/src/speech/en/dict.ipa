@@ -44,6 +44,7 @@ abadie;ab'ædi
 abaft;ab'æft
 abair;ab'ɛr
 abalkin;ab'ɑlkɪn
+abalon;æbalɑn
 abalone;æbal'oʊni
 abalone's;æbal'oʊnz
 abalones;æbal'oʊniz
@@ -140,6 +141,7 @@ abdomen;æbd'oʊman
 abdomen_1;'æbdaman
 abdominal;æbd'ɑmanal
 abdominal_1;abd'ɑmanal
+abdominals;æbd'ɑmanalz
 abducent;æbd'usant
 abduct;æbd'akt
 abducted;æbd'aktɪd
@@ -240,6 +242,7 @@ abimaels;æbɪm'eɪlz
 abingdon;'æbɪɳdan
 abington;'æbɪɳtan
 abio;'ɑbioʊ
+abiogenesis;ɑbi'oʊdʒ'ɛnasas
 abiola;ɑbi'oʊla
 abiola's;ɑbi'oʊlaz
 abiomed;eɪb'iamɛd
@@ -7097,6 +7100,7 @@ ascents;as'ɛnts
 ascertain;æsɜt'eɪn
 ascertained;æsɜt'eɪnd
 ascertaining;æsɜt'eɪnɪɳ
+ascertainment;æsɜt'eɪnmant
 ascertains;æsɜt'eɪnz
 ascetic;as'ɛtɪk
 ascetic's;as'itɪks
@@ -11012,6 +11016,7 @@ bavarian;bav'ɛrian
 bavaro;bɑv'ɑroʊ
 bavaw;bav'ɑ
 baver;b'eɪvɜ
+baviaan;bav'iɑn
 bavis;b'eɪvɪs
 bawble;b'obal
 bawd;b'od
@@ -12468,6 +12473,7 @@ benvenuti;bɛnvɛn'uti
 benvenuto;bɛnvɛn'utoʊ
 benware;b'ɛnwɛr
 benway;b'ɛnweɪ
+benwick;b'ɛnwɪk
 benyamin;bɛnjam'in
 benyo;b'eɪnjoʊ
 benyon;bɛnjan
@@ -16804,6 +16810,7 @@ brackbill;br'ækbal
 brackeen;brak'in
 bracken;br'ækan
 brackenbury;br'ækanbɛri
+brackened;br'ækand
 brackens;br'ækanz
 bracker;br'ækɜ
 bracket;br'ækɪt
@@ -19619,6 +19626,7 @@ burrs;b'ɜz
 burrus;b'uras
 burruss;b'uras
 burry;b'ɜi
+burs;b'ɜz
 bursch;b'ɜʃ
 burse;b'ɜs
 bursey;b'ɜsi
@@ -20761,6 +20769,7 @@ camden's;k'æmdanz
 camdessus;kæmd'ɛsas
 came;k'eɪm
 cameco;k'æmɪkoʊ
+cameelious;k'æmiljas
 camejo;kɑm'eɪjoʊ
 camel;k'æmal
 camel's;k'æmalz
@@ -24702,6 +24711,7 @@ chinatown;tʃ'aɪnataʊn
 chinatown's;tʃ'aɪnataʊnz
 chinaware;tʃ'aɪnaw'ɛr
 chinchilla;tʃɪntʃ'ɪla
+chine;tʃ'in
 chinee;tʃaɪn'i
 chinen;tʃ'ɪnan
 chinese;tʃaɪn'iz
@@ -24754,6 +24764,7 @@ chippendales;tʃ'ɪpadeɪl
 chipper;tʃ'ɪpɜ
 chippewa;tʃ'ɪpawɑ
 chippewas;tʃ'ɪpaw'ɑz
+chippeway;tʃ'ɪpweɪ
 chipping;tʃ'ɪpɪɳ
 chippings;tʃ'ɪpɪɳz
 chipps;tʃ'ɪps
@@ -26281,6 +26292,7 @@ clio;kl'ioʊ
 clip;kl'ɪp
 clipboard;kl'ɪpbord
 clipp'd;kl'ɪpd
+clippa;kl'ɪpa
 clippard;kl'ɪpɜd
 clipped;kl'ɪpt
 clipper;kl'ɪpɜ
@@ -28330,6 +28342,7 @@ concocting;kank'ɑktɪɳ
 concoction;kank'ɑkʃan
 concoctions;kank'ɑkʃanz
 concocts;kank'ɑkts
+concolor;k'ɑnk'alɜ
 concomitant;kɑnk'ɑmatant
 concomitant_1;kɑnkam'ɪtant
 concomitantly;kɑnk'ɑmatantli
@@ -31098,6 +31111,7 @@ cozzens;k'ɑzanz
 cozzi;k'oʊtsi
 cozzolino;koʊtsoʊl'inoʊ
 cps;s'ipi'ɛs
+cpu;s'ipi'u
 crab;kr'æb
 crab's;kr'æbz
 crabb;kr'æb
@@ -31307,6 +31321,8 @@ craved;kr'eɪvd
 craven;kr'eɪvan
 craven's;kr'eɪvanz
 cravens;kr'eɪvanz
+craventy;kr'eɪvanti
+craventy's;kr'eɪvantiz
 craver;kr'eɪvɜ
 craves;kr'eɪvz
 cravey;kr'eɪvi
@@ -32704,6 +32720,7 @@ curtains;k'ɜtanz
 curti;k'urti
 curtice;k'urtɪs
 curtin;k'ɜtɪn
+curtiosity;k'urti'ɑsati
 curtis;k'ɜtas
 curtis's;k'ɜtɪsɪz
 curtis_1;k'ɜtɪs
@@ -32976,6 +32993,7 @@ cynically;s'ɪnɪkali
 cynically_1;s'ɪnɪkli
 cynicism;s'ɪnɪsɪzam
 cynics;s'ɪnɪks
+cynisca;s'ɪnɪska
 cynosure;s'ɪnoʊʒɜ
 cynric;s'ɪnrɪk
 cynth;s'ɪnθ
@@ -35341,6 +35359,7 @@ delial;dɪl'aɪɛl
 delial_1;dil'aɪɛl
 delian;d'eɪlian
 delians;d'ɛljanz
+delibab;dɪlɪb'ɑb
 deliberate;dɪl'ɪbɜat
 deliberate_1;dɪl'ɪbɜeɪt
 deliberate_2;dɪl'ɪbrat
@@ -35924,6 +35943,7 @@ dennett;d'ɛnɪt
 denney;d'ɛni
 dennie;d'ɛni
 dennin;d'ɛnɪn
+dennin's;d'ɛnɪnz
 denning;d'ɛnɪɳ
 denninger;d'ɛnɪɳɜ
 dennington;d'ɛnɪɳtan
@@ -39318,6 +39338,7 @@ divincenzo;dɪvintʃ'ɛnzoʊ
 divine;dɪv'aɪn
 divined;dɪv'aɪnd
 divinely;dɪv'aɪnli
+divineness;dɪv'aɪnnas
 diviner;dɪv'aɪnɜ
 diviners;dɪv'aɪnɜz
 divines;dɪv'aɪnz
@@ -39382,6 +39403,7 @@ dizzying;d'ɪziɪɳ
 djakarta;dʒak'ɑrta
 djakarta's;dʒak'ɑrtaz
 djibouti;dʒɪb'uti
+djinn;dʒɪn
 djinns;dʒɪnz
 djukanovic;dʒuk'ænavɪk
 djukanovic_1;dʒak'ænavɪtʃ
@@ -39414,6 +39436,7 @@ doan;d'oʊn
 doan's;d'oʊnz
 doan't;d'oʊnt
 doane;d'oʊn
+doane's;d'oʊnz
 doanh;d'oʊn
 doanna;d'oʊna
 doar;d'or
@@ -43213,6 +43236,7 @@ eikenberry;'ikanbɛri
 eilan;'aɪlan
 eiland;'aɪland
 eileen;aɪl'in
+eileen's;aɪl'inz
 eiler;'aɪlɜ
 eilerman;'aɪlɜman
 eilers;'aɪlɜz
@@ -45593,6 +45617,7 @@ equine;'ikwaɪn
 equinely;'ikwaɪnli
 equinoctial;'ɛkwin'ɑktjal
 equinox;'ikwanɑks
+equinoxes;'ɛkwɪnɑksɪz
 equion;'ɛkwiɑn
 equip;ɪkw'ɪp
 equipage;ɪkw'ɪpɪdʒ
@@ -45803,6 +45828,7 @@ ermin;'ɜmɪn
 ermina;ɜm'ina
 ermine;'ɜman
 ermined;'ɜmand
+ermines;'ɜmanz
 erminia;ɜm'inia
 erminie;'ɜmɪni
 ermintrude;'ɜmɪntr'ud
@@ -46506,6 +46532,7 @@ eurobond;j'uroʊbɑnd
 eurobonds;j'uroʊbɑndz
 eurocheck;j'uratʃɛk
 eurochecks;j'uratʃɛks
+euroclydon;j'uroʊkl'ɪdan
 eurocom;j'urakam
 eurocom_1;j'uroʊkɑm
 eurocommercial;j'uroʊkam'ɜʃal
@@ -47090,6 +47117,7 @@ excoriated;ɛksk'orieɪtɪd
 excoriating;ɛksk'orieɪtɪɳ
 excoriation;ɛksk'orieɪʃan
 excrement;'ɛkskramant
+excrements;ɛkskramɛnts
 excrescence;ɪkskr'ɛsans
 excrescences;ɪkskr'ɛsansɪz
 excreta;ɪkskr'ita
@@ -47696,6 +47724,7 @@ exultingly;ɪgz'altɪɳli
 exults;ɪgz'alts
 exum;ɪgz'am
 exupere;ɪgz'upɜ
+exuviae;ɪgz'uvia
 exxon;'ɛksɑn
 exxon's;'ɛksɑnz
 eyde;'eɪd
@@ -49816,6 +49845,9 @@ fidgetted;f'ɪdʒɪtad
 fidgetting;f'ɪdʒɪtɪɳ
 fidgetty;f'ɪdʒɪti
 fidgety;f'ɪdʒati
+fidgit;f'ɪdʒɪt
+fidgit's;f'ɪdʒats
+fidgits;f'ɪdʒats
 fidilini;fad'il'ini
 fidler;f'aɪdalɜ
 fidler_1;f'aɪdlɜ
@@ -52448,6 +52480,7 @@ fourthquarter_1;f'orθk'ortɜ
 fourths;f'orθs
 fourths_1;f'ors
 fourtou;fort'u
+fourty;f'orti
 fourways;f'orweɪz
 fouse;f'aʊs
 fousek;f'aʊsɪk
@@ -53518,6 +53551,7 @@ frum;fr'am
 frumious;fr'umias
 frumkin;fr'amkɪn
 frump;fr'amp
+frumps;fr'amps
 frumpy;fr'ampi
 frunze;fr'anz
 frusen;fr'uzan
@@ -55607,6 +55641,8 @@ general_1;dʒ'ɛnral
 generale;dʒɛnɜ'æl
 generales;dʒɛnɛr'ɑlɛs
 generali;dʒɛnɜ'ɑli
+generalisation;dʒɛnɜ'ælaz'eɪʃan
+generalisations;dʒɛnɜ'ælaz'eɪʃanz
 generalised;dʒ'ɛnralaɪzd
 generalissimo;dʒɛnɛral'ɪsɪmoʊ
 generalist;dʒ'ɛnɜalɪst
@@ -61844,6 +61880,7 @@ hanover's;h'ænoʊvɜz
 hanoverian;hænoʊv'ɪrian
 hanoverians;h'ænoʊv'ɪrianz
 hanrahan;h'ænrahæn
+hanrahan's;h'ænrahænz
 hanratty;h'ænrati
 hans;h'ɑns
 hans's;h'ænz
@@ -63234,6 +63271,7 @@ heatherly;h'ɛðɜli
 heathers;h'ɛðɜz
 heatherstone;h'ɛðɜstoʊn
 heatherstone's;h'ɛðɜstoʊnz
+heathery;h'ɛðɜi
 heathland;h'iθlænd
 heathman;h'iθman
 heathrow;h'iθroʊ
@@ -66298,6 +66336,7 @@ honoria;ɑn'ɜia
 honorific;ɑnɜ'ɪfɪk
 honoring;'ɑnɜɪɳ
 honorius;ɑn'ɜiɪs
+honorof;ɑnɜ'ɑf
 honors;'ɑnɜz
 honour;'ɑnɜ
 honour's;'ɑnɜz
@@ -67732,6 +67771,7 @@ hurlbert;h'ɜlbɜt
 hurlbird;h'ɜlbɜd
 hurlburt;h'ɜlbɜt
 hurlbut;h'ɜlbat
+hurlbut's;h'ɜlbats
 hurlbutt;h'ɜlbat
 hurled;h'ɜld
 hurless;h'ɜlas
@@ -68152,6 +68192,7 @@ hypoglycemia;haɪpoʊglaɪs'imia
 hypoglycemic;haɪpoʊglaɪs'imɪk
 hypolite;h'aɪpalaɪt
 hyponex;h'aɪpoʊnɛks
+hypos;haɪpoʊz
 hypotension;haɪpoʊt'ɛnʃan
 hypothalamic;haɪpoʊθal'æmɪk
 hypotheken;haɪp'ɑθakan
@@ -68785,6 +68826,7 @@ immature;ɪmatj'ur
 immaturity;ɪmatʃ'urɪti
 immeasurable;ɪm'ɛʒɜæbal
 immeasurably;ɪm'ɛʒɜæbli
+immeasured;ɪm'ɛʒɜd
 immediacy;ɪm'idiasi
 immediate;ɪm'idiat
 immediately;ɪm'idiatli
@@ -70540,6 +70582,7 @@ inpatient;'ɪnpeɪʃant
 inpatients;'ɪnpeɪʃants
 input;'ɪnput
 inputs;'ɪnputs
+inputting;'ɪnputɪɳ
 inquest;'ɪnkwɛst
 inquietude;ɪnkw'aɪatud
 inquire;ɪnkw'aɪr
@@ -72940,6 +72983,7 @@ jason;dʒ'eɪsan
 jason's;dʒ'eɪsanz
 jasp;dʒ'æsp
 jaspal;dʒ'æspɑl
+jaspar;dʒ'æspɜ
 jasper;dʒ'æspɜ
 jasper's;dʒ'æspɜz
 jaspers;dʒ'æspɜz
@@ -73045,6 +73089,7 @@ jeanine;dʒan'in
 jeanlouis;ʒɑnlu'i
 jeanmichele;ʒɑnmaʃ'ɛl
 jeanne;dʒ'in
+jeanne's;dʒ'inz
 jeannette;dʒan'ɛt
 jeannie;dʒ'ini
 jeannie's;dʒ'iniz
@@ -73587,6 +73632,7 @@ jock;dʒ'ɑk
 jocker;dʒ'ɑkɜ
 jockers;dʒ'ɑkɜz
 jockey;dʒ'ɑki
+jockey's;dʒ'ɑkiz
 jockeyed;dʒ'ɑkid
 jockeying;dʒ'ɑkiɪɳ
 jockeys;dʒ'ɑkiz
@@ -73735,6 +73781,7 @@ jolicoeur;ʒ'ɑlɪkɜ
 jolie;dʒoʊl'i
 joliet;dʒ'oʊliɛt
 joliffe;dʒ'oʊlɪf
+joliffe's;dʒ'oʊlɪfs
 jolin;dʒ'oʊlɪn
 joline;dʒoʊl'ini
 jolivette;ʒ'ɑlɪvɛt
@@ -75222,6 +75269,7 @@ kawasaki;kɑwɑs'ɑki
 kawashima;kɑwɑʃ'ima
 kawasmi;kaw'ɑsmi
 kawate;kɑw'ɑteɪ
+kaweah;kaw'ia
 kawecki;kɑv'ɛtski
 kaweske;kɑv'ɛski
 kaweske_1;kaw'ɛski
@@ -75778,6 +75826,7 @@ kerensky;k'ɛranski
 kerestes;k'ɛrɪsts
 keresztes;k'ɛrastiz
 kerfoot;k'ɜfut
+kerfoot's;k'ɜfuts
 kerfuffle;kɜf'afal
 kerh;k'ɜh
 kerhet;k'ɜh'ɛt
@@ -77629,6 +77678,7 @@ kolodziej;kal'ɑdzidʒ
 kolodziejski;kalɑdʒi'eɪski
 kolojejchick;koʊloʊdʒ'eɪtʃɪk
 kolokoff;k'ɑlakof
+kolokolo;k'ɑlakoʊloʊ
 koloski;kal'aʊski
 kolowich;k'ɑlawɪtʃ
 kolp;k'oʊlp
@@ -77731,6 +77781,7 @@ konzi;k'ɑnzi
 konzi's;k'ɑnziz
 koo;k'u
 koob;k'ub
+koodoo;k'udu
 koogler;k'uglɜ
 kooi;k'ui
 kooiker;k'uɪkɜ
@@ -82778,6 +82829,7 @@ limpid;l'ɪmpɪd
 limping;l'ɪmpɪɳ
 limply;l'ɪmpli
 limpness;l'ɪmpnas
+limpopo;l'ɪmp'oʊpoʊ
 limps;l'ɪmps
 lin;l'ɪn
 lina;l'ina
@@ -83764,6 +83816,7 @@ logician;loʊdʒ'ɪʃan
 logicians;loʊdʒ'ɪʃanz
 logicon;l'ɑdʒɪkɑn
 logie;l'oʊdʒi
+login;l'oʊdʒɪn
 logistic;ladʒ'ɪstɪk
 logistical;ladʒ'ɪstɪkal
 logistically;ladʒ'ɪstɪkli
@@ -85987,6 +86040,7 @@ magnetometer;mægnat'ɑmatɜ
 magnetometers;mægnat'ɑmatɜz
 magnetron;m'ægnatrɑn
 magnets;m'ægnats
+magnifica;mægn'ɪfɪka
 magnificat;mægn'ɪfɪkæt
 magnification;mægnafak'eɪʃan
 magnifications;mægnafak'eɪʃanz
@@ -87262,6 +87316,7 @@ marbled;m'ɑrbald
 marblehead;m'ɑrbalhɛd
 marbles;m'ɑrbalz
 marbod;m'ɑrbɑd
+marbre;m'ɑrbɜ
 marbry;m'ɑrbri
 marburger;m'ɑrbɜgɜ
 marbury;m'ɑrbɛri
@@ -89498,6 +89553,7 @@ mcfatter;makf'ætɜ
 mcfaul;makf'ol
 mcfayden;makf'eɪdan
 mcfee;makf'i
+mcfee's;makf'iz
 mcfeely;makf'ili
 mcfeeters;makf'itɜz
 mcferran;makf'ɛran
@@ -92337,6 +92393,7 @@ milled;m'ɪld
 milledge;m'ɪlɪdʒ
 millen;m'ɪlan
 millender;m'ɪlɛndɜ
+millenium;mal'ɛniam
 millennia;mal'ɛnia
 millennial;mɪl'ɛnial
 millennium;mal'ɛniam
@@ -93867,6 +93924,7 @@ moisturizer;m'ɔʏstʃɜaɪzɜ
 mojave;moʊh'ɑvi
 mojica;moʊj'ika
 mojo;m'oʊdʒoʊ
+mojomove;moʊh'oʊmoʊv
 mok;m'ɑk
 moka;m'oʊka
 moke;m'oʊk
@@ -93881,6 +93939,7 @@ molaison;mal'eɪzan
 moland;m'ɑland
 molander;m'ɑlandɜ
 molano;moʊl'ɑnoʊ
+molar;m'oʊlɜ
 molasses;mal'æsaz
 molchan;m'oʊltʃan
 mold;m'oʊld
@@ -93903,6 +93962,7 @@ moldovan;moʊldoʊv'ɑn
 molds;m'oʊldz
 moldy;m'oʊldi
 mole;m'oʊl
+mole's;m'oʊlz
 molecular;mal'ɛkjalɜ
 molecule;m'ɑlakjul
 molecules;m'ɑlakjulz
@@ -94205,6 +94265,7 @@ monkeying;m'aɳkiɪɳ
 monkeyish;m'aɳkiɪʃ
 monkeylike;m'aɳkilaɪk
 monkeys;m'aɳkiz
+monkford;m'aɳkfɜd
 monkish;m'aɳkɪʃ
 monks;m'aɳks
 monkshaven;m'aɳksheɪvan
@@ -96090,6 +96151,8 @@ museums_1;mj'uziamz
 musgrave;m'asgreɪv
 musgrave's;m'asgreɪvz
 musgrove;m'asgrav
+musgrove's;m'asgravz
+musgroves;m'asgravz
 mush;m'aʃ
 musha;mj'uʃa
 musha_1;m'uʃa
@@ -96593,6 +96656,7 @@ nakashima;nɑkɑʃ'ima
 nakasone;nɑkas'oʊni
 nakasone's;nɑkas'oʊniz
 nakata;nɑk'ɑta
+nakata's;nɑk'ɑtaz
 nakatani;nɑkɑt'ɑni
 nakayama;nɑkɑj'ɑma
 naked;n'eɪkad
@@ -97210,6 +97274,7 @@ nebraskan;nabr'æskan
 nebraskans;nabr'æskanz
 nebuchadnezzar;n'ɛbjuk'ædnɛzɜ
 nebula;n'ɛbjala
+nebulae;n'ɛbjali
 nebular;n'ɛbjalɜ
 nebulizer;n'ɛbjalaɪzɜ
 nebulous;n'ɛbjalas
@@ -98402,6 +98467,7 @@ nightengales;n'aɪtɪɳgalz
 nighter;n'aɪtɜ
 nighters;n'aɪtɜz
 nightfall;n'aɪtfol
+nightglow;n'aɪtgloʊ
 nightgown;n'aɪtg'aʊn
 nightgowns;n'aɪtg'aʊnz
 nighthawk;n'aɪthok
@@ -98626,6 +98692,7 @@ nissin;n'ɪsɪn
 nissley;n'ɪsli
 nist;n'ɪst
 nistler;n'ɪstlɜ
+nisus;n'ɪsas
 niswander;n'ɪswondɜ
 niswonger;n'ɪswoɳɜ
 nit;n'ɪt
@@ -100766,6 +100833,7 @@ ojibways;oʊdʒ'ɪbweɪz
 ojo;'oʊdʒoʊ
 ojo's;'oʊdʒoʊz
 ok;'oʊk'eɪ
+ok'd;oʊkd
 oka;'oʊka
 okabe;oʊk'ɑbeɪ
 okada;oʊk'ɑda
@@ -101350,9 +101418,11 @@ opera;'ɑpra
 opera's;'ɑpraz
 operable;'ɑpɜabal
 operan;'ɑpɜan
+operand;'ɑpɜand
 operandi;ɑpɜ'ændi
 operandi_1;ɑpɜ'ændaɪ
 operandi_2;ɑpɜ'ɛndaɪ
+operands;ɑpɜ'ændz
 operant;'ɑpɜant
 operaretur;ɑpɜ'ɛrɪtɜ
 operas;'ɑpraz
@@ -104694,6 +104764,7 @@ pasadena;pæsad'inɜ
 pasages;pæsadʒaz
 pascagoula;pæskag'ula
 pascal;pæsk'æl
+pascal's;pæskalz
 pascale;pæsk'æl
 pascarella;pɑskɑr'ɛla
 pascarelli;pɑskɑr'ɛli
@@ -105350,6 +105421,7 @@ peapack;p'ipæk
 peapod;p'ipod
 pear;p'ɛr
 pearce;p'ɪrs
+pearce's;p'ɪrsɪz
 pearcy;p'ɜki
 pearl;p'ɜl
 pearl's;p'ɜlz
@@ -106022,6 +106094,7 @@ people;p'ipal
 people's;p'ipalz
 peopled;p'ipald
 peoples;p'ipalz
+peopling;p'ipalɪɳ
 peoria;pi'oria
 peoria's;pi'oriaz
 peory;pi'ori
@@ -107316,6 +107389,7 @@ philosophic;fɪlas'ɑfɪk
 philosophical;fɪlas'ɑfɪkal
 philosophically;fɪlas'ɑfɪkali
 philosophically_1;fɪlas'ɑfɪkli
+philosophie;fal'ɑsafi
 philosophies;fal'ɑsafiz
 philosophise;fal'ɑsafɪs
 philosophises;fɪlas'ɑfaɪzɪz
@@ -107506,6 +107580,7 @@ physicians;faz'ɪʃanz
 physicians_1;fɪz'ɪʃanz
 physicist;f'ɪzɪsɪst
 physicists;f'ɪzɪsɪsts
+physico;f'ɪzɪkoʊ
 physics;f'ɪzɪks
 physio;f'ɪzioʊ
 physiognomies;fɪziagnamiz
@@ -112218,6 +112293,7 @@ proposes;prap'oʊzɪz
 proposing;prap'oʊzɪɳ
 proposition;prɑpaz'ɪʃan
 proposition's;prɑpaz'ɪʃanz
+propositional;prɑpaz'ɪʃanal
 propositioned;prɑpaz'ɪʃand
 propositions;prɑpaz'ɪʃanz
 propound;prap'aʊnd
@@ -116342,6 +116418,7 @@ redler;r'ɛdlɜ
 redley;r'ɛdli
 redlich;r'ɛdlɪk
 redlin;r'ɛdlɪn
+redlined;r'ɛdlaɪnd
 redlinger;r'ɛdalɪɳɜ
 redlinger_1;r'ɛdlɪɳɜ
 redlining;r'ɛdlaɪnɪɳ
@@ -121215,6 +121292,7 @@ rosete;r'ɑsit
 rosett;r'oʊzat
 rosetta;roʊz'ɛta
 rosette;ras'ɛt
+rosetted;roʊz'ɛtɪd
 rosettes;r'oʊz'ɛts
 rosetti;roʊs'ɛti
 rosevear;roʊzv'ɪr
@@ -122043,6 +122121,7 @@ rumfelt;r'amfɛlt
 rumford;r'amfɜd
 rumina;r'umɪna
 ruminant;r'umanant
+ruminants;r'umanants
 ruminate;r'umɪneɪt
 ruminated;r'umɪneɪtɪd
 ruminates;r'umɪneɪts
@@ -123645,6 +123724,7 @@ sarage's;s'æradʒɪz
 saragossa;sɑrɑg'oʊsa
 sarah;s'ɛra
 sarah's;s'ɛraz
+sarai;sɑr'ɑi
 sarajevan;sɑraj'eɪvan
 sarajevan's;sɑraj'eɪvanz
 sarajevans;sɑraj'eɪvanz
@@ -123840,6 +123920,7 @@ sates;s'eɪts
 sather;s'æðɜ
 sathre;s'æθɜ
 sathyavagiswaran;sæθjavɑgɪswɑran
+satiable;sɑtiabal
 satiate;s'eɪʃieɪt
 satiated;s'eɪʃieɪtɪd
 satiating;s'eɪʃieɪtɪɳ
@@ -125510,6 +125591,7 @@ sciuto;si'utoʊ
 sclafani;sklɑf'ɑni
 scleroderma;sklɪrad'ɜma
 sclerosis;sklɜ'oʊsas
+sclusively;skl'usɪvli
 scobee;sk'ɑbi
 scobey;sk'oʊbi
 scobie;sk'ɑbi
@@ -125538,6 +125620,7 @@ scoldings;sk'oʊldɪɳz
 scolds;sk'oʊldz
 scoles;sk'oʊlz
 scolia;sk'oʊlja
+scollard;sk'ɑlɜd
 scollops;sk'ɑlaps
 scoma;sk'oʊma
 sconc;sk'ɑns
@@ -125831,6 +125914,7 @@ scrubbing;skr'abɪɳ
 scrubbs;skr'abz
 scrubby;skr'abi
 scruby;skr'ubi
+scruciating;skr'uʃieɪtɪɳ
 scruff;skr'af
 scruffy;skr'afi
 scruggs;skr'agz
@@ -126601,6 +126685,7 @@ selchow;s'ɛltʃaʊ
 selda;s'ɛlda
 seldane;s'ɛldeɪn
 selden;s'ɛldan
+selden's;s'ɛldanz
 selders;s'ɛldɜz
 seldin;s'ɛldɪn
 seldom;s'ɛldam
@@ -127706,6 +127791,7 @@ shalikashvili's;ʃælikɑʃv'iliz
 shall;ʃ'æl
 shall's;ʃ'ælz
 shallcross;ʃ'ælkrɑs
+shallenberg;ʃ'olanbɜg
 shallenberger;ʃ'olanbɜgɜ
 shallop;ʃ'ælap
 shallops;ʃ'ælaps
@@ -128116,6 +128202,7 @@ sheepish;ʃ'ipɪʃ
 sheepishly;ʃ'ipɪʃli
 sheeplands;ʃ'iplandz
 sheepman;ʃ'ipman
+sheepmen;ʃ'ipman
 sheeps;ʃ'ips
 sheepskin;ʃ'ipskɪn
 sheepskins;ʃ'ipskɪnz
@@ -130496,6 +130583,7 @@ skipton;sk'ɪptan
 skipwith;sk'ɪpwɪθ
 skipworth;sk'ɪpwɜθ
 skirdall;sk'ɜdɑl
+skirl;sk'ɜl
 skirmish;sk'ɜmɪʃ
 skirmishers;sk'ɜmɪʃɜz
 skirmishes;sk'ɜmɪʃɪz
@@ -131180,6 +131268,7 @@ smartish;sm'ɑrtɪʃ
 smartly;sm'ɑrtli
 smartmoney;sm'ɑrtmani
 smartness;sm'ɑrtnɪs
+smartphones;sm'ɑrtfoʊnz
 smarts;sm'ɑrts
 smartt;sm'ɑrt
 smarty;sm'ɑrti
@@ -131869,6 +131958,7 @@ soco's;s'oʊk'oʊz
 soco's_1;s'ɑkoʊz
 soco_1;s'ɑkoʊ
 socol;s'oʊkɑl
+socotra;s'oʊk'ɑtra
 socotrine;s'ɑkoʊtr'in
 socrates;s'ɑkratiz
 socrates's;s'ɑkratizɪz
@@ -133079,6 +133169,7 @@ speckle;sp'ɛkal
 speckled;sp'ɛkald
 speckles;sp'ɛkalz
 speckless;sp'ɛklas
+speckly;sp'ɛkli
 speckman;sp'ɛkman
 specks;sp'ɛks
 specksioneer;sp'ɛkʃan'ɪr
@@ -133721,6 +133812,7 @@ spouses;sp'aʊsaz
 spouses_1;sp'aʊsɪz
 spout;sp'aʊt
 spouted;sp'aʊtad
+spouter;sp'aʊtɜ
 spouting;sp'aʊtɪɳ
 spouts;sp'aʊts
 spracklen;spr'ækalan
@@ -134444,6 +134536,7 @@ stanifer;st'ænɪfɜ
 stanis;st'ænɪs
 stanish;st'ænɪʃ
 stanislas;st'ænɪslɑs
+stanislaus;st'ænɪslaʊz
 stanislav;st'ænɪslɑv
 stanislaw;st'ænɪslo
 stanislawski;stænɪsl'ɑfski
@@ -134621,6 +134714,7 @@ starvin;st'ɑrvɪn
 starving;st'ɑrvɪɳ
 starwalt;st'ɑrwalt
 starwave;st'ɑrweɪv
+starwood;st'ɑrwud
 stary;st'ɛri
 starzyk;st'ɑrzɪk
 stash;st'æʃ
@@ -136334,6 +136428,7 @@ stripping;str'ɪpɪɳ
 strips;str'ɪps
 stript;str'ɪpt
 striptease;str'ɪptiz
+stripy;str'aɪpi
 strite;str'aɪt
 strittmatter;str'ɪtmatɜ
 strive;str'aɪv
@@ -136682,6 +136777,7 @@ sturt's;st'ɜts
 sturtevant;st'ɜtavant
 sturtz;st'ɜts
 sturza;st'ɜza
+stute;st'ut
 stuteley;st'utli
 stutes;st'uts
 stutesman;st'utsman
@@ -145349,6 +145445,7 @@ tula;t'ula
 tulane;tul'eɪn
 tulares;tul'ɛrz
 tularosa;tulɑr'oʊsa
+tule;tj'ul
 tules;tj'ulz
 tuley;tj'uli
 tulia;t'ulia
@@ -146458,6 +146555,7 @@ unbridgable;anbr'ɪdʒabal
 unbridgeable;anbrɪdʒabal
 unbridged;anbr'ɪdʒd
 unbridled;anbr'aɪdald
+unbroke;anbr'oʊk
 unbroken;anbr'oʊkan
 unbruised;anbr'uzd
 unbuckled;anbakald
@@ -148376,6 +148474,7 @@ upper;'apɜ
 upperclass;'apɜklæs
 uppercliff;'apɜklɪf
 uppercliff's;'apɜklɪfs
+uppercross;'apɜkros
 uppercut;'apɜkat
 upperhand;'apɜhænd
 upperman;'apɜman
@@ -150296,6 +150395,7 @@ vesture;v'ɛstʃɜ
 vesuve;vas'uv
 vesuvius;vas'uvias
 vet;v'ɛt
+vet's;vɛts
 veta;v'ɛta
 vetch;v'ɛtʃ
 vetch's;v'ɛtʃɪz
@@ -152195,6 +152295,7 @@ wanzer;w'ɑnzɜ
 wapanachki;w'ɑpan'ɑʃki
 wapentake;wap'ɛnteɪk
 wapiti;wap'iti
+wapitis;wap'itiz
 waples;w'opalz
 wapner;w'ɑpnɜ
 wapoota;wap'uta
@@ -152659,6 +152760,7 @@ wauters;w'aʊtɜz
 wave;w'eɪv
 wave's;w'eɪvz
 waved;w'eɪvd
+waveform;w'eɪvform
 wavelength;w'eɪvlɛɳθ
 wavelengths;w'eɪvlɛɳθs
 waveless;w'eɪvlas
@@ -154515,6 +154617,7 @@ whores;h'orz
 whorl;w'ɜl
 whorl_1;w'orl
 whorl_2;hw'orl
+whorled;w'ɜld
 whorley;h'orli
 whorley_1;w'orli
 whorley_2;hw'orli
@@ -156887,6 +156990,7 @@ yaney;j'eɪni
 yanez;j'ænɪz
 yang;j'æɳ
 yangsheng;j'ɑɳʃ'ɛɳ
+yangtse;j'æɳkts
 yangtze;j'æɳkts'i
 yanhamu;j'ænam'u
 yani;j'ɑni
