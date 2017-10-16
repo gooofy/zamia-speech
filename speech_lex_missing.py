@@ -135,19 +135,20 @@ for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
 
     cnt += 1
 
+    if cnt > options.num_words:
+        break
+
     if verbose:
         logging.info(u"Missing %4d times: %s" % (item[1], item[0]))
     else:
         logging.info(item[0].encode('utf8'))
-        if cnt > options.num_words:
-            break
 
     if options.generate:
         ipas = sequitur_gen_ipa (sequitur_model, item[0])
-        logging.info(u"generated lex entry: %s -> %s" % (item[0], ipas))
+        logging.info(u"%4d/%4d generated lex entry: %s -> %s" % (cnt, options.num_words, item[0], ipas))
         lex[item[0]] = {'ipa': ipas}
 
-logging.debug("%d missing words total. %d submissions lack at least one word, %d are covered fully by the lexicon." % (len(missing), num_ts_lacking, num_ts_complete))
+logging.info("%d missing words total. %d submissions lack at least one word, %d are covered fully by the lexicon." % (len(missing), num_ts_lacking, num_ts_complete))
 
 if options.generate:
     logging.info('saving lexicon...')
