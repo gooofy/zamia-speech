@@ -18,7 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# compute top-n missing words in lexicon from submissions
+# compute top-n missing words in lexicon from submissions,
+# optionally generate phoneme transcriptions for those using sequitur
 #
 
 import os
@@ -30,14 +31,17 @@ import curses.textpad
 import locale
 import codecs
 
-from optparse           import OptionParser
+from optparse               import OptionParser
 
-from nltools            import misc
-from nltools.tokenizer  import tokenize
-from nltools.phonetics  import ipa2xsampa, xsampa2ipa
+from nltools                import misc
+from nltools.tokenizer      import tokenize
+from nltools.phonetics      import ipa2xsampa, xsampa2ipa
+from nltools.sequiturclient import sequitur_gen_ipa
 
-from speech_transcripts import Transcripts
-from speech_lexicon     import Lexicon
+from speech_transcripts     import Transcripts
+from speech_lexicon         import Lexicon
+
+SEQUITUR_MODEL  = 'data/models/sequitur-voxforge-%s-latest'
 
 #
 # init 
@@ -50,6 +54,9 @@ misc.init_app ('speech_lex_missing')
 #
 
 parser = OptionParser("usage: %prog [options] [filter])")
+
+parser.add_option ("-g", "--generate", action="store_true", dest="generate", 
+                   help="generate phoneme transcriptions using sequitur g2p")
 
 parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
                    help="language (default: de)")
@@ -68,6 +75,8 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
     verbose=False
+
+sequitur_model = SEQUITUR_MODEL % options.lang
 
 #
 # load lexicon, transcripts
@@ -133,6 +142,16 @@ for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
         if cnt > options.num_words:
             break
 
+    if options.generate:
+        ipas = sequitur_gen_ipa (sequitur_model, item[0])
+        logging.info(u"generated lex entry: %s -> %s" % (item[0], ipas))
+        lex[item[0]] = {'ipa': ipas}
 
 logging.debug("%d missing words total. %d submissions lack at least one word, %d are covered fully by the lexicon." % (len(missing), num_ts_lacking, num_ts_complete))
+
+if options.generate:
+    logging.info('saving lexicon...')
+    lex.save()
+    logging.info('saving lexicon...done.')
+
 
