@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# compute top-20 missing words in lexicon from submissions
+# compute top-n missing words in lexicon from submissions
 #
 
 import os
@@ -30,7 +30,7 @@ import curses.textpad
 import locale
 import codecs
 
-from optparse import OptionParser
+from optparse           import OptionParser
 
 from nltools            import misc
 from nltools.tokenizer  import tokenize
@@ -39,29 +39,47 @@ from nltools.phonetics  import ipa2xsampa, xsampa2ipa
 from speech_transcripts import Transcripts
 from speech_lexicon     import Lexicon
 
-NUM_WORDS = 50
-
-verbose = len(sys.argv)==2 and sys.argv[1] == '-v'
-
-logging.basicConfig(level=logging.DEBUG)
-
 #
-# init terminal
+# init 
 #
 
 misc.init_app ('speech_lex_missing')
 
 #
-# load transcripts
+# command line
 #
 
-transcripts = Transcripts()
+parser = OptionParser("usage: %prog [options] [filter])")
+
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+                   help="language (default: de)")
+
+parser.add_option ("-n", "--num-words", dest="num_words", type="int", default=50,
+                   help="max number of missing words to report, default: 50")
+
+parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
+                   help="enable debug output")
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+    verbose=True
+else:
+    logging.basicConfig(level=logging.INFO)
+    verbose=False
 
 #
-# load lexicon
+# load lexicon, transcripts
 #
 
-lex = Lexicon()
+logging.info("loading lexicon...")
+lex = Lexicon(lang=options.lang)
+logging.info("loading lexicon...done.")
+
+logging.info("loading transcripts...")
+transcripts = Transcripts(lang=options.lang)
+logging.info("loading transcripts...done.")
 
 #
 # find missing words
@@ -85,7 +103,7 @@ for cfn in transcripts:
 
     lacking = False
 
-    for word in tokenize(ts['prompt']):
+    for word in tokenize(ts['prompt'], lang=options.lang):
 
         if word in lex:
             continue
@@ -109,15 +127,12 @@ for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
     cnt += 1
 
     if verbose:
-        print u"Missing %4d times: %s" % (item[1], item[0])
+        logging.info(u"Missing %4d times: %s" % (item[1], item[0]))
     else:
-        print item[0].encode('utf8'),
-        if cnt > NUM_WORDS:
+        logging.info(item[0].encode('utf8'))
+        if cnt > options.num_words:
             break
 
 
-if verbose:
-    print
-    print "%d missing words total. %d submissions lack at least one word, %d are covered fully by the lexicon." % (len(missing), num_ts_lacking, num_ts_complete)
-    print
+logging.debug("%d missing words total. %d submissions lack at least one word, %d are covered fully by the lexicon." % (len(missing), num_ts_lacking, num_ts_complete))
 
