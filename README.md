@@ -3,9 +3,8 @@
 Python scripts to compute audio and language models from voxforge.org speech data.
 Models that can be built include:
 
-* CMU Sphinx audio model
-* various Kaldi audio models
-* cmuclmtk language model
+* CMU Sphinx continous and PTM audio models
+* Kaldi nnet3 audio models
 * srilm language model
 * sequitur g2p model
 
@@ -13,9 +12,9 @@ Models that can be built include:
 However, if you are a developer interested in natural language processing you may find some of them useful.
 Contributions, patches and pull requests are very welcome.
 
-At the time of this writing, the scripts here are focused on building the german VoxForge model. However, there is no
-reason why they couldn't be used to build other language models as well, in fact I am planning to add support for the
-english language und audio models soon.
+At the time of this writing, the scripts here are focused on building the english and german VoxForge models. 
+However, there is no reason why they couldn't be used to build other language models as well, feel free to 
+contribute support for those.
 
 Links
 =====
@@ -27,12 +26,13 @@ Links
 Requirements
 ============
 
-*Note*: very incomplete.
+*Note*: probably incomplete.
 
 * Python 2.7 with nltk, numpy, ...
-* CMU Sphinx, cmuclmtk
+* CMU Sphinx
 * srilm
 * kaldi
+* py-nltools
 
 Setup Notes
 ===========
@@ -44,24 +44,51 @@ instructions, just some hints to get you started.
 
 ```ini
 [speech]
-vf_login            = <your voxforge login>
+vf_login              = <your voxforge login>
 
-vf_audiodir_de      = /home/bofh/projects/ai/data/speech/de/voxforge/audio
-vf_contribdir_de    = /home/bofh/projects/ai/data/speech/de/voxforge/audio-contrib
-extrasdir_de        = /home/bofh/projects/ai/data/speech/de/kitchen
-gspv2_dir           = /home/bofh/projects/ai/data/speech/de/gspv2
+vf_audiodir_de        = /home/bofh/projects/ai/data/speech/de/voxforge/audio
+vf_contribdir_de      = /home/bofh/projects/ai/data/speech/de/voxforge/audio-contrib
+extrasdir_de          = /home/bofh/projects/ai/data/speech/de/kitchen
+gspv2_dir             = /home/bofh/projects/ai/data/speech/de/gspv2
 
-kaldi_root          = /apps/kaldi
+vf_audiodir_en        = /home/bofh/projects/ai/data/speech/en/voxforge/audio
+extrasdir_en          = /home/bofh/projects/ai/data/speech/en/kitchen
+librivoxdir           = /home/bofh/projects/ai/data/speech/en/lsvf
 
-wav16_dir_de        = /home/bofh/projects/ai/data/speech/de/16kHz
-wav16_dir_en        = /home/bofh/projects/ai/data/speech/en/16kHz
+kaldi_root            = /apps/kaldi-cuda
 
-europarl_de         = /home/bofh/projects/ai/data/corpora/de/europarl-v7.de-en.de
-parole_de           = /home/bofh/projects/ai/data/corpora/de/German Parole Corpus/DE_Parole/
+wav16_dir_de          = /home/bofh/projects/ai/data/speech/de/16kHz
+wav16_dir_en          = /home/bofh/projects/ai/data/speech/en/16kHz
+noise_dir             = /home/bofh/projects/ai/data/speech/noise
+
+europarl_de           = /home/bofh/projects/ai/data/corpora/de/europarl-v7.de-en.de
+parole_de             = /home/bofh/projects/ai/data/corpora/de/German Parole Corpus/DE_Parole/
+
+europarl_en           = /home/bofh/projects/ai/data/corpora/en/europarl-v7.de-en.en
+cornell_movie_dialogs = /home/bofh/projects/ai/data/corpora/en/cornell_movie_dialogs_corpus
+web_questions         = /home/bofh/projects/ai/data/corpora/en/WebQuestions
+yahoo_answers         = /home/bofh/projects/ai/data/corpora/en/YahooAnswers
+
+host_asr              = localhost
+port_asr              = 8301
+
+kaldi_model_dir_de    = /home/bofh/projects/ai/speech/data/models/kaldi-nnet3-voxforge-de-latest
+kaldi_model_de        = nnet_tdnn_a
+
+host_getty            = localhost
+port_getty            = 8298
+port_gettyp           = 8299
+
+[db]
+dbserver              = localhost
+dbname                = nlp
+dbuser                = semantics
+dbpass                = ********
+url                   = postgresql://semantics:********@localhost:5432/nlp
 
 [tts]
-host      = dagobert
-port      = 8300
+host                  = localhost
+port                  = 8300
 ```
 
 Language Model
@@ -127,11 +154,11 @@ Also, I sometimes use this command to add missing words from transcripts in batc
 CMU Sphinx Model
 ================
 
-To build the CMU Sphinx model:
+To build the CMU Sphinx continous model:
 
 ```bash
 ./speech_sphinx_export.py
-cd data/dst/speech/de/cmusphinx/
+cd data/dst/speech/de/cmusphinx_cont/
 ./sphinx-run.sh
 ```
 
@@ -141,61 +168,15 @@ Running pocketsphinx
 just a sample invocation for live audio from mic:
 
     pocketsphinx_continuous \
-        -hmm model_parameters/voxforge.cd_cont_3000 \
+        -hmm model_parameters/voxforge.cd_cont_6000 \
         -lw 10 -feat 1s_c_d_dd -beam 1e-80 -wbeam 1e-40 \
         -dict etc/voxforge.dic \
-        -lm etc/voxforge.lm.DMP \
+        -lm etc/voxforge.lm.bin \
         -wip 0.2 \
         -agc none -varnorm no -cmn current
 
-
-
 Kaldi Models
 ============
-
-HMM Models
-----------
-
-To build the kaldi models:
-
-```bash
-./speech_kaldi_export.py
-cd data/dst/speech/de/kaldi/
-./run-lm.sh
-./run-am.sh
-```
-
-Once this is finished, you can find various models in the `exp/` subdirectory. A few notes on what all those models are
-supposed to be:
-
-```
-exp              tool                  training set       lm        based on        # comment
----------------------------------------------------------------------------------------------------------------------------------
-mono             train_mono.sh         train              lang                      # Train monophone models
-mono_ali         align_si.sh           train              lang      mono            # Get alignments from monophone system.
-tri1             train_deltas.sh       train              lang      mono_ali        # train tri1 [first triphone pass]
-tri1_ali         align_si.sh           train              lang      tri1            
-tri2a            train_deltas.sh       train              lang      tri1_ali        # Train tri2a, which is deltas+delta+deltas
-tri2b            train_lda_mllt.sh     train              lang      tri1_ali        # tri2b [LDA+MLLT]
-tri2b_ali        align_si.sh           train              lang      tri2b           # Align all data with LDA+MLLT system (tri2b)
-tri2b_denlats    make_denlats.sh       train              lang      tri2b           # Do MMI on top of LDA+MLLT.
-tri2b_mmi        train_mmi.sh          train              lang      tri2b_denlats   
-tri2b_mmi_b0.05  train_mmi.sh --boost  train              lang      tri2b_denlats 
-tri2b_mpe        train_mpe.sh          train              lang      tri2b_denlats   # Do MPE.
-
-tri3b            train_sat.sh          train              lang      tri2b_ali       # LDA + MLLT + SAT.
-tri3b_ali        align_fmllr.sh        train              lang      tri3b           # align all data.
-
-tri3b_denlats    make_denlats.sh       train              lang      tri3b           # Do MMI on top of LDA+MLLT+SAT
-tri3b_mmi        train_mmi.sh          train              lang      tri3b_denlats   
-tri3b_mmi_b0.05  train_mmi.sh --boost  train              lang      tri3b_denlats 
-tri3b_mpe        train_mpe.sh          train              lang      tri3b_denlats   # Do MPE.
-
-ubm5a            train_ubm.sh          train              lang      tri3b_ali       # SGMM (subspace gaussian mixture model)
-sgmm_5a          train_sgmm2.sh        train              lang      ubm5a
-sgmm_5a_denlats  make_denlats_sgmm2.sh train              lang      sgmm_5a_ali 
-sgmm_5a_mmi_b0.1 train_mmi_sgmm2.sh    train              lang      sgmm_5a_denlats 
-```
 
 NNet3 Models
 ------------
