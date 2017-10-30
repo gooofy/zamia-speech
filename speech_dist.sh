@@ -68,59 +68,6 @@ popd
 rm -r "$DISTDIR/$AMNAME"
 
 #
-# kaldi gmm models 
-#
-
-AMNAME="kaldi-gmm-voxforge-${LANG}-r$datum"
-
-mkdir "$DISTDIR/$AMNAME"
-
-function export_kaldi_model {
-
-    EXPNAME=$1
-    GRAPHNAME=$2
-
-    mkdir "$DISTDIR/$AMNAME/$EXPNAME"
-
-    cp data/dst/speech/${LANG}/kaldi/exp/$EXPNAME/final.mdl   $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/$EXPNAME/final.mat   $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/$EXPNAME/splice_opts $DISTDIR/$AMNAME/$EXPNAME/          2>/dev/null
-    cp data/dst/speech/${LANG}/kaldi/exp/$EXPNAME/cmvn_opts   $DISTDIR/$AMNAME/$EXPNAME/          2>/dev/null 
-    cp data/dst/speech/${LANG}/kaldi/exp/$EXPNAME/delta_opts  $DISTDIR/$AMNAME/$EXPNAME/          2>/dev/null 
-
-    cp data/dst/speech/${LANG}/kaldi/exp/$GRAPHNAME/HCLG.fst  $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/$GRAPHNAME/words.txt $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/$GRAPHNAME/num_pdfs  $DISTDIR/$AMNAME/$EXPNAME/
-
-}
-
-# export_kaldi_model tri2b           tri2b/graph
-export_kaldi_model tri2b_mmi       tri2b_denlats/dengraph
-export_kaldi_model tri2b_mmi_b0.05 tri2b_denlats/dengraph
-export_kaldi_model tri2b_mpe       tri2b_denlats/dengraph
-# export_kaldi_model tri3b           tri3b/graph
-export_kaldi_model tri3b_mpe       tri3b_denlats/dengraph
-export_kaldi_model tri3b_mmi       tri3b_denlats/dengraph
-export_kaldi_model tri3b_mmi_b0.05 tri3b_denlats/dengraph
-
-cp data/dst/speech/${LANG}/kaldi/RESULTS.txt $DISTDIR/$AMNAME/
-cp README.md "$DISTDIR/$AMNAME"
-cp LICENSE   "$DISTDIR/$AMNAME"
-cp AUTHORS   "$DISTDIR/$AMNAME"
-
-mkdir "$DISTDIR/$AMNAME/conf"
-cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
-cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
-cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
-
-pushd $DISTDIR
-tar cfv "$AMNAME.tar" $AMNAME
-xz -v -8 -T 12 "$AMNAME.tar"
-popd
-
-rm -r "$DISTDIR/$AMNAME"
-
-#
 # cont sphinx model
 #
 
