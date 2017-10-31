@@ -169,22 +169,27 @@ with open (options.outfn, 'w') as outf:
     
         else:    
 
-            if decoder.decode_wav_file(wavfn):
+            try:
 
-                s, l = decoder.get_decoded_string()
+                if decoder.decode_wav_file(wavfn):
 
-                hyp = ' '.join(tokenize(s))
+                    s, l = decoder.get_decoded_string()
 
-                if hyp == prompt:
-                    logging.info("%7d, # rated: %5d %-20s *** MATCH ***" % (idx, num_rated, utt_id))
-                    outf.write ('%s;%d\n' % (utt_id, options.rating))
-                    outf.flush()
-                    logging.debug ('    %s written.' % options.outfn)
+                    hyp = ' '.join(tokenize(s))
+
+                    if hyp == prompt:
+                        logging.info("%7d, # rated: %5d %-20s *** MATCH ***" % (idx, num_rated, utt_id))
+                        outf.write ('%s;%d\n' % (utt_id, options.rating))
+                        outf.flush()
+                        logging.debug ('    %s written.' % options.outfn)
+                    else:
+                        logging.info("%7d, # rated: %5d %-20s no match" % (idx, num_rated, utt_id))
+                        logging.debug("    hyp   : %s" % repr(hyp))
+                        logging.debug("    prompt: %s" % repr(prompt))
+                        
                 else:
-                    logging.info("%7d, # rated: %5d %-20s no match" % (idx, num_rated, utt_id))
-                    logging.debug("    hyp   : %s" % repr(hyp))
-                    logging.debug("    prompt: %s" % repr(prompt))
-                    
-            else:
-                logging.info("%7d, # rated: %5d %-20s decoder failed" % (idx, num_rated, utt_id))
+                    logging.info("%7d, # rated: %5d %-20s decoder failed" % (idx, num_rated, utt_id))
+
+            except:
+                logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
 
