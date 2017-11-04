@@ -322,8 +322,9 @@ logging.info ( "%s written." % fn )
 #
 
 misc.copy_file ('data/src/speech/kaldi-run-lm.sh', '%s/run-lm.sh' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-run-am.sh', '%s/run-am.sh' % work_dir)
+# misc.copy_file ('data/src/speech/kaldi-run-am.sh', '%s/run-am.sh' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-run-nnet3.sh', '%s/run-nnet3.sh' % work_dir)
+misc.copy_file ('data/src/speech/kaldi-run-chain.sh', '%s/run-chain.sh' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-cmd.sh', '%s/cmd.sh' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-path.sh', '%s/path.sh' % work_dir)
 misc.mkdirs ('%s/conf' % work_dir)
@@ -332,6 +333,10 @@ misc.copy_file ('data/src/speech/kaldi-mfcc-hires.conf', '%s/conf/mfcc_hires.con
 misc.copy_file ('data/src/speech/kaldi-online-cmvn.conf', '%s/conf/online_cmvn.conf' % work_dir)
 misc.mkdirs ('%s/local' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-score.sh', '%s/local/score.sh' % work_dir)
+misc.mkdirs ('%s/local/chain' % work_dir)
+misc.copy_file ('data/src/speech/kaldi-run-chain-common.sh', '%s/local/chain/run_chain_common.sh' % work_dir)
+misc.mkdirs ('%s/local/nnet3' % work_dir)
+misc.copy_file ('data/src/speech/kaldi-run-ivector-common.sh', '%s/local/nnet3/run_ivector_common.sh' % work_dir)
 
 #
 # main

@@ -8,10 +8,66 @@ fi
 LANG=$1
 DISTDIR=data/dist/$LANG
 
-rm -rf $DISTDIR
-mkdir $DISTDIR
+# rm -rf $DISTDIR
+# mkdir $DISTDIR
 
 datum=`date +%Y%m%d`
+
+#
+# kaldi chain models 
+#
+
+AMNAME="kaldi-chain-voxforge-${LANG}-r$datum"
+
+mkdir "$DISTDIR/$AMNAME"
+
+function export_kaldi_chain {
+
+    EXPNAME=$1
+    GRAPHNAME=$2
+
+    mkdir "$DISTDIR/$AMNAME/$EXPNAME"
+
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
+
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/num_pdfs                 $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones/align_lexicon.int $DISTDIR/$AMNAME/$EXPNAME/
+
+}
+
+export_kaldi_chain tdnn_sp tdnn_sp/graph
+
+mkdir "$DISTDIR/$AMNAME/extractor"
+
+cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
+cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
+cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
+cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
+cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
+cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
+
+cp data/dst/speech/${LANG}/kaldi/RESULTS.txt $DISTDIR/$AMNAME/
+cp README.md "$DISTDIR/$AMNAME"
+cp LICENSE   "$DISTDIR/$AMNAME"
+cp AUTHORS   "$DISTDIR/$AMNAME"
+
+mkdir "$DISTDIR/$AMNAME/conf"
+cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
+cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
+cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
+
+pushd $DISTDIR
+tar cfv "$AMNAME.tar" $AMNAME
+xz -v -8 -T 12 "$AMNAME.tar"
+popd
+
+rm -r "$DISTDIR/$AMNAME"
+
+#FIXME
+exit 0
 
 #
 # kaldi nnet3 models 
