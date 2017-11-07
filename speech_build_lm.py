@@ -77,9 +77,9 @@ init_app ('speech_build_lm')
 
 config = load_config ('.speechrc')
 
-kaldi_root       = config.get("speech", "kaldi_root")
-ngram_path       = '%s/tools/srilm/bin/i686-m64/ngram' % kaldi_root
-ngram_count_path = '%s/tools/srilm/bin/i686-m64/ngram-count' % kaldi_root
+srilm_root       = config.get("speech", "srilm_root")
+ngram_path       = '%s/bin/i686-m64/ngram' % srilm_root
+ngram_count_path = '%s/bin/i686-m64/ngram-count' % srilm_root
 
 #
 # commandline parsing
