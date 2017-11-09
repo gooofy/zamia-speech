@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# adapted from kaldi's librispeech egs
+# adapted from kaldi's egs/tedlium/s5_r2/local/chain/run_tdnn.sh
 
 mfccdir=mfcc_chain
 
@@ -25,22 +25,11 @@ min_seg_len=1.55
 train_set=train
 gmm=tri2b_chain # the gmm for the target data
 nnet3_affix=_chain  # cleanup affix for nnet3 and chain dirs, e.g. _cleaned
+num_threads_ubm=12
 
-# The rest are configs specific to this script.  Most of the parameters
-# are just hardcoded at this level, in the commands below.
-train_stage=-10
-get_egs_stage=-10
-num_chunk_per_minibatch=128
- 
-# TDNN options
-# this script uses the new tdnn config generator so it needs a final 0 to reflect that the final layer input has no splicing
-# training options
-frames_per_eg=150
-relu_dim=725
-remove_egs=false
-common_egs_dir=
 xent_regularize=0.1
-self_repair_scale=0.00001
+train_stage=-10
+common_egs_dir=  # you can set this to use previously dumped egs.
 
 # pre-flight checks
 
@@ -127,10 +116,13 @@ echo run_ivector_common.sh
 echo
 
 local/nnet3/run_ivector_common.sh --stage $stage \
+                                  --nj $nJobs \
                                   --min-seg-len $min_seg_len \
                                   --train-set $train_set \
                                   --gmm $gmm \
-                                  --nnet3-affix "$nnet3_affix" || exit 1;
+                                  --num-threads-ubm $num_threads_ubm \
+                                  --nnet3-affix "$nnet3_affix"
+
 
 gmm_dir=exp/$gmm
 ali_dir=exp/${gmm}_ali_${train_set}_sp_comb
@@ -148,90 +140,150 @@ for f in $gmm_dir/final.mdl $train_data_dir/feats.scp $train_ivector_dir/ivector
 done
 
 echo
-echo run_chain_common.sh
+echo creating lang directory with one state per phone.
 echo
-# Please take this as a reference on how to specify all the options of
-# local/chain/run_chain_common.sh  
-local/chain/run_chain_common.sh --stage $stage \
-                                --gmm-dir $gmm_dir \
-                                --ali-dir $ali_dir \
-                                --lores-train-data-dir ${lores_train_data_dir} \
-                                --lang $lang \
-                                --lat-dir $lat_dir \
-                                --tree-dir $tree_dir || exit 1;
+
+if [ -d data/lang_chain ]; then
+  if [ data/lang_chain/L.fst -nt data/lang/L.fst ]; then
+    echo "$0: data/lang_chain already exists, not overwriting it; continuing"
+  else
+    echo "$0: data/lang_chain already exists and seems to be older than data/lang..."
+    echo " ... not sure what to do.  Exiting."
+    exit 1;
+  fi
+else
+  cp -r data/lang data/lang_chain
+  silphonelist=$(cat data/lang_chain/phones/silence.csl) || exit 1;
+  nonsilphonelist=$(cat data/lang_chain/phones/nonsilence.csl) || exit 1;
+  # Use our special topology... note that later on may have to tune this
+  # topology.
+  steps/nnet3/chain/gen_topo.py $nonsilphonelist $silphonelist >data/lang_chain/topo
+fi
 
 echo
-echo "$0: creating neural net configs";
-echo 
+echo 'Get the alignments as lattices (gives the chain training more freedom).'
+echo
+
+steps/align_fmllr_lats.sh --nj $nJobs --cmd "$train_cmd" ${lores_train_data_dir} \
+    data/lang $gmm_dir $lat_dir
+rm $lat_dir/fsts.*.gz # save space
+
+echo
+echo 'Build a tree using our new topology.  We know we have alignments for the'
+echo 'speed-perturbed data (local/nnet3/run_ivector_common.sh made them), so use'
+echo 'those.'
+echo
+
+if [ -f $tree_dir/final.mdl ]; then
+  echo "$0: $tree_dir/final.mdl already exists, refusing to overwrite it."
+  exit 1;
+fi
+steps/nnet3/chain/build_tree.sh --frame-subsampling-factor 3 \
+    --context-opts "--context-width=2 --central-position=1" \
+    --cmd "$train_cmd" 4000 ${lores_train_data_dir} data/lang_chain $ali_dir $tree_dir
+
 mkdir -p $dir
 
-# create the config files for nnet initialization
-repair_opts=${self_repair_scale:+" --self-repair-scale-nonlinearity $self_repair_scale "}
+echo
+echo "$0: creating neural net configs using the xconfig parser";
+echo
 
-steps/nnet3/tdnn/make_configs.py $repair_opts \
-  --feat-dir $train_data_dir \
-  --ivector-dir $train_ivector_dir \
-  --tree-dir $tree_dir \
-  --relu-dim $relu_dim \
-  --splice-indexes "-1,0,1 -1,0,1,2 -3,0,3 -3,0,3 -3,0,3 -6,-3,0 0" \
-  --use-presoftmax-prior-scale false \
-  --xent-regularize $xent_regularize \
-  --xent-separate-forward-affine true \
-  --include-log-softmax false \
-  --final-layer-normalize-target 0.5 \
-  $dir/configs || exit 1;
+num_targets=$(tree-info $tree_dir/tree |grep num-pdfs|awk '{print $2}')
+learning_rate_factor=$(echo "print 0.5/$xent_regularize" | python)
+
+mkdir -p $dir/configs
+cat <<EOF > $dir/configs/network.xconfig
+input dim=100 name=ivector
+input dim=40 name=input
+
+# please note that it is important to have input layer with the name=input
+# as the layer immediately preceding the fixed-affine-layer to enable
+# the use of short notation for the descriptor
+fixed-affine-layer name=lda input=Append(-1,0,1,ReplaceIndex(ivector, t, 0)) affine-transform-file=$dir/configs/lda.mat
+
+# the first splicing is moved before the lda layer, so no splicing here
+relu-batchnorm-layer name=tdnn1 dim=450 self-repair-scale=1.0e-04
+relu-batchnorm-layer name=tdnn2 input=Append(-1,0,1) dim=450
+relu-batchnorm-layer name=tdnn3 input=Append(-1,0,1,2) dim=450
+relu-batchnorm-layer name=tdnn4 input=Append(-3,0,3) dim=450
+relu-batchnorm-layer name=tdnn5 input=Append(-3,0,3) dim=450
+relu-batchnorm-layer name=tdnn6 input=Append(-6,-3,0) dim=450
+
+## adding the layers for chain branch
+relu-batchnorm-layer name=prefinal-chain input=tdnn6 dim=450 target-rms=0.5
+output-layer name=output include-log-softmax=false dim=$num_targets max-change=1.5
+
+# adding the layers for xent branch
+# This block prints the configs for a separate output that will be
+# trained with a cross-entropy objective in the 'chain' models... this
+# has the effect of regularizing the hidden parts of the model.  we use
+# 0.5 / args.xent_regularize as the learning rate factor- the factor of
+# 0.5 / args.xent_regularize is suitable as it means the xent
+# final-layer learns at a rate independent of the regularization
+# constant; and the 0.5 was tuned so as to make the relative progress
+# similar in the xent and regular final layers.
+relu-batchnorm-layer name=prefinal-xent input=tdnn6 dim=450 target-rms=0.5
+output-layer name=output-xent dim=$num_targets learning-rate-factor=$learning_rate_factor max-change=1.5
+
+EOF
+steps/nnet3/xconfig_to_configs.py --xconfig-file $dir/configs/network.xconfig --config-dir $dir/configs/
+
 
 echo
 echo train.py 
 echo
 
-touch $dir/egs/.nodelete # keep egs around when that run dies.
-
 steps/nnet3/chain/train.py --stage $train_stage \
   --cmd "$decode_cmd" \
   --feat.online-ivector-dir $train_ivector_dir \
   --feat.cmvn-opts "--norm-means=false --norm-vars=false" \
-  --chain.xent-regularize $xent_regularize \
+  --chain.xent-regularize 0.1 \
   --chain.leaky-hmm-coefficient 0.1 \
   --chain.l2-regularize 0.00005 \
   --chain.apply-deriv-weights false \
   --chain.lm-opts="--num-extra-lm-states=2000" \
-  --egs.stage $get_egs_stage \
-  --egs.opts "--frames-overlap-per-eg 0" \
-  --egs.chunk-width $frames_per_eg \
   --egs.dir "$common_egs_dir" \
-  --trainer.num-chunk-per-minibatch $num_chunk_per_minibatch \
+  --egs.opts "--frames-overlap-per-eg 0" \
+  --egs.chunk-width 150 \
+  --trainer.num-chunk-per-minibatch 128 \
   --trainer.frames-per-iter 1500000 \
   --trainer.num-epochs 4 \
+  --trainer.optimization.proportional-shrink 20 \
   --trainer.optimization.num-jobs-initial 1 \
   --trainer.optimization.num-jobs-final 1 \
   --trainer.optimization.initial-effective-lrate 0.001 \
   --trainer.optimization.final-effective-lrate 0.0001 \
-  --trainer.max-param-change 2 \
-  --cleanup.remove-egs $remove_egs \
+  --trainer.max-param-change 2.0 \
+  --cleanup.remove-egs true \
   --feat-dir $train_data_dir \
   --tree-dir $tree_dir \
   --lat-dir $lat_dir \
-  --dir $dir  || exit 1;
+  --dir $dir
 
 echo
 echo mkgraph
 echo
 
-graph_dir=$dir/graph
-
-utils/mkgraph.sh --self-loop-scale 1.0 --remove-oov data/lang_test $dir $graph_dir
-# remove <UNK> from the graph
-fstrmsymbols --apply-to-output=true --remove-arcs=true "echo 3|" $graph_dir/HCLG.fst $graph_dir/HCLG.fst
+utils/mkgraph.sh --self-loop-scale 1.0 data/lang_test $dir $dir/graph
 
 echo
 echo decode
 echo
 
-steps/nnet3/decode.sh --acwt 1.0 --post-decode-acwt 10.0 \
-    --nj $nDecodeJobs --cmd "$decode_cmd" \
-    --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_test_hires \
-    $graph_dir data/test_hires $dir/decode_test || exit 1
+steps/nnet3/decode.sh --num-threads 1 --nj $nDecodeJobs --cmd "$decode_cmd" \
+                      --acwt 1.0 --post-decode-acwt 10.0 \
+                      --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_test_hires \
+                      --scoring-opts "--min-lmwt 5 " \
+                      $dir/graph data/test_hires $dir/decode_test || exit 1;
+
+# echo
+# echo rescore
+# echo
+# 
+# steps/lmrescore_const_arpa.sh --cmd "$decode_cmd" data/lang data/lang_rescore \
+#         data/test_hires ${dir}/decode_test ${dir}/decode_test_rescore || exit 1
 
 grep WER exp/nnet3_chain/tdnn_sp/decode_test/scoring_kaldi/best_wer >>RESULTS.txt
+
+cat RESULTS.txt
 

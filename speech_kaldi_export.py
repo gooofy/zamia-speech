@@ -333,8 +333,6 @@ misc.copy_file ('data/src/speech/kaldi-mfcc-hires.conf', '%s/conf/mfcc_hires.con
 misc.copy_file ('data/src/speech/kaldi-online-cmvn.conf', '%s/conf/online_cmvn.conf' % work_dir)
 misc.mkdirs ('%s/local' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-score.sh', '%s/local/score.sh' % work_dir)
-misc.mkdirs ('%s/local/chain' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-run-chain-common.sh', '%s/local/chain/run_chain_common.sh' % work_dir)
 misc.mkdirs ('%s/local/nnet3' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-run-ivector-common.sh', '%s/local/nnet3/run_ivector_common.sh' % work_dir)
 
