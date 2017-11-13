@@ -39,6 +39,7 @@ function export_kaldi_chain {
 }
 
 export_kaldi_chain tdnn_sp tdnn_sp/graph
+export_kaldi_chain tdnn_250 tdnn_250/graph
 
 mkdir "$DISTDIR/$AMNAME/extractor"
 
