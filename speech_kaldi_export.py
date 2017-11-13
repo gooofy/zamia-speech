@@ -323,7 +323,7 @@ logging.info ( "%s written." % fn )
 
 misc.copy_file ('data/src/speech/kaldi-run-lm.sh', '%s/run-lm.sh' % work_dir)
 # misc.copy_file ('data/src/speech/kaldi-run-am.sh', '%s/run-am.sh' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-run-nnet3.sh', '%s/run-nnet3.sh' % work_dir)
+# misc.copy_file ('data/src/speech/kaldi-run-nnet3.sh', '%s/run-nnet3.sh' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-run-chain.sh', '%s/run-chain.sh' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-cmd.sh', '%s/cmd.sh' % work_dir)
 misc.copy_file ('data/src/speech/kaldi-path.sh', '%s/path.sh' % work_dir)
