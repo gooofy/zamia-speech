@@ -40,10 +40,12 @@ from nltools.tokenizer  import tokenize
 from speech_lexicon     import Lexicon
 from speech_transcripts import Transcripts
 
-from kaldisimple.nnet3  import KaldiNNet3OnlineModel, KaldiNNet3OnlineDecoder
+from kaldiasr.nnet3     import KaldiNNet3OnlineModel, KaldiNNet3OnlineDecoder
 
-MODELDIR    = 'data/models/kaldi-nnet3-voxforge-%s-latest'
-MODEL       = 'nnet_tdnn_a' 
+MODELDIR    = 'data/models/kaldi-chain-voxforge-%s-latest'
+# MODELDIR    = 'data/models/kaldi-nnet3-voxforge-%s-latest'
+MODEL       = 'tdnn_sp'
+# MODEL       = 'nnet_tdnn_a' 
 SAVE_RATE   = 10
 
 #
@@ -123,7 +125,7 @@ logging.info("loading transcripts...done.")
 
 if not options.do_all:
     logging.info("loading kaldi model...")
-    kaldi_model = KaldiNNet3OnlineModel (MODELDIR % options.lang, MODEL)
+    kaldi_model = KaldiNNet3OnlineModel (MODELDIR % options.lang, MODEL, acoustic_scale=1.0, beam=7.0, frame_subsampling_factor=3)
     logging.info("loading kaldi model...done.")
 
 #
