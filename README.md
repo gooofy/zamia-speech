@@ -56,6 +56,7 @@ extrasdir_en          = /home/bofh/projects/ai/data/speech/en/kitchen
 librivoxdir           = /home/bofh/projects/ai/data/speech/en/lsvf
 
 kaldi_root            = /apps/kaldi-cuda
+srilm_root            = /apps/kaldi-cuda/tools/srilm
 
 wav16_dir_de          = /home/bofh/projects/ai/data/speech/de/16kHz
 wav16_dir_en          = /home/bofh/projects/ai/data/speech/en/16kHz
