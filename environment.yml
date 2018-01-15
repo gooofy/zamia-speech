@@ -1,0 +1,62 @@
+name: gooofy-speech
+channels:
+- defaults
+dependencies:
+- asn1crypto=0.24.0=py27_0
+- attrs=17.3.0=py27hf19f258_0
+- ca-certificates=2017.08.26=h1d4fec5_0
+- certifi=2017.11.5=py27h71e7faf_0
+- cffi=1.11.2=py27ha7929c6_0
+- chardet=3.0.4=py27hfa10054_1
+- coverage=4.4.2=py27h86fff8b_0
+- cryptography=2.1.4=py27h6697b16_0
+- cython=0.27.3=py27hc56b35e_0
+- enum34=1.1.6=py27h99a27e9_1
+- funcsigs=1.0.2=py27h83f16ab_0
+- hypothesis=3.38.5=py27h2236425_0
+- idna=2.6=py27h5722d68_1
+- intel-openmp=2018.0.0=hc7b2577_8
+- ipaddress=1.0.19=py27_0
+- libedit=3.1=heed3624_0
+- libffi=3.2.1=hd88cf55_4
+- libgcc-ng=7.2.0=h7cc24e2_2
+- libgfortran-ng=7.2.0=h9f7466a_2
+- libstdcxx-ng=7.2.0=h7a57d05_2
+- mkl=2018.0.1=h19d6760_4
+- ncurses=6.0=h9df7e31_2
+- nltk=3.2.5=py27hec5f4de_0
+- numpy=1.14.0=py27h3dfced4_0
+- openssl=1.0.2n=hb7f436b_0
+- pcre=8.41=hc27e229_1
+- pip=9.0.1=py27ha730c48_4
+- pluggy=0.6.0=py27h1f4f128_0
+- py=1.5.2=py27h203d672_0
+- pycparser=2.18=py27hefa08c5_1
+- pympler=0.5=py27h8aa4898_0
+- pyopenssl=17.5.0=py27hcee3be0_0
+- pysocks=1.6.7=py27he2db6d2_1
+- pytest=3.3.0=py27h0742b9d_0
+- python=2.7.14=h1571d57_29
+- readline=7.0=ha6073c6_4
+- requests=2.18.4=py27hc5b0589_1
+- setuptools=36.5.0=py27h68b189e_0
+- six=1.11.0=py27h5f960f1_1
+- sqlite=3.20.1=hb898158_2
+- swig=3.0.12=h38cdd7d_3
+- tk=8.6.7=hc745277_3
+- urllib3=1.22=py27ha55213b_0
+- wheel=0.30.0=py27h2bc6bb2_1
+- zlib=1.2.11=ha838bed_2
+- zope=1.0=py27_0
+- zope.interface=4.4.3=py27hb02d991_0
+- pip:
+  - num2words==0.5.6
+  - pocketsphinx==0.1.3
+  - py-espeak-ng==0.1.1
+  - py-kaldi-asr==0.2.4
+  - py-marytts==0.1.3
+  - py-nltools==0.1.2
+  - py-picotts==0.1.1
+  - setproctitle==1.1.10
+  - webrtcvad==2.0.10
+
