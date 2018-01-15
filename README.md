@@ -33,6 +33,7 @@ Requirements
 * srilm
 * kaldi
 * py-nltools
+* sox
 
 Setup Notes
 ===========
