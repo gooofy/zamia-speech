@@ -81,13 +81,6 @@ host_getty            = localhost
 port_getty            = 8298
 port_gettyp           = 8299
 
-[db]
-dbserver              = localhost
-dbname                = nlp
-dbuser                = semantics
-dbpass                = ********
-url                   = postgresql://semantics:********@localhost:5432/nlp
-
 [tts]
 host                  = localhost
 port                  = 8300
