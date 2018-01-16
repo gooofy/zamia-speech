@@ -35,6 +35,30 @@ Requirements
 * py-nltools
 * sox
 
+To set up a Conda environment named `gooofy-speech` with all Python
+dependencies installed, run
+
+    $ conda env create -f environment.yml
+
+To activate the environment, run
+
+    $ source activate gooofy-speech
+
+To deactivate the environment, run
+
+    $ source deactivate
+
+*Note*: The Conda environment was created on a Linux machine, so maybe it won't
+work on other machines.
+
+While the environment is activated, you may want to install additional packages
+with `conda install` or `pip install`. After doing so, update `environment.yml`
+with
+
+    $ ./update_conda_env.sh
+
+Afterwards you can commit the changes to the repository.
+
 Setup Notes
 ===========
 
