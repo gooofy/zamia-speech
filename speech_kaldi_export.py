@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016, 2017 Guenter Bartsch
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -39,7 +39,8 @@ from nltools.sequiturclient import sequitur_gen_ipa
 from speech_lexicon     import Lexicon
 from speech_transcripts import Transcripts
 
-WORKDIR = 'data/dst/speech/%s/kaldi'
+WORKDIR          = 'data/dst/speech/%s/kaldi'
+SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-%s-latest'
 
 #
 # init 
@@ -176,7 +177,7 @@ if options.add_all:
 
         lex_base = item[0] 
 
-        ipas = sequitur_gen_ipa (lex_base)
+        ipas = sequitur_gen_ipa (SEQUITUR_MODEL % options.lang, lex_base)
 
         logging.info ( u"%5d/%5d Adding missing word : %s [ %s ]" % (cnt, len(missing), item[0], ipas) )
 
