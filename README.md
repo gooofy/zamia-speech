@@ -223,4 +223,5 @@ Author
 ======
 
 Guenter Bartsch <guenter@zamia.org>
+Conda environment and many bugfixes contributed by mpuels (https://github.com/mpuels)
 
