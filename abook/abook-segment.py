@@ -36,8 +36,8 @@ from nltools            import misc
 from nltools.vad        import VAD, BUFFER_DURATION
 
 #
-# - convert audio to wav
-# - segment 
+# - convert wav to 16kHz
+# - segment according to voice activity measurements
 #
 
 random.seed (42)
@@ -186,12 +186,6 @@ while offset < length:
 
         samples = np.fromstring(wd, dtype=np.int16)
 
-        # A = array.array('h')
-        # A.fromstring(wd)
-        # samples = A.tolist()
-
-        # samples = struct.unpack("<h", wd)
-
         audio, finalize = vad.process_audio(samples)
 
         # logging.info ('len(cur_buffer)=%5d finalize: %s' % (len(cur_buffer), finalize))
@@ -211,10 +205,6 @@ while offset < length:
 
             A = array.array('h', cur_buffer)
             wd = A.tostring()
-
-            # for sample in cur_buffer:
-            #     wd = struct.pack("<h", sample)
-            #     wavoutf.writeframes(wd)
             wavoutf.writeframes(wd)
             wavoutf.close()
             wavoutcnt += 1
@@ -223,10 +213,6 @@ while offset < length:
             logging.info ('segment %s written, %5.1fs.' % (wavoutfn, seconds))
 
             cur_buffer = []
-
-        # if i % 1000 == 0:
-        #     p = offset * 100 / length
-        #     print "\rReading %9d/%9d %3d%% samples from %s..." % (offset, length, p, tmpwav16fn),
 
     except:
         logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
