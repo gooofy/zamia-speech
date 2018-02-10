@@ -42,16 +42,14 @@ from nltools.vad        import VAD, BUFFER_DURATION
 
 random.seed (42)
 
-# silence: anything < 20% of avg volume
-SILENCE_THRESH     = 0.2
+SAMPLE_RATE                = 16000
+FRAMES_PER_BUFFER          = SAMPLE_RATE * BUFFER_DURATION / 1000
 
-SAMPLE_RATE        = 16000
-AGGRESSIVENESS     = 2
-FRAMES_PER_BUFFER  = SAMPLE_RATE * BUFFER_DURATION / 1000
+DEFAULT_AGGRESSIVENESS     = 2
 
-MIN_UTT_LENGTH     = 1   # seconds
-MAX_UTT_LENGTH     = 25  # seconds
-MAX_UTT_GAP        = 0.2 # seconds
+DEFAULT_MIN_UTT_LENGTH     = 1   # seconds
+DEFAULT_MAX_UTT_LENGTH     = 25  # seconds
+DEFAULT_MAX_UTT_GAP        = 0.2 # seconds
 
 # debug purposes only, set to 0 to disable debug limit
 #DEBUG_LENGTH       = 5000000
@@ -95,6 +93,14 @@ vf_login    = config.get("speech", "vf_login")
 
 parser = OptionParser("usage: %prog [options] foo.wav")
 
+parser.add_option("-a", "--aggressiveness", dest="aggressiveness", type = "int", default=DEFAULT_AGGRESSIVENESS,
+                   help="aggressiveness (0-3, default: %d)" % DEFAULT_AGGRESSIVENESS)
+parser.add_option("-g", "--max-gap", dest="max_utt_gap", type = "float", default=DEFAULT_MAX_UTT_GAP,
+                   help="max utterance gap (default: %5.2fs)" % DEFAULT_MAX_UTT_GAP)
+parser.add_option("-m", "--min_utt_length", dest="min_utt_length", type = "float", default=DEFAULT_MIN_UTT_LENGTH,
+                   help="minimum utterance length (default: %5.2fs)" % DEFAULT_MIN_UTT_LENGTH)
+parser.add_option("-M", "--max_utt_length", dest="max_utt_length", type = "float", default=DEFAULT_MAX_UTT_LENGTH,
+                   help="maximum utterance length (default: %5.2fs)" % DEFAULT_MAX_UTT_LENGTH)
 parser.add_option("-s", "--speaker", dest="speaker", type = "str", default=vf_login,
                    help="speaker (default: %s)" % vf_login)
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
@@ -112,9 +118,13 @@ if len(args) != 1:
     parser.print_usage()
     sys.exit(1)
 
-inputfn    = args[0]
-speaker    = options.speaker
-tmpwav16fn = '/tmp/tmp16_%08x.wav' % os.getpid()
+inputfn        = args[0]
+speaker        = options.speaker
+tmpwav16fn     = '/tmp/tmp16_%08x.wav' % os.getpid()
+min_utt_length = options.min_utt_length 
+max_utt_length = options.max_utt_length 
+max_utt_gap    = options.max_utt_gap    
+aggressiveness = options.aggressiveness
 
 #
 # segment audio
@@ -124,11 +134,11 @@ tmpwav16fn = '/tmp/tmp16_%08x.wav' % os.getpid()
 # VAD
 #
 
-vad = VAD(aggressiveness = AGGRESSIVENESS, 
+vad = VAD(aggressiveness = aggressiveness, 
           sample_rate    = SAMPLE_RATE,
-          min_utt_length = MIN_UTT_LENGTH,
-          max_utt_length = MAX_UTT_LENGTH,
-          max_utt_gap    = MAX_UTT_GAP)
+          min_utt_length = min_utt_length,
+          max_utt_length = max_utt_length,
+          max_utt_gap    = max_utt_gap)
 
 # generate dir name
 
@@ -198,7 +208,7 @@ while offset < length:
 
         if finalize:
 
-            wavoutfn  = "%s/wav/de10-%03d.wav" % (dir_path, wavoutcnt)
+            wavoutfn  = "%s/wav/de10-%04d.wav" % (dir_path, wavoutcnt)
 
             wavoutf   = wave.open(wavoutfn, 'w')
             wavoutf.setparams((1, 2, 16000, 0, "NONE", "not compressed"))
