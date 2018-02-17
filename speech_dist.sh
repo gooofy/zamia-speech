@@ -9,7 +9,7 @@ LANG=$1
 DISTDIR=data/dist/$LANG
 
 # rm -rf $DISTDIR
-# mkdir $DISTDIR
+# mkdir -p $DISTDIR
 
 datum=`date +%Y%m%d`
 
@@ -19,14 +19,14 @@ datum=`date +%Y%m%d`
 
 AMNAME="kaldi-chain-voxforge-${LANG}-r$datum"
 
-mkdir "$DISTDIR/$AMNAME"
+mkdir -p "$DISTDIR/$AMNAME"
 
 function export_kaldi_chain {
 
     EXPNAME=$1
     GRAPHNAME=$2
 
-    mkdir "$DISTDIR/$AMNAME/$EXPNAME"
+    mkdir -p "$DISTDIR/$AMNAME/$EXPNAME"
 
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
@@ -41,7 +41,7 @@ function export_kaldi_chain {
 export_kaldi_chain tdnn_sp tdnn_sp/graph
 export_kaldi_chain tdnn_250 tdnn_250/graph
 
-mkdir "$DISTDIR/$AMNAME/extractor"
+mkdir -p "$DISTDIR/$AMNAME/extractor"
 
 cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
 cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
@@ -55,7 +55,7 @@ cp README.md "$DISTDIR/$AMNAME"
 cp LICENSE   "$DISTDIR/$AMNAME"
 cp AUTHORS   "$DISTDIR/$AMNAME"
 
-mkdir "$DISTDIR/$AMNAME/conf"
+mkdir -p "$DISTDIR/$AMNAME/conf"
 cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
 cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
 cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
@@ -73,8 +73,8 @@ rm -r "$DISTDIR/$AMNAME"
 
 AMNAME="cmusphinx-cont-voxforge-${LANG}-r$datum"
 
-mkdir "$DISTDIR/$AMNAME"
-mkdir "$DISTDIR/$AMNAME/model_parameters"
+mkdir -p "$DISTDIR/$AMNAME"
+mkdir -p "$DISTDIR/$AMNAME/model_parameters"
 
 cp -r data/dst/speech/${LANG}/cmusphinx_cont/model_parameters/voxforge.cd_cont_6000 "$DISTDIR/$AMNAME/model_parameters"
 cp -r data/dst/speech/${LANG}/cmusphinx_cont/etc "$DISTDIR/$AMNAME"
@@ -96,8 +96,8 @@ rm -r "$DISTDIR/$AMNAME"
 
 AMNAME="cmusphinx-ptm-voxforge-${LANG}-r$datum"
 
-mkdir "$DISTDIR/$AMNAME"
-mkdir "$DISTDIR/$AMNAME/model_parameters"
+mkdir -p "$DISTDIR/$AMNAME"
+mkdir -p "$DISTDIR/$AMNAME/model_parameters"
 
 cp -r data/dst/speech/${LANG}/cmusphinx_ptm/model_parameters/voxforge.cd_ptm_5000 "$DISTDIR/$AMNAME/model_parameters"
 cp -r data/dst/speech/${LANG}/cmusphinx_ptm/etc "$DISTDIR/$AMNAME"
@@ -163,14 +163,14 @@ exit 0
 
 AMNAME="kaldi-nnet3-voxforge-${LANG}-r$datum"
 
-mkdir "$DISTDIR/$AMNAME"
+mkdir -p "$DISTDIR/$AMNAME"
 
 function export_kaldi_nnet3 {
 
     EXPNAME=$1
     GRAPHNAME=$2
 
-    mkdir "$DISTDIR/$AMNAME/$EXPNAME"
+    mkdir -p "$DISTDIR/$AMNAME/$EXPNAME"
 
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
@@ -185,7 +185,7 @@ function export_kaldi_nnet3 {
 export_kaldi_nnet3 nnet_tdnn_a  nnet_tdnn_a/graph
 # export_kaldi_nnet3 lstm_ld5     lstm_ld5/graph
 
-mkdir "$DISTDIR/$AMNAME/extractor"
+mkdir -p "$DISTDIR/$AMNAME/extractor"
 
 cp data/dst/speech/${LANG}/kaldi/exp/nnet3/extractor/final.mat            "$DISTDIR/$AMNAME/extractor/"
 cp data/dst/speech/${LANG}/kaldi/exp/nnet3/extractor/global_cmvn.stats    "$DISTDIR/$AMNAME/extractor/"
@@ -199,7 +199,7 @@ cp README.md "$DISTDIR/$AMNAME"
 cp LICENSE   "$DISTDIR/$AMNAME"
 cp AUTHORS   "$DISTDIR/$AMNAME"
 
-mkdir "$DISTDIR/$AMNAME/conf"
+mkdir -p "$DISTDIR/$AMNAME/conf"
 cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
 cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
 cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf

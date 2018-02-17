@@ -1,0 +1,8 @@
+
+MKV to WAV audio track extraction
+=================================
+
+mkvextract tracks ccall/2018-02-08_15-30-28-guenter-marc.mkv 0:foo.ogg
+opusdec foo.ogg telco201802081530.wav
+./abook-segment.py telco201802081530.wav
+
