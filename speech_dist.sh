@@ -67,9 +67,6 @@ popd
 
 rm -r "$DISTDIR/$AMNAME"
 
-#FIXME
-exit 0
-
 #
 # cont sphinx model
 #
