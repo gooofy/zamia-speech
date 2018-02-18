@@ -33,6 +33,7 @@ import locale
 import codecs
 import wave
 import random
+import copy
 
 from optparse               import OptionParser
 
@@ -46,6 +47,7 @@ DEBUG_LIMIT     = 0
 OUT_DIR         = 'tmp/phone_%s' % LANG # FIXME
 FRAMERATE       = 16000
 MIN_QUALITY     = 2
+SKIP            = 4 # only generate phone-variant of every 4th existing entry
 
 #
 # init
@@ -111,15 +113,12 @@ for ts in transcripts:
 #
 
 cnt = 1
-for ts in transcripts:
+transcripts2 = copy.deepcopy(transcripts)
+for ts in transcripts2:
 
     # print type(transcripts)
 
-    if DEBUG_LIMIT:
-        ts2 = random.choice(transcripts.keys())
-        cfn   = transcripts[ts2]['cfn']
-    else:
-        cfn   = transcripts[ts]['cfn']
+    cfn   = transcripts[ts]['cfn']
 
     if cfn.startswith('gsp'):
         continue
@@ -138,50 +137,53 @@ for ts in transcripts:
     if os.path.exists(outfn):
         continue
 
-    wav = wave.open(infn, 'r')
+    if cnt % SKIP == 0:
 
-    fr = wav.getframerate()
-    if fr == FRAMERATE:
+        wav = wave.open(infn, 'r')
 
-        op = random.choice(['8kHz', 'lpc ', 'gsm '])
+        fr = wav.getframerate()
+        if fr == FRAMERATE:
 
-        logging.info ('%5d/%5d %s %s' % (cnt, total_good, op, cfn))
+            op = random.choice(['8kHz', 'lpc ', 'gsm '])
 
-        if op == '8kHz':
-            tmpfn = '%s.wav' % tmpfn_base
+            logging.info ('%5d/%5d %s %s' % (cnt, total_good, op, cfn))
 
-        elif op == 'lpc ':
-            tmpfn = '%s.lpc' % tmpfn_base
-        
+            if op == '8kHz':
+                tmpfn = '%s.wav' % tmpfn_base
+
+            elif op == 'lpc ':
+                tmpfn = '%s.lpc' % tmpfn_base
+            
+            else:
+                tmpfn = '%s.gsm' % tmpfn_base
+
+            cmd = 'sox %s -r 8000 -c 1 %s' % (infn, tmpfn)
+            logging.debug('   cmd: %s' % cmd)
+            os.system(cmd)
+
+            cmd = 'sox %s -b 16 -r 16000 -c 1 %s' % (tmpfn, outfn)
+            logging.debug('   cmd: %s' % cmd)
+            os.system(cmd)
+
+            entry2 = { 'dirfn'   : entry['dirfn'],
+                       'audiofn' : entry['audiofn'],
+                       'prompt'  : entry['prompt'],
+                       'ts'      : entry['ts'],
+                       'quality' : 2,
+                       'spk'     : entry['spk'],
+                       'cfn'     : cfn2 }
+
+            transcripts[cfn2] = entry2
+
         else:
-            tmpfn = '%s.gsm' % tmpfn_base
+            logging.error ('%s: wrong framerate %d' % (infn, fr))
 
-        cmd = 'sox %s -r 8000 -c 1 %s' % (infn, tmpfn)
-        logging.debug('   cmd: %s' % cmd)
-        os.system(cmd)
-
-        cmd = 'sox %s -b 16 -r 16000 -c 1 %s' % (tmpfn, outfn)
-        logging.debug('   cmd: %s' % cmd)
-        os.system(cmd)
-
-        # entry2 = { 'dirfn'   : entry['dirfn'],
-        #            'audiofn' : entry['audiofn'],
-        #            'prompt'  : entry['prompt'],
-        #            'ts'      : ts2,
-        #            'quality' : 2,
-        #            'spk'     : entry['spk'],
-        #            'cfn'     : cfn2 }
-
-        # transcripts[cfn2] = entry2
-
-    else:
-        logging.error ('%s: wrong framerate %d' % (infn, fr))
-
-    wav.close()
+        wav.close()
 
     cnt += 1
 
     if DEBUG_LIMIT>0 and cnt>DEBUG_LIMIT:
+        logging.warn('debug limit reached.')
         break
 
 transcripts.save()
