@@ -50,6 +50,15 @@ def play_wav(pid):
 
     tts.play_wav(wav, async=True)
 
+def audacity(pid):
+
+    global wavdirfn, tts
+
+    wavfn = '%s/%s.wav' % (wavdirfn, pid)
+
+    cmd = 'audacity %s &' % wavfn
+    os.system(cmd)
+
 #
 # init terminal
 #
@@ -127,7 +136,7 @@ if os.path.isfile(promptsfn):
 
             prompts[pid] = prompt
 
-print repr(wavs), repr(prompts)
+# print repr(wavs), repr(prompts)
 
 #
 # main ui loop
@@ -148,7 +157,7 @@ while True:
         print 
         print prompts[pid]
         
-    resp = raw_input("%s (L)isten (E)dit (N)ext (P)rev (Q)uit>" % pid)
+    resp = raw_input("%s (L)isten (A)udacity (E)dit (N)ext (P)rev (Q)uit>" % pid)
 
     if resp.lower() == 'q':
         break
@@ -170,6 +179,10 @@ while True:
     if resp.lower() == 'l':
         pid = wavs[idx]
         play_wav(pid)
+
+    if resp.lower() == 'a':
+        pid = wavs[idx]
+        audacity(pid)
 
     if resp.lower() == 'e':
         prompts[pid] = raw_input("%s prompt>" % pid)
