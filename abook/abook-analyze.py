@@ -180,3 +180,12 @@ with codecs.open('reference.txt', 'w', 'utf8') as reff, \
 logging.info('reference.txt written.')
 logging.info('hypothesis.txt written.')
 
+#
+# word-align
+#
+
+cmd = './word_align.pl reference.txt hypothesis.txt>%s.align' % subdirfn
+logging.info(cmd)
+os.system(cmd)
+
+
