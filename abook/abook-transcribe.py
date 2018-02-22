@@ -25,19 +25,21 @@ import traceback
 import logging
 import re
 import readline
+import wave
 
 from optparse           import OptionParser
 from nltools            import misc
-from nltools.tts            import TTS
+from nltools.tts        import TTS
 
 #
 # - play back segments
 # - edit/review transcripts
 #
 
-SAMPLE_RATE = 16000
+SAMPLE_RATE       = 16000
 
-PROC_TITLE  = 'abook-transcribe'
+PROC_TITLE        = 'abook-transcribe'
+AUDACITY_DURATION = 3.0
 
 def play_wav(pid):
 
@@ -45,10 +47,20 @@ def play_wav(pid):
 
     wavfn = '%s/%s.wav' % (wavdirfn, pid)
 
-    with open(wavfn) as wavf:
-        wav = wavf.read()
+    wavef = wave.open(wavfn, 'rb')
 
-    tts.play_wav(wav, async=True)
+    num_frames = wavef.getnframes()
+    frame_rate = wavef.getframerate()
+
+    duration = float(num_frames) / float(frame_rate)
+    wavef.close()
+
+    if duration < AUDACITY_DURATION:
+        with open(wavfn) as wavf:
+            wav = wavf.read()
+        tts.play_wav(wav, async=True)
+    else:
+        audacity(pid)
 
 def audacity(pid):
 
