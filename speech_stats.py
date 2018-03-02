@@ -50,6 +50,8 @@ misc.init_app (PROC_TITLE)
 
 parser = OptionParser("usage: %prog [options])")
 
+parser.add_option ("-c", "--csv", dest="csvfn", type = "str",
+                   help="CSV output file")
 parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
                    help="language (default: de)")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
@@ -71,7 +73,6 @@ else:
 config = misc.load_config('.speechrc')
 
 wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
-
 
 #
 # load transcripts
@@ -108,6 +109,7 @@ logging.info ('calculating audio duration...')
 
 total_duration   = 0.0
 duration_per_spk = {}
+subs_per_spk     = {}
 cnt              = 0
 
 for cfn in transcripts:
@@ -133,8 +135,10 @@ for cfn in transcripts:
 
     if not spk in duration_per_spk:
         duration_per_spk[spk] = 0.0
+        subs_per_spk[spk]     = 0
 
     duration_per_spk[spk] += duration
+    subs_per_spk[spk]     += 1
 
     wavef.close()
 
@@ -147,7 +151,15 @@ for cfn in transcripts:
 logging.info( "total duration of all good submissions: %s" % format_duration(total_duration))
 logging.info( "good submissions per user:")
 for spk in sorted(duration_per_spk):
-    logging.info( "%-42s %s" % (spk, format_duration(duration_per_spk[spk])))
+    logging.info( "%-42s %s (%3d)" % (spk, format_duration(duration_per_spk[spk]), subs_per_spk[spk]))
+
+if options.csvfn:
+    with codecs.open(options.csvfn, 'w', 'utf8') as csvf:
+        csvf.write('speaker,duration,subs\n')
+        for spk in sorted(duration_per_spk):
+            csvf.write( "%s,%f,%d\n" % (spk, duration_per_spk[spk], subs_per_spk[spk]))
+    logging.info('%s written.' % options.csvfn)
+
 
 #
 # sphinx model stats
