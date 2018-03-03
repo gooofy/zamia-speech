@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016, 2017 Guenter Bartsch
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,8 @@ import codecs
 from nltools.tokenizer import tokenize
 
 TSDIR    = 'data/src/speech/%s'
-MAXLINES = 100000
+SPK_TEST = 'data/src/speech/%s/spk_test.txt'
+MAXLINES = 100000 # used to split up transcript.csvs
  
 class Transcripts(object):
 
@@ -77,6 +78,12 @@ class Transcripts(object):
 
                     self.ts[cfn] = v
 
+        self.spk_test = []
+        with codecs.open(SPK_TEST % lang, 'r', 'utf8') as f:
+            for line in f:
+                self.spk_test.append(line.strip())
+
+
     def keys(self):
         return self.ts.keys()
 
@@ -116,7 +123,7 @@ class Transcripts(object):
 
         f.close()
 
-    def split(self, p_test=5, limit=0, min_quality=2, add_all=False):
+    def split(self, limit=0, min_quality=2, add_all=False):
 
         ts_all   = {}
         ts_train = {}
@@ -144,8 +151,15 @@ class Transcripts(object):
                     print "WARNING: %s transcript missing" % cfn
                     continue
 
-            ts_all[cfn]  = v
-            if len(ts_test) < (len(ts_all) * p_test / 100):
+            ts_all[cfn] = v
+
+            is_test = False
+            for spk in self.spk_test:
+                if cfn.startswith(spk):
+                    is_test = True
+                    break
+
+            if is_test:
                 ts_test[cfn]  = v
             else:
                 ts_train[cfn] = v

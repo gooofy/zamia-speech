@@ -82,6 +82,10 @@ logging.info("loading transcripts...")
 transcripts = Transcripts(lang=options.lang)
 logging.info("loading transcripts...done.")
 
+logging.info("splitting transcripts...")
+ts_all, ts_train, ts_test = transcripts.split()
+logging.info("splitting transcripts done, %d train, %d test." % (len(ts_train), len(ts_test)))
+
 #
 # load lexicon
 #
@@ -105,61 +109,60 @@ def format_duration(duration):
     h, m = divmod(m, 60)
     return "%3d:%02d:%02d" % (h, m, s)
 
-logging.info ('calculating audio duration...')
+def ts_stats(ts_data, ts_name):
 
-total_duration   = 0.0
-duration_per_spk = {}
-subs_per_spk     = {}
-cnt              = 0
+    logging.info ('calculating %s duration...' % ts_name)
 
-for cfn in transcripts:
+    total_duration   = 0.0
+    duration_per_spk = {}
+    subs_per_spk     = {}
+    cnt              = 0
 
-    quality = transcripts[cfn]['quality']
-    if quality < 2:
-        continue
+    for cfn in ts_data:
 
-    wavfn = '%s/%s.wav' % (wav16_dir, cfn)
+        wavfn = '%s/%s.wav' % (wav16_dir, cfn)
 
-    wavef = wave.open(wavfn, 'rb')
+        wavef = wave.open(wavfn, 'rb')
 
-    num_frames = wavef.getnframes()
-    frame_rate = wavef.getframerate()
+        num_frames = wavef.getnframes()
+        frame_rate = wavef.getframerate()
 
-    duration = float(num_frames) / float(frame_rate)
+        duration = float(num_frames) / float(frame_rate)
 
-    # print '%s has %d frames at %d samples/s -> %fs' % (wavfn, num_frames, frame_rate, duration)
+        # print '%s has %d frames at %d samples/s -> %fs' % (wavfn, num_frames, frame_rate, duration)
 
-    total_duration += duration
+        total_duration += duration
 
-    spk = transcripts[cfn]['spk']
+        spk = ts_data[cfn]['spk']
 
-    if not spk in duration_per_spk:
-        duration_per_spk[spk] = 0.0
-        subs_per_spk[spk]     = 0
+        if not spk in duration_per_spk:
+            duration_per_spk[spk] = 0.0
+            subs_per_spk[spk]     = 0
 
-    duration_per_spk[spk] += duration
-    subs_per_spk[spk]     += 1
+        duration_per_spk[spk] += duration
+        subs_per_spk[spk]     += 1
 
-    wavef.close()
+        wavef.close()
 
-    cnt += 1
+        cnt += 1
 
-    if cnt % 1000 == 0:
-       logging.info ('%6d/%6d: duration=%s' % (cnt, len(transcripts), format_duration(total_duration)))
+        if cnt % 1000 == 0:
+           logging.info ('%6d/%6d: duration=%s (%s)' % (cnt, len(ts_data), format_duration(total_duration), ts_name))
 
+    logging.info( "total duration of %d %s submissions: %s" % (len(ts_data), ts_name, format_duration(total_duration)))
+    logging.info( "%s per user:" % ts_name)
+    for spk in sorted(duration_per_spk):
+        logging.info( "%-42s %s (%5d, %s)" % (spk, format_duration(duration_per_spk[spk]), subs_per_spk[spk], ts_name))
 
-logging.info( "total duration of all good submissions: %s" % format_duration(total_duration))
-logging.info( "good submissions per user:")
-for spk in sorted(duration_per_spk):
-    logging.info( "%-42s %s (%3d)" % (spk, format_duration(duration_per_spk[spk]), subs_per_spk[spk]))
+    if ts_name == 'train' and options.csvfn:
+        with codecs.open(options.csvfn, 'w', 'utf8') as csvf:
+            csvf.write('speaker,duration,subs\n')
+            for spk in sorted(duration_per_spk):
+                csvf.write( "%s,%f,%d\n" % (spk, duration_per_spk[spk], subs_per_spk[spk]))
+        logging.info('%s written.' % options.csvfn)
 
-if options.csvfn:
-    with codecs.open(options.csvfn, 'w', 'utf8') as csvf:
-        csvf.write('speaker,duration,subs\n')
-        for spk in sorted(duration_per_spk):
-            csvf.write( "%s,%f,%d\n" % (spk, duration_per_spk[spk], subs_per_spk[spk]))
-    logging.info('%s written.' % options.csvfn)
-
+ts_stats(ts_test, 'test')
+ts_stats(ts_train, 'train')
 
 #
 # sphinx model stats
