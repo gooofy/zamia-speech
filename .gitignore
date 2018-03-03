@@ -11,3 +11,5 @@ data/models
 *.log
 TODO
 NOTES
+abook/work
+wav2goofy.py
