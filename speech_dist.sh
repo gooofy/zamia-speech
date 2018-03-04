@@ -30,6 +30,7 @@ function export_kaldi_chain {
 
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/tree                       $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
 
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
