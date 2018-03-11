@@ -35,7 +35,7 @@ function export_kaldi_chain {
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/num_pdfs                 $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones/align_lexicon.int $DISTDIR/$AMNAME/$EXPNAME/
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones/*                 $DISTDIR/$AMNAME/$EXPNAME/
 
 }
 
