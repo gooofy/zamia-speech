@@ -98,6 +98,7 @@ csv_dev_fn   = '%s/dev.csv'   % work_dir
 csv_test_fn  = '%s/test.csv'  % work_dir
 
 alphabet = set()
+vocabulary = []
 
 def export_ds(ds, csv_fn):
 
@@ -124,13 +125,14 @@ def export_ds(ds, csv_fn):
                 alphabet.add(c)
 
             csv_f.write('%s,%d,%s\n' % (wavfn, wavlen, prompt))
+            vocabulary.append(prompt)
             cnt += 1
 
     logging.info ("%s %d lines written." % (csv_fn, cnt) )
 
 export_ds(ts_train, csv_train_fn)
 export_ds(ts_test,  csv_test_fn)
-export_ds([],       csv_dev_fn)
+export_ds(ts_test,  csv_dev_fn)
 
 # export alphabet
 
@@ -141,4 +143,14 @@ with codecs.open(alphabet_fn, 'w', 'utf8') as alphabet_f:
     for c in sorted(alphabet):
         alphabet_f.write('%s\n' % c)
 logging.info ("%s written." % alphabet_fn)
+
+# export vocabulary
+
+vocabulary_fn = '%s/vocabulary.txt' % work_dir
+
+with codecs.open(vocabulary_fn, 'w', 'utf8') as vocabulary_f:
+
+    for l in vocabulary:
+        vocabulary_f.write('%s\n' % l)
+logging.info ("%s written." % vocabulary_fn)
 
