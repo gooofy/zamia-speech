@@ -1,3 +1,26 @@
+(0/n) Convert Audio to WAVE
+===========================
+
+MKV
+---
+mkvextract tracks foo.mkv 0:foo.ogg
+opusdec foo.ogg foo.wav
+
+MP3
+---
+ffmpeg -i foo.mp3 foo.wav
+
+(1/n) Convert Audio to 16kHz mono
+=================================
+
+sox foo.wav -r 16000 -c 1 foo_16m.wav
+
+
+Split Audio into Segments
+=========================
+
+./abook-segment.py foo_16m.wav
+
 
 MKV to WAV audio track extraction
 =================================
