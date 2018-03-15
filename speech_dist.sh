@@ -38,6 +38,8 @@ function export_kaldi_chain {
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones/*                 $DISTDIR/$AMNAME/$EXPNAME/
     cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones.txt               $DISTDIR/$AMNAME/$EXPNAME/
 
+    cp data/dst/speech/${LANG}/kaldi/data/local/dict/*                                   $DISTDIR/$AMNAME/$EXPNAME/
+
 }
 
 export_kaldi_chain tdnn_sp tdnn_sp/graph
