@@ -12,4 +12,7 @@ data/models
 TODO
 NOTES
 abook/work
+abook/in/
+abook/out/
+abook/segments/
 wav2goofy.py
