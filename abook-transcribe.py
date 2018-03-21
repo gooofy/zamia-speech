@@ -280,7 +280,8 @@ def lex_edit(lex_token):
                 ipas = lex_entry['ipa']
 
                 xs = ipa2xsampa (lex_token, ipas, stress_to_vowels=False)
-                xs = raw_input(xs + ' ')
+                readline.add_history(xs)
+                xs = raw_input(xs + '> ')
 
                 ipas = xsampa2ipa (lex_token, xs)
     
@@ -378,19 +379,18 @@ while segmentfn:
 
     tokens = tokenize(prompt, lang=lang)
     ts = u' '.join(tokens)
-    print ts
 
     for t in tokens:
         if not t in lex:
             lex_missing.add(t)
     if lex_missing:
         print
-        print u"missing tokens: %s" % repr(sorted(lex_missing))
+        print u"MISSING TOKENS: %s" % repr(sorted(lex_missing))
 
     print
 
     print "Playback: P:All U:1/3 I:2/3 O:3/3 A:Audacity" 
-    resp = raw_input("E:Prompt L:Lex 1:%s 2:%s 0:Delete Q:Quit >" % (speaker1, speaker2))
+    resp = raw_input("E:Edit L:Lex 1:%s 2:%s 0:Delete Q:Quit Prompt>" % (speaker1, speaker2))
 
     if resp.lower() == 'q':
         break
@@ -454,4 +454,8 @@ while segmentfn:
         print "%s written." % promptsfn
 
         next_segment()
+        play_wav()
+
+    else:
+        prompt = resp
 
