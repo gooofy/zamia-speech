@@ -29,6 +29,7 @@ import wave
 import datetime
 
 from optparse               import OptionParser
+from StringIO               import StringIO
 from nltools                import misc
 from nltools.tts            import TTS
 from nltools.tokenizer      import tokenize
@@ -52,24 +53,36 @@ SEQUITUR_MODEL    = 'data/models/sequitur-voxforge-de-latest'
 # menu subroutines
 #
 
-def play_wav():
+def play_wav(start=0.0, stop=1.0):
 
     global tts, segmentfn
 
     wavef = wave.open(segmentfn, 'rb')
 
-    num_frames = wavef.getnframes()
-    frame_rate = wavef.getframerate()
+    num_channels = wavef.getnchannels()
+    num_frames   = wavef.getnframes()
+    frame_rate   = wavef.getframerate()
+    sampwidth    = wavef.getsampwidth()
 
     duration = float(num_frames) / float(frame_rate)
-    wavef.close()
 
-    if duration < AUDACITY_DURATION:
-        with open(segmentfn) as wavf:
-            wav = wavf.read()
-        tts.play_wav(wav, async=True)
-    else:
-        audacity()
+    buf = StringIO()
+    wavout = wave.open(buf, 'w')
+
+    wavout.setframerate(frame_rate)
+    wavout.setnchannels(num_channels)
+    wavout.setsampwidth(sampwidth)
+    
+    wavef.setpos(int(start * num_frames))
+    samples = wavef.readframes(int((stop-start) * num_frames))
+    wavout.writeframes(samples)
+
+    wavef.close()
+    wavout.close()
+
+    # with open(segmentfn) as wavf:
+    #     wav = wavf.read()
+    tts.play_wav(buf.getvalue(), async=True)
 
 def audacity():
 
@@ -375,32 +388,40 @@ while segmentfn:
         print u"missing tokens: %s" % repr(sorted(lex_missing))
 
     print
-        
-    resp = raw_input("P:Play A:Audacity E:Edit L:Lex 1:%s 2:%s 0:Delete Q:Quit >" % (speaker1, speaker2))
+
+    print "Playback: P:All U:1/3 I:2/3 O:3/3 A:Audacity" 
+    resp = raw_input("E:Prompt L:Lex 1:%s 2:%s 0:Delete Q:Quit >" % (speaker1, speaker2))
 
     if resp.lower() == 'q':
         break
    
-    if resp.lower() == '0':
-        os.remove(segmentfn)
-        next_segment()
+    elif resp.lower() == 'u':
+        play_wav(0.0,   0.333)
+    elif resp.lower() == 'i':
+        play_wav(0.333, 0.666)
+    elif resp.lower() == 'o':
+        play_wav(0.666, 1.0  )
 
-    if resp.lower() == 'p':
+    elif resp.lower() == 'p':
         play_wav()
 
-    if resp.lower() == 'a':
+    elif resp.lower() == 'a':
         audacity()
 
-    if resp.lower() == 'e':
+    elif resp.lower() == 'e':
         prompt = raw_input("Prompt> ")
 
-    if resp.lower() == 'l':
+    elif resp.lower() == 'l':
         if not lex_missing:
             print "All words are covered by the dictionary."
             continue
         lex_edit(list(lex_missing)[0])
 
-    if resp == '1' or resp == '2':
+    elif resp == '0':
+        os.remove(segmentfn)
+        next_segment()
+
+    elif resp == '1' or resp == '2':
         if lex_missing:
             print "Not all words are covered by the dictionary."
             continue
@@ -433,7 +454,4 @@ while segmentfn:
         print "%s written." % promptsfn
 
         next_segment()
-
-
-        
 
