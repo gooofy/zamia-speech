@@ -209,6 +209,82 @@ cd data/dst/speech/de/kaldi/
 ./run-nnet3.sh
 ```
 
+Audiobook Segmentation and Transcription
+========================================
+
+Some notes on how to segment and transcribe audiobooks or other audio sources (e.g. from librivox) using
+the abook scripts provided:
+
+(0/3) Convert Audio to WAVE Format
+----------------------------------
+
+MP3
+~~~
+```bash
+ffmpeg -i foo.mp3 foo.wav
+```
+
+MKV
+~~~
+```bash
+mkvextract tracks foo.mkv 0:foo.ogg
+opusdec foo.ogg foo.wav
+```
+
+(1/3) Convert Audio to 16kHz mono
+---------------------------------
+
+```bash
+sox foo.wav -r 16000 -c 1 foo\_16m.wav
+```
+
+
+(2/3) Split Audio into Segments
+-------------------------------
+
+This tool will use silence detection to find good cut-points. You may want to adjust
+its settings to achieve a good balance of short-segments but few words split in half.
+
+
+```bash
+./abook-segment.py foo\_16m.wav
+```
+
+settings:
+
+```bash
+[guenter@dagobert speech]$ ./abook-segment.py -h
+Usage: abook-segment.py [options] foo.wav
+
+Options:
+  -h, --help            show this help message and exit
+  -s SILENCE_LEVEL, --silence-level=SILENCE_LEVEL
+                        silence level (default: 2048 / 65536)
+  -l MIN_SIL_LENGTH, --min-sil-length=MIN_SIL_LENGTH
+                        minimum silence length (default:  0.07s)
+  -m MIN_UTT_LENGTH, --min-utt-length=MIN_UTT_LENGTH
+                        minimum utterance length (default:  2.00s)
+  -M MAX_UTT_LENGTH, --max-utt-length=MAX_UTT_LENGTH
+                        maximum utterance length (default:  9.00s)
+  -o OUTDIRFN, --out-dir=OUTDIRFN
+                        output directory (default: abook/segments)
+  -v, --verbose         enable debug output
+```
+
+by default, the resulting segments will end up in abook/segments
+
+(3/3) Transcribe Audio
+----------------------
+
+The transcription tool supports up to two speakers which you can specify on the command line.
+The resulting voxforge-packages will end up in abook/out by default.
+
+
+```bash
+./abook-transcribe.py -s speaker1 -S speaker2 abook/segments/
+```
+
+
 License
 =======
 
