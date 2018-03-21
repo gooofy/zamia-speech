@@ -295,7 +295,7 @@ while offset < length:
 
         if finalize:
 
-            wavoutfn  = "%s/segment_%04d.wav" % (outdirfn, wavoutcnt)
+            wavoutfn  = "%s/seg-%04d.wav" % (outdirfn, wavoutcnt)
 
             wavoutf   = wave.open(wavoutfn, 'w')
             wavoutf.setparams((1, 2, 16000, 0, "NONE", "not compressed"))
