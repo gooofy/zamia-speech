@@ -109,20 +109,26 @@ def lex_gen_ipa (lex_base, locale, engine, voice, speak=False):
 
     global tts
 
-    if engine == 'sequitur':
-        ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
-    
-    else:
-        tts.locale = locale
-        tts.engine = engine
-        tts.voice  = voice
-        ipas = tts.gen_ipa (lex_base)
+    ipas = u''
+    try:
 
-    if speak:
-        tts.locale = 'de'
-        tts.engine = 'mary'
-        tts.voice  = 'dfki-pavoque-neutral-hsmm'
-        tts.say_ipa(ipas, async=True)
+        if engine == 'sequitur':
+            ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
+        
+        else:
+            tts.locale = locale
+            tts.engine = engine
+            tts.voice  = voice
+            ipas = tts.gen_ipa (lex_base)
+
+        if speak:
+            tts.locale = 'de'
+            tts.engine = 'mary'
+            tts.voice  = 'dfki-pavoque-neutral-hsmm'
+            tts.say_ipa(ipas, async=True)
+
+    except:
+        logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
 
     return ipas
 
@@ -449,6 +455,7 @@ while segmentfn:
     elif resp == '0':
         os.remove(segmentfn)
         next_segment()
+        play_wav()
 
     elif resp == '1' or resp == '2':
         if lex_missing:
@@ -485,6 +492,6 @@ while segmentfn:
         next_segment()
         play_wav()
 
-    else:
+    elif len(resp)>2:
         prompt = resp
 
