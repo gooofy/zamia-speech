@@ -318,6 +318,8 @@ parser.add_option("-o", "--out-dir", dest="outdir", type = "str", default='abook
                   help="language (default: abook/out)")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
+parser.add_option("-t", "--transcript", dest="transcript", type = "str",
+                  help="transcript (optional)")
 
 (options, args) = parser.parse_args()
 
@@ -337,6 +339,17 @@ speaker2  = options.speaker2
 
 # wavdirfn  = '%s/wav' % subdirfn
 # promptsfn = '%s/etc/prompts-original' % subdirfn
+
+transcript = []
+
+if options.transcript:
+    with codecs.open(options.transcript, 'r', 'utf8') as tf:
+
+        ts = tf.read().replace('\n', ' ').replace('\r', ' ')
+        for t in ts.split(u' '):
+            if not t:
+                continue
+            transcript.append(t)
 
 #
 # config
@@ -389,7 +402,12 @@ while segmentfn:
 
     print
 
-    print "Playback: P:All U:1/3 I:2/3 O:3/3 A:Audacity" 
+    if transcript:
+        ts = u' '.join(transcript[:10])
+        print "TS (A:Add, S:Skipt): %s" % ts
+        print
+
+    print "Playback: P:All U:1/3 I:2/3 O:3/3 Y:Audacity" 
     resp = raw_input("E:Edit L:Lex 1:%s 2:%s 0:Delete Q:Quit Prompt>" % (speaker1, speaker2))
 
     if resp.lower() == 'q':
@@ -402,10 +420,21 @@ while segmentfn:
     elif resp.lower() == 'o':
         play_wav(0.666, 1.0  )
 
+    elif resp.lower() == 'a':
+        t = transcript.pop(0)
+        if prompt:
+            prompt += u' ' + t
+        else:
+            prompt = t
+        readline.add_history(prompt)
+
+    elif resp.lower() == 's':
+        t = transcript.pop(0)
+
     elif resp.lower() == 'p':
         play_wav()
 
-    elif resp.lower() == 'a':
+    elif resp.lower() == 'y':
         audacity()
 
     elif resp.lower() == 'e':
