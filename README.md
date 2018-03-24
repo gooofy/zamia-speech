@@ -4,7 +4,7 @@ Python scripts to compute audio and language models from voxforge.org speech dat
 Models that can be built include:
 
 * CMU Sphinx continous and PTM audio models
-* Kaldi nnet3 audio models
+* Kaldi nnet3 chain audio models
 * srilm language model
 * sequitur g2p model
 
@@ -206,7 +206,7 @@ To build the kaldi models:
 ./speech_kaldi_export.py
 cd data/dst/speech/de/kaldi/
 ./run-lm.sh
-./run-nnet3.sh
+./run-chain.sh
 ```
 
 Audiobook Segmentation and Transcription
