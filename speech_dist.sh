@@ -153,7 +153,7 @@ cp AUTHORS   "$DISTDIR"
 # upload
 #
 
-echo rsync -avPz --delete --bwlimit=256 data/dist/${LANG} goofy:/var/www/html/voxforge/
+echo rsync -avPz --delete --bwlimit=256 data/dist/${LANG} goofy:/var/www/html/voxforge/$LANG
 
 #
 # FIXME: remove deprecated code below
