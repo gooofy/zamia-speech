@@ -135,7 +135,8 @@ if not options.do_all:
 num_rated = 0
 idx       = 0
 next_idx  = options.offset
-decoder   = KaldiNNet3OnlineDecoder (kaldi_model)
+if not options.do_all:
+    decoder   = KaldiNNet3OnlineDecoder (kaldi_model)
 
 with open (options.outfn, 'w') as outf:
 
