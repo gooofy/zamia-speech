@@ -86,6 +86,7 @@ abgefüllt;'ʔap-gə-fʏlt
 abgegangen;'ʔap-gə-gaɳ-ən
 abgegeben;'ʔap-gə-geː-bən
 abgegrenzt;'ʔap-gə-gʁɛntst
+abgegriffen;'ʔap-gə-'gʁɪ-fən
 abgehakt;'ʔap-gə-hakt
 abgehalten;'ʔap-gə-hal-tən
 abgehauen;'ʔap-geː-haʊ-ən
@@ -484,6 +485,8 @@ abänderungsanträge;'ʔab-ʔɛn-dɐ-ʁʊɳs-'ʔan-tʁɛː-gə
 accent;'ʔa-ksa
 accent_1;ʔæk-'sɛnt
 access;'ʔɛk-zəs
+account;ə-'kaʊnt
+accounts;ə-'kaʊnts
 aceh;'ʔa-keː
 ach;'ʔax
 achillesferse;ʔax-'ɪləs-'fɛʁ-zə
@@ -534,6 +537,7 @@ achtzehnhundertfünfunddreißig;'ʔaxt-tseːn-hʊn-dɐt-fʏnf-ʔʊnt-dʁaɪ-sɪ�
 achtzehnhundertfünfundfünfzig;'ʔaxt-tseːn-hʊn-dɐt-fʏnf-ʔʊnt-fʏnf-tsɪç
 achtzehnhundertfünfundvierzig;'ʔaxt-tseːn-hʊn-dɐt-fʏnf-ʔʊnt-vɪʁ-tsɪç
 achtzehnhundertfünfzig;'ʔaxt-tseːn-hʊn-dɐt-fʏnf-tsɪç
+achtzehnhundertneun;'ʔaxt-tseːn-hʊn-dɐt-nɔʏn
 achtzehnhundertneunzehn;'ʔaxt-tseːn-hʊn-dɐt-nɔʏn-tseːn
 achtzehnhundertsechsundsiebzig;'ʔaxt-tseːn-hʊn-dɐt-zɛks-ʔʊnt-ziːp-tsɪç
 achtzehnhundertsechzig;'ʔaxt-tseːn-hʊn-dɐt-zɛç-tsɪç
@@ -564,6 +568,7 @@ addiert;ʔat-'diːɐt
 addis;'ʔa-dɪs
 addon;'ʔæd-ɔn
 addons;'ʔæd-ɔns
+address;'æd-rɛs
 ade;ʔa-'deː
 adela;'ʔa-də-laː
 adele;'ʔa-də-lə
@@ -1207,6 +1212,13 @@ angriff;'ʔan-gʁɪf
 angriffe;'ʔan-gʁɪ-fə
 angriffs;'ʔan-gʁɪfs
 angriffskrieg;'ʔan-gʁɪfs-kʁiːk
+angriffsmethode;'ʔan-gʁɪfs-meː-'toː-də
+angriffsmöglichkeit;'ʔan-gʁɪfs-'møː-glɪç-kaɪt
+angriffsmöglichkeiten;'ʔan-gʁɪfs-møː-glɪç-'kaɪ-tən
+angriffsszenarien;'ʔan-gʁɪfs-tse-'naː-ʁi-ən
+angriffsszenario;'ʔan-gʁɪfs-tseː-'naː-ʁiː-oː
+angriffsvariante;'ʔan-gʁɪfs-va-ʁiː-'an-tə
+angrifsszenario;'ʔan-gʁɪfs-tseː-'naː-ʁiː-oː
 angry;'ʔæɳ-gri
 angst;'ʔaɳst
 angstgegner;'ʔaɳst-geː-gnɐ
@@ -1235,6 +1247,7 @@ anhöhen;'ʔan-høː-ən
 anhören;'ʔan-høː-ʁən
 anhörte;'ʔan-høːɐ-tə
 anhörung;'ʔan-høː-ʁʊɳ
+animieren;ʔa-ni-'miː-ʁən
 anka;'ʔaɳ-kaː
 ankamen;'ʔan-kaː-mən
 anke;'ʔaɳ-kə
@@ -1394,6 +1407,7 @@ ansteigen;'ʔan-ʃtaɪ-gən
 ansteigt;ʔan-'ʃtaɪkt
 anstelle;ʔan-'ʃtɛ-lə
 anstellen;'ʔan-ʃtɛ-lən
+anstellt;'ʔan-ʃtɛlt
 anstellte;'ʔan-ʃtɛl-tə
 anstellung;'ʔan-ʃtɛ-lʊɳ
 anstieg;'ʔan-ʃtiːk
@@ -1768,6 +1782,7 @@ assassin;'ʔəs-æs-ɪn
 assembler;'ʔas-ɛm-blɐ
 assessor;'ʔas-ɛs-oːʁ
 assez;'ʔa-se
+assistant;ə-'sɪs-tənt
 assistentin;'ʔas-ɪs-'tɛn-tɪn
 assistenztrainer;'ʔas-ɪs-'tɛnts-tʁɛː-nɐ
 assoziationen;ʔa-sots-ja-'tsjoː-nən
@@ -1828,6 +1843,7 @@ au;'ʔaʊ
 aubinger;'ʔaʊ-bɪɳɐ
 auch;'ʔaʊx
 audacity;ɑ-'dæ-sə-ti
+audi;'ʔaʊ-diː
 audienz;ʔaʊ-diː-'ɛnts
 audio;'ʔaʊ-diː-oː
 audioaufnahme;'ʔaʊ-diː-oː-ʔaʊf-naː-mə
@@ -1835,6 +1851,9 @@ audioaufzeichnung;'ʔaʊ-diː-oː-ʔaʊf-tsaɪ-çnʊɳ
 audioaufzeichnung_1;'ʔaʊ-diːoː-ʔaʊf-tsaɪ-çnʊɳ
 audiobook;'ʔaʊ-diː-o-bʊk
 audiobooks;'ʔaʊ-diː-oː-bʊks
+audiobücher;'ʔaʊ-diː-oː-'byː-çɐ
+audiodatei;'ʔaʊ-diː-oː-da-'taɪ
+audiodaten;'ʔaʊ-diː-oː-'daː-tən
 audionachricht;'ʔaʊ-diː-oːnaxʁɪçt
 audionachrichten;'ʔaʊ-diː-oːnaxʁɪçtən
 audioqualität;'ʔaʊ-diː-oː-kva-liː-tɛːt
@@ -2024,6 +2043,7 @@ aufholen;'ʔaʊf-hoː-lən
 aufhorchend;'ʔaʊ-foːɐ-çənt
 aufhält;ʔaʊf-'hɛlt
 aufhängen;ʔaʊf-'hɛɳ-ən
+aufhöre;'ʔaʊf-høː-ʁə
 aufhören;'ʔaʊf-høː-ʁən
 aufhört;'ʔaʊf-høːɐt
 aufhörte;'ʔaʊf-høːɐ-tə
@@ -2721,6 +2741,7 @@ automaten;ʔaʊ-toː-'maː-tən
 automatik;ʔaʊ-toː-'maː-tɪk
 automatisch;ʔaʊ-toː-'maː-tɪʃ
 automatischer;ʔaʊ-to-'maː-tɪ-ʃɐ
+automatisiert;ʔaʊ-toː-ma-tiː-'ziːɐt
 automatisierung;'ʔaʊ-toː-ma-tiː-ziː-ʁʊɳ
 automatismus;ʔaʊ-toː-ma-'tɪs-mʊs
 automobil;ʔaʊ-toː-moː-'biːl
@@ -3605,6 +3626,7 @@ benehmen;bə-'neː-mən
 beneide;bə-'naɪ-də
 beneidenswerten;bən-ʔdən-'svɛɐ-tən
 benennen;bə-'nɛ-nən
+benennt;bə-'nɛnt
 benennung;bə-'nɛ-nʊɳ
 benetton;'bɛ-nə-tən
 benetzt;bə-'nɛtst
@@ -3801,6 +3823,7 @@ bescheid;bə-'ʃhaɪt
 bescheiden;bə-'ʃaɪ-dən
 bescheidenheit;bə-'ʃaɪ-dən-haɪt
 bescheint;bə-'ʃaɪnt
+bescheißen;bə-'ʃaɪ-sən
 beschenkten;bə-'ʃɛɳk-tən
 beschert;bə-'ʃɛːɐt
 bescherung;bə-'ʃeː-ʁʊɳ
@@ -4417,6 +4440,7 @@ bilanz;bɪ-'lants
 bilaterale;biː-'la-tə-'ʁaː-lə
 bilateralen;biː-'la-tə-'ʁaː-lən
 bild;'bɪlt
+bildchens;'bɪlt-çəns
 bilde;'bɪl-də
 bilden;'bɪl-dən
 bildens;'bɪl-dəns
@@ -4509,7 +4533,6 @@ birnbach;'bɪʁn-bax
 birne;'bɪʁ-nə
 birnen;'bɪʁ-nən
 bis;'bɪs
-bischen;'bɪs-çən
 bischof;'bɪ-ʃoːf
 bischoffwerder;bɪʃ-ɔf-'vɛɐ-dɐ
 bischofskonferenz;'bɪ-ʃɔfs-kɔn-fɐ-'ʁɛnts
@@ -4529,6 +4552,7 @@ bistum;'bɪs-tʊm
 bisweilen;bɪs-'vaɪ-lən
 bit;'bɪt
 bitch;'bɪtʃ
+bitcoin;'bɪt-kɔɪn
 bitrate;'bɪt-ʁaː-tə
 bitraten;'bɪ-tʁaː-tən
 bits;'bɪts
@@ -4640,8 +4664,10 @@ blitzt;'blɪtst
 blitzte;'blɪts-tə
 blitzten;'blɪts-tən
 blitzventil;'blɪts-vɛn-tiːl
+blobs;'blɑbz
 block;'blɔk
 blockade;blɔ-'kaː-də
+blockchain;'blɑk-tʃɛɪn
 blockieren;blɔ-'kiː-ʁən
 blockiert;blɔ-'kiːɐt
 blockverschlüsselung;'blɔk-fɛɐ-ʃlʏ-sə-lʊɳ
@@ -5153,6 +5179,7 @@ bächlein;'bɛç-laɪn
 bäckchen;'bɛk-çən
 bäckerei;'bɛ-kɐ-aɪ
 bäder;'bɛː-dɐ
+bälkchen;'bɛlk-çən
 bälle;'bɛ-lə
 bände;'bɛn-də
 bänder;'bɛn-dɐ
@@ -5312,6 +5339,7 @@ chancen;'ʃo-sən
 chancengleichheit;'ʃaː-sən-'glaɪç-haɪt
 changeant;'ʃa-ʒa
 chaos;'kaː-ʔɔs
+chaotisch;kaː-'ʔoː-tɪʃ
 chaplin;'tʃæp-lən
 chapman;'tʃæp-mən
 charakter;ka-'ʁak-tɐ
@@ -5435,6 +5463,7 @@ codename;'koʊd-nɛɪm
 codes;'kəʊdz
 codierung;ko-'diː-ʁʊɳ
 coffre;'koː-fʁə
+coins;'kɔɪnz
 colombiana;'kəl-am-bi-əna
 color;'kʌ-lɜ
 colorado;'kɑ-lɜ-ɑ-dəʊ
@@ -5465,21 +5494,26 @@ computersystem;kɔm-'pjuː-tɐ-zʏs-teːm
 con;'kɔn
 conditio;'kɔn-diː-tsiː-oː
 confession;'kən-fɛʃ-ən
+consensus;kən-'sɛn-səs
 constantine;'kɑn-stən-tiːn
 container;kɔn-'tɛɪ-nɐ
 containerformat;kɔn-'tɛɪ-nɐ-fɔɐ-maːt
 containerformate;kɔn-'teː-nɐ-fɔɐ-maː-tə
 containerhäfen;kɔn-'tɛɪ-nɐ-hɛː-fən
 containerschiffen;kɔn-'teɪ-nɐ-ʃɪ-fən
+contract;'kɑn-trækt
 control;kən-'trəʊl
 conway;'kɑ-nwɛɪ
 cool;'kuːl
+coole;'kuːlə
 coolste;'kuːl-stə
 cooper;'kuː-pɐ
 cop;'kop
 copyright;'kɑ-pi-rɑɪt
 cord;'kɔɐt
 coreper;'koː-ʁɛ-pɐ
+corpora;'kɔʁ-poː-ʁaː
+corpus;'kɔʁ-pʊs
 couch;'kautʃ
 couche;'kaʊtʃ
 couchsurfen;'kautʃ-zøɐ-fən
@@ -5501,9 +5535,11 @@ crois;'kʁwa
 crowd;'kraʊd
 crown;'kraʊn
 crowwings;'kroʊ-wɪɳs
+crypto;'kʁyp-toː
 crystal;'krɪs-təl
 csu;'tsɛ-eːs-uː
 cu;'siː-'juː
+currency;'kɜ-ən-si
 cyber;'saɪ-bɐ
 d;'deː
 d_1;'di
@@ -5626,6 +5662,7 @@ dasselbe;das-'zɛl-bə
 dastand;daː-'ʃtant
 dastehenden;daː-'ʃteː-ən-dən
 dasteht;daː-'ʃteːt
+data;'dɛɪ-tə
 date;'deɪt
 datei;daː-'taɪ
 dateien;daː-'taɪ-ən
@@ -5767,6 +5804,7 @@ demand;dɪ-'maːnd
 demandé;də-'ma-de
 demantene;dɛ-'man-tə-nə
 demantenwald;'dɛ-man-tən-valt
+dementsprechend;'deːm-ʔɛnt-'ʃpʁɛ-çənt
 demetrios;dɪ-'meː-tʁiː-oːs
 demgegenüber;deːm-geː-gən-'ʔyː-bɐ
 demnach;'deːm-nax
@@ -5873,6 +5911,7 @@ detail;deː-'taɪ
 detailfragen;deː-'taɪfʁaː-gən
 detaillierte;'dɛ-taɪ-liːɐ-tə
 details;deː-'taɪs
+detektieren;deː-tɛk-'tiː-ʁən
 detlef;'dɛt-lef
 deuten;'dɔʏ-tən
 deutend;'dɔʏ-tənt
@@ -5904,7 +5943,9 @@ deviantart;deː-viː-'an-taɐt
 devise;'deː-viː-zə
 devisenschwacher;'deː-viː-zən-ʃva-xɐ
 dezember;deː-'tsɛm-bɐ
+dezentrale;deː-tsɛn-'tʁaː-lə
 dezentralisation;deː-'tsɛn-tʁa-liː-za-'tsjoːn
+dezentralisierung;deː-tsɛn-tʁa-liː-'ziː-ʁʊɳ
 dezimiert;deː-tsiː-'miːɐt
 dgb;'deː-'geː-'beː
 diabetes;diː-a-'beː-təs
@@ -5915,6 +5956,7 @@ diagnostiziere;diː-ag-nɔs-tiː-'tsiː-ʁə
 diagnostizierte;diː-ag-nɔs-tiː-'tsiːɐ-tə
 diagonale;dia-go-'naː-lə
 diagramm;diː-a-'gʁam
+diagramme;diː-a-'gʁa-mə
 dialekt;diː-a-'lɛkt
 dialog;diː-a-'loːk
 dialogen;diː-a-'loː-gən
@@ -6026,6 +6068,7 @@ diktat;dɪk-'taːt
 diktator;dɪk-'taː-toːɐ
 diktatoren;dɪk-ta-'toː-ʁən
 diktatur;dɪk-ta-'tʊɐ
+diktier;dɪk-'tiːɐ
 diktieren;dɪk-'tiː-ʁən
 diktierkürzel;'dɪk-tiːɐ-kʏɐ-tsəl
 diktierstil;'dɪk-tiːɐ-ʃtiːl
@@ -6118,6 +6161,8 @@ dm;'deː-'ʔɛm
 do;'du
 doch;'dɔç
 dochten;'dɔx-tən
+docs;'dɑks
+does;'dʌz
 dogma;'dɔg-maː
 dogmatisch;dɔk-'maː-tɪʃ
 dogs;'dɔgs
@@ -6158,6 +6203,7 @@ donau;'doː-naʊ
 donaustrategie;'doː-naʊ-ʃtʁaː-teː-giː
 donc;'dok
 donegals;'doː-nə-gaːls
+doner;'dɔ-nɜ
 donna;'dɔ-naː
 donnerschlag;'dɔ-nɐ-ʃlaːk
 donnerstag;'dɔ-nɐs-taːk
@@ -6457,6 +6503,7 @@ durchgeführten;'dʊʁç-gə-fyːɐ-tən
 durchgegangen;'dʊʁç-gə-gaɳ-ən
 durchgegeben;'dʊʁç-gə-geː-bən
 durchgegriffen;'dʊʁç-gə-gʁɪ-fən
+durchgehen;'dʊʁç-'geː-ən
 durchgelesen;'dʊʁç-gə-leː-zən
 durchgemacht;'dʊʁç-gə-maxt
 durchgesetzt;'dʊɐç-gə-zɛtst
@@ -6524,6 +6571,7 @@ durchzuführenden;'dʊʁç-tsuː-fyː-ʁən-dən
 durchzugehen;'dʊɐç-tsuː-geː-ən
 durchzuhalten;'dʊʁç-tsuː-hal-tən
 durchzuleben;'dʊʁç-tsuː-leː-bən
+durchzulesen;'dʊʁç-tsuː-'leː-zən
 durchzumachen;'dʊɐç-tsuː-max-ən
 durchzusehen;'dʊʁç-tsuː-zeː-ən
 durchzusetzen;'dʊʁç-tsuː-zɛ-tsən
@@ -6753,6 +6801,7 @@ eigenkapital;'ʔaɪ-gəɳ-ka-piː-taːl
 eigenliebe;'ʔaɪ-gɛn-liː-pə
 eigenmacht;'ʔaɪ-gə-nmaxt
 eigenmächtige;'ʔaɪ-gən-mɛç-tɪ-gə
+eigenname;'ʔaɪ-gə-'naː-mə
 eigennützig;'ʔaɪ-gə-nʏ-tsɪç
 eigens;'ʔaɪ-gəns
 eigenschaft;'ʔaɪ-gən-ʃaft
@@ -7421,6 +7470,8 @@ elfhundertsechzig;'ʔɛlf-hʊn-dɐt-zɛç-tsɪç
 elfjähriges;'ʔɛlf-jɛː-ʁɪ-gəs
 elfte;'ʔɛlf-tə
 elften;'ʔɛlf-tən
+eli;'ʔeː-li
+elias;ʔɛ-'liː-as
 elin;ʔe-'liːn
 elisabeth;ɪ-'lɪ-zə-bɪθ
 elite;ʔeː'liː-tə
@@ -7738,6 +7789,7 @@ entlehnt;ʔɛnt-'leːnt
 entließ;ʔɛnt-'liːs
 entließe;ʔɛnt-'liːsə
 entlockte;'ʔɛn-tlɔk-tə
+entlohnen;ʔɛnt-'loː-nən
 entlohnung;'ʔɛn-tloː-nʊɳ
 entmutigt;'ʔɛn-tmuː-tɪkt
 entnehmen;ʔɛnt-'neː-mən
@@ -8469,6 +8521,7 @@ ersuche;ʔɛɐ-'zuː-xə
 ersuchen;ʔɐ-'zuː-xən
 ersucht;ʔɛɐ-'zuːxt
 ersuchte;ʔɛɐ-'zuːx-tə
+ertappe;ʔɛɐ-'ta-pə
 erteilen;ʔɛɐ-'taɪ-lən
 erteilt;ʔɛɐ-'taɪlt
 erteilte;ʔɛɐ-'taɪl-tə
@@ -8626,6 +8679,7 @@ et;'ʔeː
 etablissement;ʔeː-ta-bliː-sə-'mɔ
 etage;'ʔɛtaː-ʃə
 etat;'ʔeː-taː
+ethereum;'ɛ-θɜ-ɪ-ri-əm
 ethik;'ʔeː-tɪk
 ethische;'ʔeːtɪ-ʃə
 ethischen;'ʔeː-tɪ-ʃən
@@ -9261,6 +9315,7 @@ figuren;fiː-'guː-ʁən
 figurierte;fiː-gu-'ʁiːɐ-tə
 fiktives;'fɪk-tiː-vəs
 filbinger;'fɪl-bɪɳɐ
+file;'fɑɪl
 filelight;'faɪl-aɪ-t
 filezilla;'faɪl-tsɪ-laː
 filiale;fɪl-'jaː-lə
@@ -9315,6 +9370,7 @@ finde;'fɪn-də
 finden;'fɪn-dən
 findest;'fɪn-dəst
 findet;'fɪn-dət
+findungs;'fɪn-dʊɳs
 fing;'fɪɳ
 fingen;'fɪ-ɳən
 finger;'fɪ-ɳɐ
@@ -9772,6 +9828,7 @@ freier;'fʁaɪ-ɐ
 freieren;'fʁaɪ-ʁən
 freies;'fʁaɪ-əs
 freigabe;'fʁaɪ-gaː-pə
+freigeben;'fʁaɪ-'geː-bən
 freigebig;'fʁaɪ-geː-bɪç
 freigebigen;'fʁaɪ-geː-bɪ-gən
 freigebigkeit;'fʁaɪ-geː-bɪç-kaɪt
@@ -10012,6 +10069,7 @@ fummelt;'fʊ-məlt
 fundament;'fʊn-daː-mɛnt
 fundamental;'fʊnd-aː-mən-taːl
 fundamentalen;'fʊn-daː-mɛn-taː-lən
+fundamentales;fʊn-da-mɛn-'taː-ləs
 fundamentalistischen;fʊn-da-mɛn-ta-'lɪs-tɪ-ʃən
 fundamente;fʊn-da-'mɛn-tə
 funde;'fʊn-də
@@ -10280,6 +10338,7 @@ gallo;'gæ-ləʊ
 galoppiert;ga-'lɔ-piːɐt
 galt;'galt
 galway;'gɑ-lwɛɪ
+gamification;'gæ-mə-fə-kɛɪ-ʃən
 gandhi;'gan-diː
 gang;'gaɳ
 gange;'ga-ɳə
@@ -10482,6 +10541,7 @@ gedenkt;gə-'dɛɳkt
 gedeutet;gə-'dɔʏ-tət
 gedicht;gə-'dɪçt
 gedichte;gə-'dɪç-tə
+gediehen;gə-'diː-ən
 gedient;gə-'diːnt
 gedreht;gə-'dʁeːt
 gedrehte;gə-'dʁeː-tə
@@ -11115,6 +11175,7 @@ genauigkeit;gə-'naʊ-ɪç-kaɪt
 genauso;gə-'naʊ-zoː
 genauste;gə-'naʊ-stə
 gendarmerie;ʒoːn-'daɐ-məʁiː
+gender;'dʒɛn-dɜ
 geneckt;gə-'nɛkt
 genehmigen;gə-'neː-mɪ-gən
 genehmigt;gə-'neː-mɪkt
@@ -12367,6 +12428,7 @@ grobklassifikation;'gʁoːp-kla-siː-fiː-kats-joːn
 grog;'gʁɔk
 gros;'gʁoː
 grotesk;gʁo-'tɛsk
+ground;'graʊnd
 group;'grup
 groß;'gʁoːs
 großartigen;'gʁoːs-ʔaɐ-tɪ-gən
@@ -12415,6 +12477,7 @@ grunde;'gʁʊn-də
 grundfarbe;'gʁʊnt-faɐ-bə
 grundgesetz;'gʁʊnt-gə-zɛts
 grundgesetzes;'gʁʊnt-gə-zɛ-tsəs
+grundidee;'gʁʊnt-ʔɪ-'deː
 grundkenntnis;'gʁʊnt-kɛnt-nɪs
 grundlage;'gʁʊnt-laː-gə
 grundlagen;'gʁʊnt-laː-gən
@@ -13891,6 +13954,7 @@ hochgelben;'hoːx-gɛl-bən
 hochgepudertem;'hoːx-gə-puː-dɐ-təm
 hochgetrieben;'hoːx-gə-tʁiː-bən
 hochgewölbten;hoːx-gə-'vøːl-btən
+hochgezählt;'hoːx-gə-'tsɛːlt
 hochgipfeliger;'hoːx-gɪp-fəl-ɪ-gɐ
 hochkomma;'hoːx-'kɔmaː
 hochlehniger;'hoː-xleː-nɪ-gɐ
@@ -14308,6 +14372,7 @@ ibm;'ʔiː-beː-ɛm
 ice;ʔaɪs
 ich;'ʔɪç
 ichs;'ʔɪçs
+ico;'ʔɑɪ-'siː-'ʔɔʊ
 icq;'aɪ-'siː-'kjuː
 ideal;ʔiː-deː-'aːl
 idealer;ʔɪ-deː-'aː-lɐ
@@ -14574,6 +14639,7 @@ innovativsten;ʔɪ-no-va-'tiːf-stən
 innovatoren;'ʔɪ-no-va-'toː-ʁən
 innsbruck;'ʔɪns-bʁʊk
 inoffiziell;'ʔɪn-ɔfiː-'tsjɛl
+input;'ɪn-pʊt
 inquisition;ʔɪn-kvɪ-ziː-'tsjoːn
 inquisitionsverfahren;ʔɪn-kv-ɪ-ziː-'tsjoːns-fɛɐ-'faː-ʁən
 ins;'ʔɪns
@@ -14703,6 +14769,7 @@ internets;'ʔɪn-tɐ-nɛts
 internetverbindung;'ʔɪn-tɐ-nɛt-fɛɐ-bɪn-dʊɳ
 internetverbindungen;'ʔɪn-tɐ-nɛt-fɛɐ-bɪn-dʊɳ-ən
 internetzugang;'ʔɪn-tɐ-nɛt-'tsuː-gaɳ
+interplanetary;'ɪn-tɜ-plæ-nə-tɛ-ri
 interpret;ʔɪn-tɐ-'pʁeːt
 interpretation;ʔɪn-tɐ-pʁɛ-tats-'joːn
 interpretiert;ʔɪn-tɐ-pʁɛ-'tiːɐt
@@ -14738,6 +14805,7 @@ inwieweit;'ʔɪn-viː-vaɪt
 inzwischen;ʔɪn-'tsvɪ-ʃən
 ip;ʔiː-peː
 ip_1;ʔaiː-piː
+ipfs;'ʔiː-'peː-'ʔɛf-'ʔɛs
 iphone;'aɪ-fəʊn
 iq;'ʔiː-kuː
 irak;ʔiː-'ʁaːk
@@ -15083,12 +15151,14 @@ kaffeetische;'ka-feː-'tɪʃə
 kaffeetrinken;'ka-feː-tʁɪɳ-kən
 kahl;'kaːl
 kahn;'kaːn
+kai;'kaɪ
 kairo;'kaɪ-ʁoː
 kaiser;'kaɪ-zɐ
 kaiserliches;'kaɪ-zɐ-lɪ-çəs
 kaiserslautern;kaɪ-zɐs-'laʊ-tɐn
 kaiserzeit;'kaɪ-zɐ-tsaɪt
 kakaobutter;ka-'kaʊ-'bʊ-tɐ
+kaldi;'kal-diː
 kalenderblatt;kaː-'lɛn-dɐ-blat
 kalifornien;ka-lɪ-'fɔɐ-niː-ən
 kaliko;'kaː-lɪ-koː
@@ -15607,6 +15677,7 @@ klempner;'klɛmp-nɐ
 klettert;'klɛ-tɐt
 kletterte;'klɛ-tɐ-tə
 klick;'klɪk
+klicke;'klɪ-kə
 klicken;'klɪ-kən
 klickt;'klɪkt
 klienten;kliː-'ɛn-tən
@@ -15621,6 +15692,7 @@ klimpern;'klɪm-pɐn
 klingel;'klɪɳ-əl
 klingeln;'klɪɳ-əln
 klingelte;'klɪɳ-əl-tə
+klingelts;'klɪɳ-əl-ts
 klingelzug;'klɪɳ-əl-tsuːk
 klingen;'klɪɳ-ən
 klingend;'klɪ-ɳənt
@@ -15676,6 +15748,7 @@ kmines;'kaː-m'ai-ns
 kmu;'kaː-'ʔɛm-'ʔuː
 knabe;'knaː-bə
 knaben;'knaː-bən
+knackpunkte;'knak-'pʊɳk-tə
 knapp;'knap
 knappe;'kna-pə
 knappen;'kna-pən
@@ -15714,6 +15787,7 @@ knospen;'knɔs-pən
 knospenden;'nɔspɛn-dən
 knoten;'knoː-tən
 knotenpunkten;'knoː-tən-pʊɳk-tən
+know;'nəʊ
 knuddle;'knʊ-dlə
 knurrte;'knʊʁ-tə
 knusperte;'knʊs-pɐ-tə
@@ -16390,6 +16464,7 @@ kummervoll;'kʊ-mɐ-fɔl
 kumulative;'kʊ-muː-la-tiː-və
 kunde;'kʊn-də
 kunden;'kʊn-dən
+kundenstamm;'kʊn-dən-'ʃtam
 kundgebung;'kʊn-tgə-bʊɳ
 kundgebungen;'kʊn-tgə-bʊ-ɳən
 kundgetan;'kʊn-tgə-taːn
@@ -16764,6 +16839,7 @@ lateinischen;la-'taɪ-nɪ-ʃən
 later;'leɪ-tə
 laterne;laː-'tɛɐ-nə
 laternen;laː-'tɛɐ-nən
+latex;'laː-tɛç
 latin;'lɛ-tɪn
 latinisiert;la-tiː-niː-'ziːɐt
 latmos;'lat-moːs
@@ -17179,6 +17255,7 @@ leuten;'lɔʏ-tən
 leutnant;'lɔʏ-tnant
 leutnants;'lɔʏ-tnants
 level;'lɛ-vəl
+levenstein;'leː-vən-ʃtaɪn
 leverkusen;'leː-vɐ-kuː-zən
 levitikus;'lɛ-vi-tiː-kʊs
 lexem;lɛk-'seːm
@@ -17347,6 +17424,7 @@ linien;'liː-nɪ-ən
 linings;'laɪ-nɪɳs
 link;'lɪɳk
 linke;'lɪɳ-kə
+linked;'lɪɳkt
 linken;'lɪɳ-kən
 linkere;'lɪɳ-kɐ-ʁə
 linkes;'lɪɳ-kəs
@@ -17358,6 +17436,7 @@ linksklick;'lɪɳ-ksklɪk
 linksseitig;'lɪɳks-saɪ-tɪç
 linnen;'lɪ-nən
 linné;'li-ne
+linphone;'lɪn-fəʊn
 linsen;'lɪn-zən
 linstant;lɪn-'stant
 linus;'liː-nʊs
@@ -17743,6 +17822,7 @@ malerische;'maːl-ɐ-ʁɪ-ʃə
 malerischer;'maːl-ɐ-ʁɪ-ʃɐ
 malern;'maːl-ɐn
 malkasten;mal-kas-tən
+malst;'maːlst
 malt;'malt
 malte;'maːl-tə
 malten;'maːl-teː-ʔeːn
@@ -17818,6 +17898,7 @@ margarethe;'maʁ-ga-ʁɛ-tə
 margarine;maʁ-ga-'ʁiː-nə
 marge;'maɐʒə
 margell;'maɐ-gɛl
+marginal;maʁ-gi-'naːl
 marginalien;maʁ-gi-'naː-lɪən
 margot;'maɐ-gɔt
 maria;ma-'ʁiː-jaː
@@ -18239,6 +18320,7 @@ migration;mɪ-gʁats-'joːn
 migrationsgast;mɪ-gʁats-'joːns-gast
 migräne;mɪ-'gʁɛː-nə
 mike;'mɑɪk
+mikro;'miː-kʁoː
 mikrocomputer;'miː-kʁoː-kɔm-pjuː-tɐ
 mikrofon;miː-kʁoː-'foːn
 mikrofone;'mɪk-ʁoː-foː-nə
@@ -18497,6 +18579,8 @@ mittelpunkt;'mɪ-təl-pʊɳkt
 mittelraum;'mɪ-təl-ʁaʊm
 mittels;'mɪ-təls
 mittelschloss;'mɪ-təl-'ʃlɔs
+mittelsmann;'mɪ-təls-'man
+mittelsmänner;'mɪ-təls-'mɛ-nɐ
 mittelstand;'mɪ-təl-ʃtant
 mittelständische;'mɪ-təl-ʃtɛn-dɪ-ʃə
 mittelständischen;'mɪ-təl-ʃtɛn-dɪ-ʃən
@@ -19274,6 +19358,7 @@ nein;'naɪn
 neinsagen;'naɪn-zaː-gən
 nektar;'nɛk-taːɐ
 nen;'nən
+nene;'neː-neː
 nenne;'nɛ-nə
 nennen;'nɛ-nən
 nennenswerte;'nɛ-nəns-'veːɐ-tə
@@ -19502,6 +19587,7 @@ nichteuropäischen;'nɪçt-ʔɔʏ-ʁoː-'pɛː-ɪ-ʃən
 nichtig;'nɪç-tɪç
 nichtigkeit;'nɪç-tɪg-kaɪt
 nichtkönnen;'nɪçt-'kœ-nən
+nichtmal;'nɪçt-maːl
 nichts;'nɪçts
 nichtsdestotrotz;'nɪçts-dɛs-toː-'tʁɔts
 nichtsdestoweniger;'nɪçts-dɛs-toː-veː-nɪ-gɐ
@@ -19678,6 +19764,7 @@ normanns;'nɔɐ-mans
 normative;'nɔɐ-ma-tiː-və
 normen;'nɔɐ-mən
 normenkontrolle;'nɔɐ-mən-kɔn-tʁɔ-lə
+normierung;nɔɐ-'miː-ʁʊɳ
 normung;'nɔɐ-mʊɳ
 normungen;'nɔɐ-mʊ-ɳən
 normungsarbeiten;'nɔɐ-mʊɳz-'ʔaɐ-baɪ-tən
@@ -19700,6 +19787,7 @@ notfalls;'noːt-fals
 notieren;noː-'tiː-ʁən
 notiert;noː-'tiːɐt
 notiz;no-'tiːts
+notizbuch;no-'tiː-ts-'buːx
 notizbuche;no-'tiː-ts-bʊ-xə
 notizen;no-'tiː-tsən
 notschrei;'noːt-ʃʁaɪ
@@ -19854,6 +19942,7 @@ oberkante;'ʔoː-bɐ-kan-tə
 oberkörper;'ʔoː-bɐ-kœɐ-pɐ
 oberlehrerinnen;'ʔoː-bɐ-leː-ʁɐ-ʁɪn-ən
 oberlippe;'ʔoː-bɐ-lɪ-pə
+obermenge;'ʔoː-bɐ-'mɛ-ɳə
 oberon;'ʔoː-bɐ-ʁoːn
 oberseite;'ʔoː-bɐ-zaɪ-tə
 oberst;'ʔoː-bɐst
@@ -19926,6 +20015,7 @@ oftmals;'ʔɔft-maːls
 oggersheim;'ʔɔ-gɐ-shaɪm
 oh;'ʔoː
 oheim;'ʔoː-haɪm
+ohja;'ʔoː-'jaː
 ohje;ʔoː-'jeː
 ohne;'ʔoː-nə
 ohnedies;'ʔoː-nə-diːs
@@ -20112,6 +20202,7 @@ ottomane;ʔɔ-toː-'maː-nə
 ottomanen;ʔɔ-toː-'maː-nən
 oui;'wi
 out;ʔaʊt
+output;'aʊ-tpʊt
 oval;ʔo-'vaːl
 oxford;'ɑ-ksfɜd
 oz;'ɑz
@@ -20158,6 +20249,7 @@ papachen;'pa-paː-çən
 papagei;pa-paː-'gaɪ
 papageien;pa-pa-'gaɪ-ən
 papas;'pa-paːs
+paper;'pɛɪ-pɜ
 papier;pa-'piːɐ
 papiere;pa-'piːɐ-ʁə
 papieren;pa-'piː-ʁən
@@ -20303,7 +20395,9 @@ pauschal;'paʊ-ʃaːl
 pause;'paʊ-zə
 pausen;'paʊ-zən
 pausenmodell;'paʊ-zən-moː-dɛl
+pausieren;paʊ-'ziː-ʁən
 pavel;paː-vəl
+payments;'pɛɪ-mənts
 payne;'peɪn
 pazifik;pa-'tsiː-fɪk
 pazifischen;pa-'tsiː-fɪ-ʃən
@@ -20960,9 +21054,11 @@ programmvorschau;pʁoː-'gʁam-foːʁ-ʃaʊ
 programmzeitraums;pʁo-'gʁam-tsaɪt-ʁaʊms
 programmäßig;pʁoː-'gʁa-mɛ-sɪç
 project;prə-'dʒɛkt
+projects;prə-'dʒɛkts
 projekt;pʁoː-'jɛkt
 projekte;pʁoː-'jɛk-tə
 projekten;pʁoː-'jɛk-tən
+projektnamen;pʁoː-'jɛkt-'naː-mən
 projekts;pʁo-'jɛktz
 proklamation;pʁo-'kla-ma-'tsjoːn
 prolog;'pʁo-loːk
@@ -20971,6 +21067,8 @@ promill;pʁo-'mɪl
 prominente;pʁoː-miː-'nɛn-tə
 prominenten;pʁoː-miː-'nɛn-tən
 promotion;pʁoː-moː-'tsjoːn
+prompt;'prɑmpt
+prompts;'prɑmpts
 proof;'pruːf
 propaganda;pʁoː-paː-'gan-daː
 propagandamaterial;pʁoː-paː-'gan-daː-maː-teː-ʁiː-'aːl
@@ -21144,6 +21242,7 @@ puppenstube;'pʊ-pən-'ʃtuː-bə
 pupse;'pʊ-pzə
 purer;'puː-ʁɐ
 purpurfarbigen;puːɐ-'puːʁ-faɐ-bɪ-gən
+put;'pʊt
 putzt;'pʊtst
 putzte;'pʊts-tə
 pygmäen;pɪg-'mɛː-ən
@@ -21409,13 +21508,18 @@ rauscht;'ʁaʊʃt
 rauschte;'ʁaʊʃ-tə
 rauschten;'ʁaʊʃ-tən
 rausfliegen;'ʁaʊs-fliː-gən
+rausgebracht;'ʁaʊs-gə-'bʁaxt
+rausgegeben;'ʁaʊs-gə-'geː-bən
 rausgeht;'ʁaʊs-geːt
 rausgekommen;'ʁaʊs-gə-kɔ-mən
 rauskam;'ʁaʊs-kaːm
 rauskommen;'ʁaʊs-kɔ-mən
+rauskommt;'ʁaʊs-kɔmt
 ravensburg;'ʁaː-vəns-bʊɐk
 rawls;'rɔlz
 razzien;'ʁa-tsiː-ən
+reader;'ri-dɜ
+readers;'ri-dɜz
 reagan;'rɛɪ-gən
 reagieren;ʁeː-a-'giː-ʁən
 reagiert;ʁeː-a-'giːɐt
@@ -21551,6 +21655,7 @@ rechtswissenschaft;'ʁɛçts-vɪ-sən-ʃaft
 rechtswissenschaften;'ʁɛçts-vɪ-sən-ʃaf-tən
 rechtswissenschaftler;'ʁɛçts-vɪ-sən-ʃaf-tlɐ
 rechtzeitig;'ʁɛçt-tsaɪ-tɪç
+recording;rə-'kɔr-dɪɳ
 red;'rɛd
 redaktion;ʁeː-dak-'tsjoːn
 redaktionsgeschichte;ʁeː-dak-'tsjoːns-gə-ʃɪç-tə
@@ -21564,6 +21669,7 @@ redensarten;'ʁeː-dəns-ʔaɐ-tən
 redest;'ʁeː-dəst
 redet;'ʁeː-dət
 redete;'ʁeː-də-tə
+redewendungen;'ʁeː-də-'vɛn-dʊ-ɳən
 redezeit;'ʁeː-də-tsaɪt
 redlichkeit;'ʁeːt-lɪç-kaɪt
 redner;'ʁeː-dnɐ
@@ -21730,6 +21836,7 @@ reiniger;'ʁaɪ-nɪ-gɐ
 reinigung;'ʁaɪ-niː-gʊɳ
 reinigungsmittel;'ʁaɪ-niː-gʊɳs-mɪ-təl
 reinkommt;'ʁaɪn-kɔmt
+reinkriegt;'ʁaɪn-'kʁiːkt
 reinlegt;'ʁaɪn-leːkt
 reinlich;'ʁaɪn-lɪç
 reinliche;'ʁaɪ-nlɪ-çə
@@ -21844,6 +21951,7 @@ rentner;'ʁɛnt-nɐ
 reparationen;ʁɛ-pa-ʁaː-'tsjoː-nən
 repariert;ʁeː-pa-'ʁiːɐt
 repetitionen;ʁɛ-pɛ-tiː-'tsjoː-nən
+repo;'ʁeː-poː
 reportage;ʁɛ-pɔɐ-'taː-ʒə
 reportagen;ʁɛ-pɔɐ-'taː-ʒən
 reporter;ʁɛ-'pɔɐ-tɐ
@@ -21984,6 +22092,7 @@ rieselte;'ʁiː-zəl-tə
 riesen;'ʁiː-zən
 riesenbaum;'ʁiː-zən-baʊm
 riesenbauten;'ʁiː-zən-'baʊ-tən
+riesennetzwerk;'ʁiː-zən-'nɛts-vɛɐk
 riesig;'ʁiː-zɪç
 riesige;'ʁiː-zɪ-gə
 riesigen;'ʁiː-zɪ-gən
@@ -22195,6 +22304,7 @@ ruinen;ʁuː-'ʔiː-nən
 ruinieren;ʁuː-iː-'niː-ʁən
 ruiniert;ʁuː-iː-'niːɐt
 rum;'ʁʊm
+rummale;ʁʊm-'maː-lə
 rumpf;'ʁʊmpf
 rumpfes;'ʁʊmpf-əs
 rumänien;ʁuː-'mɛː-niː-ən
@@ -22486,6 +22596,7 @@ sattelt;'za-təlt
 saturn;za-'tʊɐn
 satz;'zats
 satzes;'za-tsəs
+satzteile;'zats-'taɪ-lə
 satzzeichen;'zats-tsaɪ-çən
 sau;'zaʊ
 sauber;'zaʊ-bɐ
@@ -23030,6 +23141,7 @@ schneit;'ʃnaɪt
 schneite;'ʃnaɪ-tə
 schnell;'ʃnɛl
 schnelle;'ʃnɛ-lə
+schnellem;'ʃnɛ-ləm
 schnellen;'ʃnɛ-lən
 schneller;'ʃnɛ-lɐ
 schnellere;'ʃnɛ-lɐ-ʁə
@@ -23121,8 +23233,10 @@ schreibst;'ʃʁaɪpst
 schreibt;'ʃʁaɪpt
 schreibtisch;'ʃʁaɪp-tɪʃ
 schreibtische;'ʃʁaɪ-btɪ-ʃə
+schreibungen;'ʃʁaɪ-bʊ-ɳən
 schreibunterricht;'ʃʁaɪp-ʔʊn-tɐ-ʁɪçt
 schreibweise;'ʃʁaɪp-vaɪ-zə
+schreibweisen;'ʃʁaɪp-'vaɪ-zən
 schreien;'ʃʁaɪ-ən
 schreiend;'ʃʁaɪən-deː
 schreins;'ʃʁaɪns
@@ -24233,6 +24347,7 @@ sorten;'zɔɐ-tən
 sortiert;zɔʁ-'tiːɐt
 sortierung;'zɔɐ-tiː-ʁʊɳ
 sortierungen;'zɔɐ-tiː-ʁʊ-ɳən
+sorum;'zoː-ʁʊm
 soso;'zoː-zoː
 sotto;'zɔ-toː
 soul;'soʊl
@@ -24317,6 +24432,7 @@ spannend;'ʃpa-nənt
 spannende;'ʃpan-ən-də
 spannenden;'ʃpan-ən-dən
 spannender;'ʃpa-nən-dɐ
+spannenderen;'ʃpa-nən-dɐ-ʁən
 spannendes;'ʃpa-nən-dəs
 spannung;'ʃpa-nʊɳ
 spannungen;'ʃpa-nʊ-ɳən
@@ -24343,7 +24459,9 @@ spaßhaft;'ʃpaːs-haft
 spaßig;'ʃpaː-sɪç
 spd;'ʔɛs-'peː-'deː
 speak;'spik
+speaker;s-'pi-kɜ
 spectrum;'ʃpɛk-tʁʊm
+speech;'spitʃ
 speer;'ʃpeːɐ
 speichel;'ʃpaɪ-çəl
 speicher;'ʃpaɪ-çɐ
@@ -24374,6 +24492,8 @@ spekulationen;ʃpeː-kuː-lats-'joː-nən
 spekulieren;ʃpə-kuː-'liː-ʁən
 spekuliert;ʃpə-kuː-'liːɐt
 spenden;'ʃpɛn-dən
+spender;'ʃpɛn-dɐ
+spendet;'ʃpɛn-dət
 spendier;ʃpɛn-'diːɐ
 sperren;'ʃpɛɐ-ʁən
 sperrte;'ʃpɛɐ-tə
@@ -24469,6 +24589,7 @@ splitter;s-pl'ɪtɐ
 spon;'ʃpoː-n
 sponsoren;'ʃpɔn-zoː-ʁən
 spontan;ʃpɔn-'taːn
+spontane;ʃpɔn-'taː-nə
 sport;'ʃpɔɐt
 sportarena;'ʃpɔɐt-ʔa-ʁeː-naː
 sportart;'ʃpɔɐt-ʔaːɐt
@@ -24803,6 +24924,7 @@ stehende;'ʃteː-ən-də
 stehenden;'ʃteː-ən-dən
 stehender;'ʃteː-ən-dɐ
 stehendes;'ʃteː-ən-dəs
+stehgreif;'ʃteː-gʁaɪf
 stehlampe;'ʃteː-lam-pə
 stehlampen;'ʃteː-lam-pən
 stehst;'ʃteːst
@@ -25143,6 +25265,7 @@ strenger;'ʃtʁɛɳ-ɐ
 strengere;'ʃtʁɛɳ-ɐ-ʁə
 strengste;'ʃtʁɛɳs-tə
 strengsten;'ʃtʁɛɳs-tən
+strepitus;ʃtʁɛ-pi-'tʊs
 stress;'ʃtʁɛs
 streuen;'ʃtʁɔʏ-ən
 streuobstwiesen;'ʃtʁɔʏ-ʔoːpst-viː-zən
@@ -25202,6 +25325,7 @@ strukturschwachen;ʃtʁʊk-'tuːɐ-ʃvax-ən
 strukturwandel;ʃtʁʊk-'tʊɐ-van-dəl
 strukturwandels;ʃtʁʊk-'tuːɐ-van-dəls
 strumpfbänder;'ʃtʁʊmpf-bɛn-dɐ
+sträube;'ʃtʁɔʏ-bə
 sträuben;'ʃtʁɔʏ-bən
 ströme;'ʃtʁøː-mə
 strömen;'ʃtʁøː-mən
@@ -25563,6 +25687,7 @@ tagesordnungspunkt;'taː-gəs-ɔɐt-nʊɳs-pʊɳkt
 tagesschau;'taː-gəs-ʃaʊ
 tagesverlauf;'taː-gəs-fɛɐ-laʊf
 tageszeit;'taː-gəs-tsaɪt
+tagline;'tæg-lɑɪn
 taglöhner;'tag-løː-nɐ
 tags;'taks
 tags_1;'tɛːks
@@ -25797,6 +25922,7 @@ telefonieren;'teː-lə-foː-niː-ʁən
 telefoniert;'teː-lə-foː-niːɐt
 telefonisch;teː-lə-'foː-nɪʃ
 telefonische;'teː-lə-foː-nɪ-ʃə
+telefonkonferenzen;teː-lə-'foːn-kɔn-fɐ-'ʁɛnts-ən
 telefonnetz;'teː-lə-foːn-nɛts
 telefonnummer;'teː-lə-foːn-nʊ-mɐ
 telefonsoftware;'teː-lə-foːn-sɔft-vɛːɐ
@@ -26159,6 +26285,9 @@ trank;'tʁaɳk
 tranken;'tʁaɳ-kən
 tranquille;'tʁan-kv-ɪ-lə
 transaktionen;'tʁans-ʔak-tsjoː-nən
+transcriber;'træns-krɑɪ-bɜ
+transcription;'træns-krɪp-ʃən
+transcripts;'træns-krɪpts
 transferiert;tʁans-'fɛʁiːɐt
 transfers;tʁans-'feːɐs
 transformation;tʁans-fɔɐ-mats-'joːn
@@ -26166,6 +26295,12 @@ transformierenden;tʁan-sfɔɐ-'miː-ʁən-dən
 transformiert;tʁan-sfɔɐ-'miːɐt
 transitland;tʁan-'zɪt-lant
 transitländer;tʁan-'zɪt-'lɛn-dɐ
+transkribiere;tʁans-kʁiː-'biːɐ-ʁə
+transkribieren;tʁans-kʁiː-'biː-ʁən
+transkribierer;tʁans-kʁiː-'biː-ʁɐ
+transkribiert;tʁans-kʁiː-'biːɐt
+transkription;tʁan-skʁɪp-'tsjoːn
+translate;træn-'zlɛɪt
 transparentem;tʁans-paː-'ʁɛn-təm
 transparenten;tʁans-paː-'ʁɛn-tən
 transparenteren;tʁans-paː-'ʁɛn-tɐ-ʁən
@@ -26190,6 +26325,7 @@ trasse;'tʁa-sə
 trat;'tʁaːt
 traten;'tʁaː-tən
 tratsch;'tʁaːtʃ
+trau;'tʁaʊ
 trauben;'tʁaʊ-bən
 traubensaft;'tʁaʊ-bən-zaft
 traue;'tʁaʊ-ə
@@ -26443,6 +26579,7 @@ turnier;'tʊʁ-niːɐ
 tus;'tuːs
 tust;'tuːst
 tut;'tuːt
+tutorial;'tu-tɔ-ri-əl
 tuts;'tʊts
 tux;'tʊks
 tv;teː-'faʊ
@@ -26905,6 +27042,7 @@ unbill;'ʔʊn-bɪl
 unbändige;'ʔʊn-bɛn-dɪ-gə
 unbürokratisch;'ʔʊn-bʏ-ʁoː-kʁa-tɪʃ
 unchained;ʔən-'tʃeɪnd
+unconditionally;'ʌn-kən-dɪ-ʃə-nə-li
 und;'ʔʊnt
 undank;'ʔʊn-daɳk
 undankbarkeit;'ʔʊn-daɳ-kbaɐ-kaɪt
@@ -27104,6 +27242,7 @@ unglückseligen;'ʔʊn-glʏk-zeː-lɪ-gən
 unglücksnacht;'ʔʊn-glʏksnaxt
 ungnade;'ʔʊn-gnaːdə
 ungut;'ʔʊn-guːt
+unguten;'ʔʊɳ-guː-tən
 ungültig;'ʔʊn-gʏl-tɪç
 ungünstig;'ʔʊɳ-ʏns-tɪç
 ungünstiger;'ʔʊn-gʏns-tɪ-gɐ
@@ -27717,6 +27856,7 @@ verbessert;fɛɐ-'bɛ-sɐt
 verbesserte;fɛɐ-'bɛ-sɐ-tə
 verbesserung;fɛɐ-'bɛs-ə-ʁʊɳ
 verbesserungen;fɛɐ-'bɛ-sə-ʁʊɳ-ən
+verbesserungsvorschläge;fɛɐ-'bɛ-sɐ-ʁʊɳs-'foːɐ-ʃlɛː-gə
 verbeten;fɛɐ-'beː-tən
 verbeugte;fɛɐ-'bɔʏ-ktə
 verbeugung;fɛɐ-'bɔʏ-gʊɳ
@@ -28217,6 +28357,7 @@ verleidet;fɛɐ-'laɪ-dət
 verleihen;fɛɐ-'laɪ-ən
 verleiht;fɛɐ-'laɪt
 verleiten;fɛɐ-'laɪ-tən
+verlesen;fɛɐ-'leː-zən
 verletzen;fɛɐ-'lɛ-tsən
 verletzt;fɛɐ-'lɛtst
 verletzte;fɛɐ-'lɛts-tə
@@ -29023,6 +29164,7 @@ vierjährigen;'fiːɐ-jɛː-ʁɪ-gən
 viermal;'fiːɐ-maːl
 vierschrötige;fiːɐ-'ʃʁøː-tɪ-gə
 viertausend;'fiːɐ-taʊ-zənt
+viertausendeinhundertvierundachtzig;'fiːɐ-taʊ-sənd-ʔaɪn-hʊn-dɐt-fiːɐ-ʔʊnt-ʔaxt-tsɪç
 viertausendsechsundneunzig;'fiːɐ-taʊ-zənt-zɛks-ʔʊnt-nɔʏn-tsɪç
 vierte;'fiːɐ-tə
 vierteile;'fiːɐ-taɪ-lə
@@ -29069,6 +29211,7 @@ violinspielen;viː-oː-'liː-n-ʃpiː-lən
 viren;'viː-ʁən
 virgil;vɪʁ-'giːl
 virginia;vɜ-'dʒɪn-jə
+virtual;'vɜ-tʃu-əl
 virtueller;'vɪɐ-tuː-ɛ-lɐ
 virtuelles;'vɪɐ-tuː-ɛ-ləs
 visa;'viː-zaː
@@ -29309,6 +29452,7 @@ vorgeworfen;'foːɐ-gə-vɔɐ-fən
 vorgezeigt;'foːɐ-gə-tsaɪkt
 vorgezeigten;'foːɐ-gə-tsaɪk-tən
 vorgezogen;'foːɐ-gə-tsoː-gən
+vorgibt;'foːɐ-gɪpt
 vorging;'foːɐ-gɪɳ
 vorgänge;'fɔɐ-gɛ-ɳə
 vorgängen;'foːɐ-gɛɳ-ən
@@ -29706,6 +29850,7 @@ wall;'val
 wallace;'wɔ-ləs
 wallenden;'val-ən-dən
 wallfahrtsfrömmigkeit;'val-faːɐts-'fʁøm-ɪç-kaɪt
+wallpaper;'wɔl-pɛɪ-pɜ
 wallte;'val-tə
 walross;vaː-lʁ'ɔs
 walrosse;vaː-lʁ'ɔsə
@@ -30115,8 +30260,10 @@ wenn;'vɛn
 wenngleich;vɛn-'glaɪç
 wenns;'vɛns
 wer;'vɛɐ
+werbe;'vɛɐ-bə
 werbeflyer;'vɛɐ-bə-'flaɪ-ɐ
 werben;'vɛɐ-bən
+werbetrommel;'vɛɐ-bə-'tʁɔ-məl
 werbewirksam;'vɛɐ-bə-vɪɐk-zaːm
 werbung;'vɛɐ-bʊɳ
 werd;'vɛɐt
@@ -30216,6 +30363,8 @@ wetterverhältnisse;'vɛ-tɐ-fɛɐ-hɛlt-nɪ-sə
 wettervorhersage;'vɛtɐ-foːʁ-'heːʁ-zaːgə
 wettkämpfe;'vɛt-'kɛm-pfə
 whats;'wəts
+white;'wɑɪt
+whiteboard;'wɑɪt-bɔrd
 whitecastle;waɪt-'kaː-səl
 whitney;'wɪt-niː
 who;'veː-'ʔhaː-'ʔoː
@@ -30706,6 +30855,7 @@ woraus;voː-'ʁaʊs
 worden;'vɔɐ-dən
 wordpress;'vøːɐt-pʁɛs
 worin;voː-'ʁɪn
+work;'wɜk
 workout;'wɜ-kaʊt
 world;'vœɐlt
 worms;'vɔʁms
@@ -30891,6 +31041,7 @@ x;'ʔɛks
 x_1;'ʔɪks
 xbmc;'ʔɪks-'beː'ʔɛm-'tseː
 xbmc_1;'ʔɛks-'bɪ'-ʔɛm-'ziː
+xing;'ksɪɳ
 xl;'ʔɪks-'ʔɛl
 xorg;ʔɪks-'ʔɔʁg
 y;'ʔʏp-siː-lɔn
@@ -31518,6 +31669,7 @@ zurückließ;tsʊ-'ʁʏk-liːs
 zurücknehmen;tsuː-'ʁʏk-neː-mən
 zurückreicht;tsuː-'ʁʏk-ʁaɪçt
 zurückschauen;'tsuː-ʁʏk-ʃaʊ-ən
+zurückschicken;tsuː-'ʁʏk-'ʃɪ-kən
 zurückschiebens;tsʊ-'ʁʏk-ʃiː-bəns
 zurückschrecken;tsʊ-'ʁʏk-ʃʁɛ-kən
 zurücksetzen;tsuː-'ʁʏk-zɛts-ən
