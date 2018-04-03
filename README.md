@@ -110,6 +110,20 @@ host                  = localhost
 port                  = 8300
 ```
 
+Links to Text Corpora
+=====================
+
+The following list contains text corpora that can be used to train language
+models with the scripts contained in this repository. Right of the name of the
+corpus is the corresponding variable in `.speechrc`.
+
+- [Europarl](http://www.statmt.org/europarl/), specifically [parallel corpus German-English](http://www.statmt.org/europarl/v7/de-en.tgz): `europarl_de`, `europarl_en`
+- [Cornell Movie--Dialogs Corpus](http://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html): `cornell_movie_dialogs`
+- [German Parole Corpus](http://ota.ox.ac.uk/desc/2467): `parole_de`
+- [WebQuestions](https://nlp.stanford.edu/software/sempre/): `web_questions`
+- [Yahoo! Answers dataset](https://cogcomp.org/page/resource_view/89): `yahoo_answers`
+
+
 Language Model
 ==============
 
