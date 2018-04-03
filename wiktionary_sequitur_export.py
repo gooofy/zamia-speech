@@ -19,8 +19,7 @@
 #
 
 #
-# use the pre-trained seq2seq model to generate candidate lex entries, 
-# validate them against sequitur, add ones that match to our lex 
+# train a sequitur model that translates wiktionary IPA into our IPA style
 #
 
 import os
@@ -32,11 +31,12 @@ import logging
 from optparse           import OptionParser
 
 from nltools            import misc
+from nltools.phonetics  import ipa2xsampa
 from speech_lexicon     import Lexicon
-from wiktionary_model   import WiktionarySeq2Seq
 
-PROC_TITLE      = 'wiktionary_gen_entries'
+PROC_TITLE      = 'wiktionary_sequitur_train'
 DICTFN          = 'data/dst/speech/de/dict_wiktionary_de.txt'
+WORKDIR         = 'data/dst/speech/de/wiktionary_sequitur'
 
 #
 # init
@@ -65,20 +65,6 @@ else:
 #
 
 config = misc.load_config ('.speechrc')
-
-wikfn  = config.get("speech", "wiktionary_de")
-
-#
-# load pre-trained model
-#
-
-wiktionary_model = WiktionarySeq2Seq('base_256')
-
-wiktionary_model.load()
-
-print wiktionary_model.predict(u"kühn·heit", u'kyːnhaɪ̯t')
-
-# sys.exit(0)
 
 #
 # load lexicon
@@ -110,21 +96,41 @@ with codecs.open(DICTFN, 'r', 'utf8') as dictf:
 print "loading wiktionary... done. %d entries." % len(wiktionary)
 
 #
-# predict missing entries
+# export training data for sequitur
 #
 
-for i, token in enumerate(wiktionary):
+os.system("rm -rf %s" % WORKDIR)
+misc.mkdirs(WORKDIR)
 
-    if token in lex:
-        continue
+num_missing = 0
+num_found   = 0
 
-    try:
+with codecs.open('%s/train.lex' % WORKDIR, 'w', 'utf8') as trainf, \
+     codecs.open('%s/test.lex'  % WORKDIR, 'w', 'utf8') as testf, \
+     codecs.open('%s/all.lex'   % WORKDIR, 'w', 'utf8') as allf :
 
-        word     = wiktionary[token][0].lower()
-        ipa      = wiktionary[token][1].strip()
-        ipa_pred = wiktionary_model.predict(word, ipa).strip()
+    cnt = 0
 
-        logging.info("%6d/%6d %-30s: %-30s => %s" % (i+1, len(wiktionary), word, ipa, ipa_pred))
-    except:
-        pass
+    for token in lex:
+        if not token in wiktionary:
+            # print u"Missing in wiktionary: %s" % token
+            num_missing += 1
+        else:
+            num_found += 1
+
+            source_ipa = wiktionary[token][1]
+            target_ipa = lex[token]['ipa'].replace(u'-', u'')
+
+            target_xs = ipa2xsampa (token, target_ipa, spaces=True, stress_to_vowels=False)
+
+            if cnt % 10 == 0:
+                testf.write (u'%s %s\n' % (source_ipa, target_xs))
+            else:
+                trainf.write (u'%s %s\n' % (source_ipa, target_xs))
+            allf.write (u'%s %s\n' % (source_ipa, target_xs))
+
+            cnt += 1
+
+logging.info('sequitur workdir %s done. %d entries.' % (WORKDIR, cnt))
+
 

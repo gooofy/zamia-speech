@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -82,6 +82,7 @@ class ArticleExtractor(xml.sax.ContentHandler):
             ipa         = None
             hyphenation = None
             hyp_armed   = False
+            german      = False
 
             for line in body.split('\n'):
                 if not ipa:
@@ -96,7 +97,13 @@ class ArticleExtractor(xml.sax.ContentHandler):
                             hyphenation = m.group(1)
                     if u'{{Worttrennung}}' in line:
                         hyp_armed = True
+                if not german:
+                    if u'{{Sprache|Deutsch}}' in line:
+                        german = True
 
+            if not german:
+                print "%7d %7d %s NOT GERMAN." % (article_cnt, ipa_cnt, title)
+                return
             if not ipa:
                 print "%7d %7d %s NO PRONOUNCIATION FOUND." % (article_cnt, ipa_cnt, title)
                 return

@@ -95,6 +95,8 @@ cornell_movie_dialogs = /home/bofh/projects/ai/data/corpora/en/cornell_movie_dia
 web_questions         = /home/bofh/projects/ai/data/corpora/en/WebQuestions
 yahoo_answers         = /home/bofh/projects/ai/data/corpora/en/YahooAnswers
 
+wiktionary_de         = /home/bofh/projects/ai/data/corpora/de/dewiktionary-20180320-pages-meta-current.xml
+
 host_asr              = localhost
 port_asr              = 8301
 
@@ -183,6 +185,34 @@ Also, I sometimes use this command to add missing words from transcripts in batc
 ```bash
 ./speech_lex_edit.py `./speech_lex_missing.py`
 ```
+
+Wiktionary
+----------
+
+For the german lexicon, entries can be extracted from the german wiktionary using a set of scripts.
+To do that, the first step is to extract a set of candidate entries from an wiktionary XML dump:
+
+```bash
+./wiktionary_extract_ipa.py 
+```
+
+this will output extracted entries to `data/dst/speech/de/dict_wiktionary_de.txt`. We now need to 
+train a sequitur model that translates these entries into our own IPA style and phoneme set:
+
+```bash
+./wiktionary_sequitur_export.py
+./wiktionary_sequitur_train.sh
+```
+
+finally, we translate the entries and check them against the predictions from our regular sequitur model:
+
+```bash
+./wiktionary_sequitur_gen.py
+```
+
+this script produces two output files: `data/dst/speech/de/dict_wiktionary_gen.txt` contains acceptable entries,
+`data/dst/speech/de/dict_wiktionary_rej.txt` contains rejected entries.
+
 
 CMU Sphinx Model
 ================
