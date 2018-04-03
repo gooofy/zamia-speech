@@ -11,7 +11,7 @@ from nltools.tokenizer import tokenize
 from pathlib2 import Path
 
 SENTENCES_STATS = 1000
-PUNKT_PICKLEFN = Path('data/dst/speech/de/punkt.pickle')
+PUNKT_PICKLEFN = Path('data/dst/tokenizers/punkt-de.pickle')
 
 
 class ParoleParser(HTMLParser):

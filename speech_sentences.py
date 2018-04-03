@@ -8,15 +8,13 @@ import os
 
 import plac
 
-from pathlib2 import Path
-
 from nltools.misc import init_app, load_config
 from nltools.tokenizer import tokenize
 
 import parole
 
 from parole import load_punkt_tokenizer
-
+from paths import TEXT_CORPORA_DIR
 
 TEXT_CORPORA = {
     "cornell_movie_dialogs":
@@ -47,7 +45,7 @@ def main(text_corpus, verbose=False):
 
     Let text_corpus be the argument given on the command line.
     Then the corpus text_corpus is tokenized and each sentence is written on a
-    separate line into `data/dst/speech/text-corpora/<text_corpus>.txt`. All
+    separate line into `data/dst/text-corpora/<text_corpus>.txt`. All
     punctuation marks are stripped.
     """
     init_app('speech_sentences')
@@ -61,10 +59,9 @@ def main(text_corpus, verbose=False):
 
     corpus_path = config.get("speech", text_corpus)
 
-    out_text_corpora_dir = Path("data/dst/speech/text-corpora")
-    out_text_corpora_dir.mkdir(parents=True, exist_ok=True)
+    TEXT_CORPORA_DIR.mkdir(parents=True, exist_ok=True)
 
-    out_file = out_text_corpora_dir / (text_corpus + ".txt")
+    out_file = TEXT_CORPORA_DIR / (text_corpus + ".txt")
 
     with codecs.open(str(out_file), "w", "utf-8") as outf:
         # I haven't figured out how to refactor the processing algorithms of the

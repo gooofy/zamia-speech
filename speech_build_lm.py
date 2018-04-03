@@ -60,7 +60,8 @@ from pathlib2 import Path
 
 from nltools.misc import init_app, load_config
 
-TEXT_CORPORA_BASE_PATH = Path("data/dst/speech/text-corpora")
+from paths import LANGUAGE_MODELS_DIR, TEXT_CORPORA_DIR
+
 SENTENCES_STATS = 100000
 
 
@@ -75,17 +76,17 @@ def main(language_model, debug=0, verbose=False, *text_corpus):
     """Train n-gram language model on tokenized text corpora
 
     The resulting language model will be written to the directory
-    data/dst/speech/lm/<language_model>/. The search path for the tokenized text
-    corpora is data/dst/speech/text-corpora.
+    data/dst/lm/<language_model>/. The search path for the tokenized text
+    corpora is data/dst/text-corpora.
 
     Example:
 
         ./speech_build_lm.py my-language-model parole_de europarl_de
 
     A language model will be trained on the text corpora found in
-    data/dst/speech/text-corpora/parole_de.txt and
-    data/dst/speech/text-corpora/europarl_de.txt. The resulting language model
-    will be written to the directory data/dst/speech/my-language-model/.
+    data/dst/text-corpora/parole_de.txt and
+    data/dst/text-corpora/europarl_de.txt. The resulting language model
+    will be written to the directory data/dst/lm/my-language-model/.
     """
     init_app('speech_build_lm')
 
@@ -113,7 +114,7 @@ def main(language_model, debug=0, verbose=False, *text_corpus):
                       ngram_count_path)
         sys.exit(1)
 
-    outdir = Path('data/dst/speech/lm/%s' % language_model)
+    outdir = LANGUAGE_MODELS_DIR / language_model
     outdir.mkdir(parents=True, exist_ok=True)
 
     train_fn = outdir / "train_all.txt"
@@ -122,7 +123,7 @@ def main(language_model, debug=0, verbose=False, *text_corpus):
 
     with codecs.open(str(train_fn), 'w', 'utf8') as dstf:
         for text_corpus_name in text_corpus:
-            src = TEXT_CORPORA_BASE_PATH / (text_corpus_name + ".txt")
+            src = TEXT_CORPORA_DIR / (text_corpus_name + ".txt")
             logging.info('reading from sources %s' % src)
             with codecs.open(str(src), 'r', 'utf8') as srcf:
                 while True:
