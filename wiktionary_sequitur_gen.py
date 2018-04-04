@@ -80,6 +80,8 @@ TOLERATABLE_DIFFS = [ (u'p', u'b'),
                       (u'b', u'p'),
                       (u'ɛ', u'ə'),
                       (u'ə', u'ɛ'),
+                      (u'e', u'ɛ'),
+                      (u'ɛ', u'e'),
                       (u'r', u'ʁ'),
                       (u'ʁ', u'r'),
                       (u'ɐ', u'ʁ'),
@@ -88,6 +90,8 @@ TOLERATABLE_DIFFS = [ (u'p', u'b'),
                       (u't', u'd'),
                       (u'z', u's'),
                       (u's', u'z'),
+                      (u'ʊ', u'u'),
+                      (u'u', u'ʊ'),
                     ]
 
 def merge_check(token, ipa_r, ipa_w):
