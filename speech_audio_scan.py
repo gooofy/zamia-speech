@@ -25,117 +25,76 @@
 import os
 import sys
 import logging
-import readline
-import atexit
-import traceback
 
-from optparse import OptionParser
-from StringIO import StringIO
+import plac
+from pathlib2 import Path
 
 from nltools import misc
 from speech_transcripts import Transcripts
 
-# logging.basicConfig(level=logging.DEBUG)
-logging.basicConfig(level=logging.INFO)
 
-#
-# commandline
-#
-
-parser = OptionParser("usage: %prog [options] ")
-
-parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
-           help="language (default: de)")
-
-(options, args) = parser.parse_args()
-
-lang = options.lang
-
-#
-# init terminal
-#
-
-misc.init_app ('speech_audio_scan')
-
-#
-# config
-#
-
-config = misc.load_config('.speechrc')
-
-scan_dirs = []
-if lang == 'de':
-
-    scan_dirs.append(config.get("speech", "vf_audiodir_de"))
-    scan_dirs.append(config.get("speech", "extrasdir_de"))
-    scan_dirs.append(config.get("speech", "gspv2_dir") + '/train')
-    scan_dirs.append(config.get("speech", "gspv2_dir") + '/dev')
-    # scan_dirs.append(config.get("speech", "gspv2_dir") + '/test')
-
-    wav16_dir   = config.get("speech", "wav16_dir_de")
-
-elif lang == 'en':
-
-    scan_dirs.append(config.get("speech", "vf_audiodir_en"))
-    scan_dirs.append(config.get("speech", "extrasdir_en"))
-    scan_dirs.append(config.get("speech", "librivoxdir"))
-
-    wav16_dir   = config.get("speech", "wav16_dir_en")
-
-else:
-
-    print "***ERROR: language %s not supported yet." % lang
-    print
-    sys.exit(1)
+SPEECH_CORPORA = ["voxforge_de", "voxforge_contrib_de", "audio_extras_de",
+                  "gspv2", "voxforge_en", "audio_extras_en", "librivox"]
 
 
-#
-# load transcripts
-#
+@plac.annotations(
+    verbose=("Enable verbose logging", "flag", "v"),
+    speech_corpora=("Name of the speech corpus to scan. Allowed values: "
+                    + ", ".join(SPEECH_CORPORA), "positional", None, str, None,
+                    "speech_corpus"))
+def main(verbose=False, *speech_corpora):
+    """Scan directory for audio files and convert them to wav files
 
-print "loading transcripts..."
-transcripts = Transcripts(lang=lang)
-print "loading transcripts...done."
+    For each speech corpus `speech_corpus`
 
+    1. the resulting wav files are written to the directory
+       `.speechrc.wav16`/<speech_corpus>/
 
-def audio_convert (cfn, subdir, fn, audiodir):
+    2. the transcripts in data/src/speech/<speech_corpus>/transcripts_*.csv are
+       updated.
+    """
+    misc.init_app('speech_audio_scan')
 
-    # global mfcc_dir
-    global wav16_dir
+    config = misc.load_config('.speechrc')
 
-    # convert audio if not done yet
+    wav16 = Path(config.get("speech", "wav16"))
 
-    w16filename = "%s/%s.wav" % (wav16_dir, cfn)
+    if len(speech_corpora) < 1:
+        logging.error("At least one speech corpus must be provided.")
+        sys.exit(1)
 
-    if not os.path.isfile (w16filename):
+    for speech_corpus in speech_corpora:
+        if speech_corpus not in SPEECH_CORPORA:
+            logging.error("Unsupported corpus: " + speech_corpus)
+            sys.exit(1)
 
-        wavfilename  = "%s/%s/wav/%s.wav" % (audiodir, subdir, fn)
+    if verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
-        if not os.path.isfile (wavfilename):
-            # flac ?
-            flacfilename  = "%s/%s/flac/%s.flac" % (audiodir, subdir, fn)
-    
-            if not os.path.isfile (flacfilename):
-                print "   WAV file '%s' does not exist, neither does FLAC file '%s' => skipping submission." % (wavfilename, flacfilename)
-                return False
+    for speech_corpus in speech_corpora:
+        transcripts = Transcripts(lang=speech_corpus)
+        out_wav16_subdir = wav16 / speech_corpus
+        out_wav16_subdir.mkdir(parents=True, exist_ok=True)
 
-            print "%-20s: converting %s => %s (16kHz mono)" % (cfn, flacfilename, w16filename)
-            os.system ("sox '%s' -r 16000 -b 16 -c 1 %s" % (flacfilename, w16filename))
-        
+        in_root_corpus_dir = Path(config.get("speech", speech_corpus))
+        if speech_corpus == "gspv2":
+            in_audio_dirs = [in_root_corpus_dir / subdir
+                             for subdir in ("train", "dev", "test")]
         else:
+            in_audio_dirs = [in_root_corpus_dir]
 
-            print "%-20s: converting %s => %s (16kHz mono)" % (cfn, wavfilename, w16filename)
-            os.system ("sox '%s' -r 16000 -b 16 -c 1 %s" % (wavfilename, w16filename))
+        for in_audio_dir in in_audio_dirs:
+            scan_audiodir(str(in_audio_dir), transcripts, str(out_wav16_subdir))
+            print "scanning done."
 
-    return True
+        transcripts.save()
+        print "new transcripts saved."
+        print
 
-#
-# main
-#
 
-def scan_audiodir(audiodir):
-
-    global transcripts
+def scan_audiodir(audiodir, transcripts, out_wav16_subdir):
 
     for subdir in os.listdir(audiodir):
 
@@ -200,20 +159,43 @@ def scan_audiodir(audiodir):
 
                     transcripts[cfn] = v
 
-                audio_convert (cfn, subdir, audiofn, audiodir)
+                audio_convert (cfn, subdir, audiofn, audiodir, out_wav16_subdir)
 
-for d in scan_dirs:
-    scan_audiodir (d)
 
-print "scanning done."
+def audio_convert(cfn, subdir, fn, audiodir, wav16_dir):
+    # global mfcc_dir
 
-# print "cleaning transcripts..."
-# 
-# for cfn in transcripts:
-# 
-#     transcripts[cfn]['dirfn'] = os.path.basename(os.path.normpath(transcripts[cfn]['dirfn'])) 
+    # convert audio if not done yet
 
-transcripts.save()
-print "new transcripts saved."
-print
+    w16filename = "%s/%s.wav" % (wav16_dir, cfn)
 
+    if not os.path.isfile(w16filename):
+
+        wavfilename = "%s/%s/wav/%s.wav" % (audiodir, subdir, fn)
+
+        if not os.path.isfile(wavfilename):
+            # flac ?
+            flacfilename = "%s/%s/flac/%s.flac" % (audiodir, subdir, fn)
+
+            if not os.path.isfile(flacfilename):
+                print "   WAV file '%s' does not exist, neither does FLAC file '%s' => skipping submission." % (
+                wavfilename, flacfilename)
+                return False
+
+            print "%-20s: converting %s => %s (16kHz mono)" % (
+            cfn, flacfilename, w16filename)
+            os.system(
+                "sox '%s' -r 16000 -b 16 -c 1 %s" % (flacfilename, w16filename))
+
+        else:
+
+            print "%-20s: converting %s => %s (16kHz mono)" % (
+            cfn, wavfilename, w16filename)
+            os.system(
+                "sox '%s' -r 16000 -b 16 -c 1 %s" % (wavfilename, w16filename))
+
+    return True
+
+
+if __name__ == "__main__":
+    plac.call(main)
