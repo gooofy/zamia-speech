@@ -91,6 +91,17 @@ def lex_paint_main():
     stdscr.insstr(my-1, mx-40, " R:remove  E:Edit  T:Token       Q:Quit ", curses.A_REVERSE )
     stdscr.refresh()
 
+def say_ipa (locale, engine, voice, ipas):
+    global tts
+
+    try:
+        tts.locale = locale
+        tts.engine = engine
+        tts.voice  = voice
+        tts.say_ipa (ipas, async=True)
+    except:
+        traceback.print_exc()
+
 def lex_gen_ipa (locale, engine, voice, speak=False):
 
     global tts
@@ -105,10 +116,7 @@ def lex_gen_ipa (locale, engine, voice, speak=False):
         ipas = tts.gen_ipa (lex_base)
 
     if speak:
-        tts.locale = 'de'
-        tts.engine = 'mary'
-        tts.voice  = 'dfki-pavoque-neutral-hsmm'
-        tts.say_ipa(ipas, async=True)
+        say_ipa ('de', 'mary', 'dfki-pavoque-neutral-hsmm', ipas)
 
     return ipas
 
@@ -133,10 +141,7 @@ def lex_set_token(token):
 
     ipas = lex_entry['ipa']
 
-    tts.locale ='de'
-    tts.engine ='mary'
-    tts.voice  ='dfki-pavoque-neutral-hsmm'
-    tts.say_ipa(ipas, async=True)
+    say_ipa('de', 'mary', 'dfki-pavoque-neutral-hsmm', ipas)
 
     lex_gen['de-mary']     = lex_gen_ipa('de', 'mary',     'bits3')
     lex_gen['de-espeak']   = lex_gen_ipa('de', 'espeak',   'de')
@@ -245,23 +250,15 @@ try:
         # generate en-mary 
         elif c == ord('l'):
             
-            tts.locale ='en-US'
-            tts.engine ='mary'
-            tts.voice  ='cmu-rms-hsmm'
-
             ipas = tts.gen_ipa (lex_base)
-            tts.say_ipa(ipas, async=True)
+            say_ipa('en-US', 'mary', 'cmu-rms-hsmm', ipas)
             lex_entry['ipa'] = ipas
 
         # generate fr-mary 
         elif c == ord('k'):
             
-            tts.locale ='fr'
-            tts.engine ='mary'
-            tts.voice  ='upmc-pierre-hsmm'
-
             ipas = tts.gen_ipa (lex_base)
-            tts.say_ipa(ipas, async=True)
+            say_ipa('fr', 'mary', 'upmc-pierre-hsmm', ipas)
             lex_entry['ipa'] = ipas
 
         # generate de-sequitur
@@ -276,11 +273,7 @@ try:
     
             ipas = lex_entry['ipa']
 
-            tts.locale ='de'
-            tts.engine ='mary'
-            tts.voice  ='bits3'
-
-            tts.say_ipa(ipas, async=True)
+            say_ipa('de', 'mary', 'bits3', ipas)
 
         # speak de mary hsmm
         elif c == ord('o'):
@@ -290,11 +283,7 @@ try:
     
             ipas = lex_entry['ipa']
 
-            tts.locale = 'de'
-            tts.engine = 'mary'
-            tts.voice  = 'dfki-pavoque-neutral-hsmm'
-
-            tts.say_ipa(ipas, async=True)
+            say_ipa('de', 'mary', 'dfki-pavoque-neutral-hsmm', ipas)
 
         # speak fr mary hsmm
         elif c == ord('i'):
@@ -308,18 +297,14 @@ try:
             tts.engine ='mary'
             tts.voice  ='upmc-pierre-hsmm'
 
-            tts.say_ipa(ipas, async=True)
+            say_ipa('fr', 'mary', 'upmc-pierre-hsmm', ipas)
    
         # speak en mary hsmm
         elif c == ord('u'):
     
             ipas = lex_entry['ipa']
 
-            tts.locale = 'en-US'
-            tts.engine = 'mary'
-            tts.voice  = 'cmu-rms-hsmm'
-
-            tts.say_ipa(ipas, async=True)
+            say_ipa('en-US', 'mary', 'cmu-rms-hsmm', ipas)
    
         # edit token
         elif c == ord('t'):
