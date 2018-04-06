@@ -269,6 +269,8 @@ with codecs.open(OUTDICTFN, 'w', 'utf8') as outdictf, \
 
                 # matched = ipa_r.replace(u"-", u"") == ipa_w
                 ipa_m = merge_check(token, ipa_r, ipa_w)
+                if ipa_m and (not u"'" in ipa_m): # at least one stress marker is required
+                    ipa_m = None
 
                 # if matched:
                 if ipa_m:
