@@ -42,6 +42,7 @@ OUTDICTFN        = 'data/dst/speech/de/dict_wiktionary_gen.txt'
 OUTREJFN         = 'data/dst/speech/de/dict_wiktionary_rej.txt'
 REGULAR_MODEL    = 'data/models/sequitur-voxforge-de-latest'
 WIKTIONARY_MODEL = 'data/dst/speech/de/wiktionary_sequitur/model-6'
+TEST_TOKEN       = u'aalbestand'
 
 CHUNK_SIZE       = 1000
 
@@ -102,9 +103,6 @@ def merge_check(token, ipa_r, ipa_w):
         - tolerate vocal length differences
         - tolerate differences listed above """
     
-    # print ipa_r
-    # print ipa_w
-
     ir = 0
     iw = 0
 
@@ -135,7 +133,7 @@ def merge_check(token, ipa_r, ipa_w):
             continue
         if ipa_r[ir] != u"ʔ" and ipa_w[iw] == u"ʔ":
             iw += 1
-            ipa_m += u"ː"
+            ipa_m += u"ʔ"
             continue
 
         if ipa_r[ir] == u"-":
@@ -164,6 +162,13 @@ def merge_check(token, ipa_r, ipa_w):
         iw += 1
 
     if ir==len(ipa_r) and iw==len(ipa_w):
+
+        if token == TEST_TOKEN:
+            print token
+            print ipa_r
+            print ipa_w
+            print ipa_m
+
         return ipa_m
     return None 
 
