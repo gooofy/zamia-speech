@@ -83,7 +83,19 @@ for token in lex:
     entry = lex[token]
 
     ipa = entry['ipa']
-    if u"'" in ipa:
+
+    failed = False
+
+    if not (u"'" in ipa):
+        failed = True
+
+    if u"--" in ipa:
+        failed = True
+
+    if len(ipa) == 0:
+        failed = True
+
+    if not failed:
         continue
 
     cnt += 1
