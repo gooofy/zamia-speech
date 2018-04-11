@@ -113,7 +113,6 @@ with codecs.open(inputfn, 'r', 'utf8') as inputf:
             for line in inputf:
 
                 line = line.strip()
-                readline.add_history(line)
                 linecnt += 1
 
                 while True:
@@ -153,6 +152,7 @@ with codecs.open(inputfn, 'r', 'utf8') as inputf:
                     if resp.lower() == 'q':
                         sys.exit(0)
                     elif resp.lower() == 'e':
+                        readline.add_history(line)
                         line = raw_input("Prompt> ")
                     elif resp.lower() == 'r':
                         oov_repl = raw_input("Replacement for %s> " % oov).decode('utf8')
