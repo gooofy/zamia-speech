@@ -85,6 +85,12 @@ class LexEdit(object):
 
         ipas = lex_entry['ipa']
 
+        lex_gen = {}
+
+        lex_gen['de-mary']     = self.lex_gen_ipa(lex_base, 'de', 'mary',     'bits3')
+        lex_gen['de-espeak']   = self.lex_gen_ipa(lex_base, 'de', 'espeak',   'de')
+        lex_gen['de-sequitur'] = self.lex_gen_ipa(lex_base, 'de', 'sequitur', 'de')
+
         try:
             self.tts.locale ='de'
             self.tts.engine ='mary'
@@ -92,12 +98,6 @@ class LexEdit(object):
             self.tts.say_ipa(ipas, async=True)
         except:
             logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
-
-        lex_gen = {}
-
-        lex_gen['de-mary']     = self.lex_gen_ipa(lex_base, 'de', 'mary',     'bits3')
-        lex_gen['de-espeak']   = self.lex_gen_ipa(lex_base, 'de', 'espeak',   'de')
-        lex_gen['de-sequitur'] = self.lex_gen_ipa(lex_base, 'de', 'sequitur', 'de')
 
         while True:
 
