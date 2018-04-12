@@ -62,6 +62,8 @@ parser.add_option ("-d", "--debug", dest="debug", type='int', default=0,
                    help="limit number of transcripts (debug purposes only), default: 0 (unlimited)")
 parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
                    help="language (default: de)")
+parser.add_option ("-p", "--prompt-words", action="store_true", dest="prompt_words",
+                   help="limit dict to tokens covered in prompts")
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="enable verbose logging")
 
@@ -102,7 +104,7 @@ logging.info ( "loading transcripts (%d train, %d test) ...done." % (len(ts_trai
 #
 
 
-misc.mkdirs('%s/lexicon' % data_dir)
+# FIXME: unused, remove misc.mkdirs('%s/lexicon' % data_dir)
 misc.mkdirs('%s/local/dict' % data_dir)
 misc.mkdirs(wav16_dir)
 misc.mkdirs(mfcc_dir)
@@ -197,22 +199,28 @@ logging.info ( "Exporting dictionary..." )
 
 utt_dict = {}
 
-for ts in ts_all:
+if options.prompt_words:
+    for ts in ts_all:
 
-    tsd = ts_all[ts]
+        tsd = ts_all[ts]
 
-    tokens = tsd['ts'].split(' ')
+        tokens = tsd['ts'].split(' ')
 
-    # logging.info ( '%s %s' % (repr(ts), repr(tokens)) )
+        # logging.info ( '%s %s' % (repr(ts), repr(tokens)) )
 
-    for token in tokens:
-        if token in utt_dict:
-            continue
+        for token in tokens:
+            if token in utt_dict:
+                continue
 
-        if not token in lex.dictionary:
-            logging.error ( "*** ERROR: missing token in dictionary: '%s' (tsd=%s, tokens=%s)" % (token, repr(tsd), repr(tokens)) )
-            sys.exit(1)
+            if not token in lex.dictionary:
+                logging.error ( "*** ERROR: missing token in dictionary: '%s' (tsd=%s, tokens=%s)" % (token, repr(tsd), repr(tokens)) )
+                sys.exit(1)
 
+            utt_dict[token] = lex.dictionary[token]['ipa']
+
+else:
+
+    for token in lex:
         utt_dict[token] = lex.dictionary[token]['ipa']
 
 ps = {}
@@ -233,7 +241,7 @@ with open (dictfn2, 'w') as dictf:
         for p in xs.split(' '):
 
             if len(p)<1:
-                logging.error ( u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s')" % (xs, xsr, ipa) )
+                logging.error ( u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s', token: '%s')" % (xs, xsr, ipa, token) )
 
             pws = p[1:] if p[0] == '\'' else p
 
@@ -254,7 +262,7 @@ logging.info ( "Exporting dictionary ... done." )
 
 psfn = '%s/local/dict/nonsilence_phones.txt' % data_dir
 with open(psfn, 'w') as psf:
-    for pws in ps:
+    for pws in sorted(ps):
         for p in sorted(list(ps[pws])):
             psf.write((u'%s ' % p).encode('utf8'))
 
@@ -276,15 +284,15 @@ psfn = '%s/local/dict/extra_questions.txt' % data_dir
 with open(psfn, 'w') as psf:
     psf.write('SIL SPN NSN\n')
 
-    for pws in ps:
-        for p in ps[pws]:
+    for pws in sorted(ps):
+        for p in sorted(list(ps[pws])):
             if '\'' in p:
                 continue
             psf.write((u'%s ' % p).encode('utf8'))
     psf.write('\n')
 
-    for pws in ps:
-        for p in ps[pws]:
+    for pws in sorted(ps):
+        for p in sorted(list(ps[pws])):
             if not '\'' in p:
                 continue
             psf.write((u'%s ' % p).encode('utf8'))
