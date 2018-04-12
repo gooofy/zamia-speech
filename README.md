@@ -241,8 +241,8 @@ just a sample invocation for live audio from mic:
 Kaldi Models
 ============
 
-NNet3 Models
-------------
+NNet3 Chain Models
+------------------
 
 To build the kaldi models:
 
@@ -253,8 +253,8 @@ cd data/dst/speech/de/kaldi/
 ./run-chain.sh
 ```
 
-Audiobook Segmentation and Transcription
-========================================
+Audiobook Segmentation and Transcription (Manual)
+=================================================
 
 Some notes on how to segment and transcribe audiobooks or other audio sources (e.g. from librivox) using
 the abook scripts provided:
@@ -326,6 +326,75 @@ The resulting voxforge-packages will end up in abook/out by default.
 
 ```bash
 ./abook-transcribe.py -s speaker1 -S speaker2 abook/segments/
+```
+
+Audiobook Segmentation and Transcription (kaldi)
+================================================
+
+Some notes on how to segment and transcribe semi-automatically audiobooks or other audio sources (e.g. from librivox) using
+kaldi:
+
+(0/4) Convert Audio to WAVE Format
+----------------------------------
+
+MP3
+~~~
+```bash
+ffmpeg -i foo.mp3 foo.wav
+```
+
+MKV
+~~~
+```bash
+mkvextract tracks foo.mkv 0:foo.ogg
+opusdec foo.ogg foo.wav
+```
+
+(1/4) Convert Audio to 16kHz mono
+---------------------------------
+
+```bash
+sox foo.wav -r 16000 -c 1 foo\_16m.wav
+```
+
+(2/4) Preprocess the Transcript
+-------------------------------
+
+This tool will tokenize the transcript and detect OOV tokens. Those can then be either
+replaced or added to the dictionary:
+
+```bash
+./abook-preprocess-transcript.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/dirkweber-sammlung-kurzer-deutscher-prosa-022-03.txt
+mv prompts.txt abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/dirkweber-sammlung-kurzer-deutscher-prosa-022-03.prompt
+```
+
+make sure to put all wav and prompt files into the same directory. As the kaldi process is parallelized for mass-segmentation, 
+at least 4 audio and prompt files are needed for the process to work.
+
+(3/4) Auto-Segment using Kaldi
+------------------------------
+
+Next, we need to create the kaldi directory structure and files for processing:
+
+```bash
+./abook-kaldi-segment.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/
+```
+
+now we can run the segmentation:
+
+```bash
+pushd data/dst/speech/de/kaldi/
+./run-segmentation.sh 
+popd
+```
+
+(4/4) Retrieve Segmentation Result
+----------------------------------
+
+Finally, we can retrieve the segmentation result in voxforge format:
+
+```bash
+./abook-kaldi-retrieve.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/
 ```
 
 
