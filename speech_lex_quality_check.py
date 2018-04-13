@@ -93,14 +93,13 @@ for token in lex:
         failed = True
 
     q_armed = False
-
+    c_prev  = None
     for c in ipa:
-        if c==u'ʔ':
-            q_armed = True
-        else:
-            if q_armed and c == u'-':
-                failed = True
-            q_armed = False
+        if c_prev==u'ʔ' and c == u'-':
+            failed = True
+        if c_prev != u"-" and c_prev and c == u"'":
+            failed = True
+        c_prev = c
 
     if len(ipa) == 0:
         failed = True
