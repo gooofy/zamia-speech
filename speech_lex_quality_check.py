@@ -92,7 +92,6 @@ for token in lex:
     if u"--" in ipa:
         failed = True
 
-    q_armed = False
     c_prev  = None
     for c in ipa:
         if c_prev==u'ʔ' and c == u'-':
