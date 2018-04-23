@@ -15,6 +15,8 @@ import parole
 
 from parole import load_punkt_tokenizer
 from paths import TEXT_CORPORA_DIR
+from speech_transcripts import Transcripts
+
 
 TEXT_CORPORA = {
     "cornell_movie_dialogs":
@@ -23,8 +25,12 @@ TEXT_CORPORA = {
         lambda corpus_path: proc_europarl_de(corpus_path, tokenize),
     "europarl_en":
         lambda corpus_path: proc_europarl_en(corpus_path, tokenize),
+    "gspv2":
+        lambda _: proc_gspv2(),
     "parole_de":
         None,
+    "voxforge_de":
+        lambda _: proc_voxforge_de(),
     "web_questions":
         lambda corpus_path: proc_web_questions(corpus_path, tokenize),
     "yahoo_answers":
@@ -136,6 +142,13 @@ def proc_europarl_en(corpus_path, tokenize):
                 break
 
 
+def proc_gspv2():
+    transcripts = Transcripts(lang='gspv2')
+    transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
+    for ts in transcripts_set:
+        yield ts
+
+
 def proc_parole_de(corpus_path, load_punkt_tokenizer, outf):
     punkt_tokenizer = load_punkt_tokenizer()
 
@@ -143,6 +156,13 @@ def proc_parole_de(corpus_path, load_punkt_tokenizer, outf):
 
     parole.parole_crawl(corpus_path, apply_punkt_wrapper.apply_punkt,
                         DEBUG_SGM_LIMIT_PAROLE)
+
+
+def proc_voxforge_de():
+    transcripts = Transcripts(lang='voxforge_de')
+    transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
+    for ts in transcripts_set:
+        yield ts
 
 
 def proc_web_questions(corpus_path, tokenize):
