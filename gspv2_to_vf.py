@@ -58,7 +58,7 @@ def main(verbose=False):
     speaker_gender = {}
 
     for folder in ['train', 'test', 'dev']:
-        destdir = dst_root_dir / folder
+        destdir = dst_root_dir
 
         src_dir = src_root_dir / folder
 
