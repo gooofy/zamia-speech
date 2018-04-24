@@ -1,11 +1,12 @@
 #!/bin/bash
 
-if [ $# != 1 ] ; then
-    echo "usage: $0 <lang>"
+if [ $# != 2 ] ; then
+    echo "usage: $0 <lang> [all|kaldi|sphinx|sequitur|srilm]"
     exit 1
 fi
 
 LANG=$1
+WHAT=$2
 DISTDIR=data/dist/$LANG
 
 # rm -rf $DISTDIR
@@ -13,133 +14,143 @@ DISTDIR=data/dist/$LANG
 
 datum=`date +%Y%m%d`
 
-#
-# kaldi chain models 
-#
+if [ \( $WHAT = "all" \) -o \( $WHAT = "kaldi" \) ] ; then
 
-AMNAME="kaldi-chain-voxforge-${LANG}-r$datum"
+    #
+    # kaldi chain models 
+    #
 
-mkdir -p "$DISTDIR/$AMNAME"
+    AMNAME="kaldi-chain-voxforge-${LANG}-r$datum"
 
-function export_kaldi_chain {
+    echo "$AMNAME ..."
 
-    EXPNAME=$1
-    GRAPHNAME=$2
+    mkdir -p "$DISTDIR/$AMNAME"
 
-    mkdir -p "$DISTDIR/$AMNAME/$EXPNAME"
+    function export_kaldi_chain {
 
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/tree                       $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
+        EXPNAME=$1
+        GRAPHNAME=$2
 
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/num_pdfs                 $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones/*                 $DISTDIR/$AMNAME/$EXPNAME/
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones.txt               $DISTDIR/$AMNAME/$EXPNAME/
+        mkdir -p "$DISTDIR/$AMNAME/$EXPNAME"
 
-    cp data/dst/speech/${LANG}/kaldi/data/local/dict/*                                   $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
+        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/tree                       $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
 
-}
+        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/num_pdfs                 $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones/*                 $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones.txt               $DISTDIR/$AMNAME/$EXPNAME/
 
-export_kaldi_chain tdnn_sp tdnn_sp/graph
-export_kaldi_chain tdnn_250 tdnn_250/graph
+        cp data/dst/speech/${LANG}/kaldi/data/local/dict/*                                   $DISTDIR/$AMNAME/$EXPNAME/
 
-mkdir -p "$DISTDIR/$AMNAME/extractor"
+    }
 
-cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
-cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
-cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
-cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
-cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
-cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
+    export_kaldi_chain tdnn_sp tdnn_sp/graph
+    export_kaldi_chain tdnn_250 tdnn_250/graph
 
-cp data/dst/speech/${LANG}/kaldi/RESULTS.txt $DISTDIR/$AMNAME/
-cp README.md "$DISTDIR/$AMNAME"
-cp LICENSE   "$DISTDIR/$AMNAME"
-cp AUTHORS   "$DISTDIR/$AMNAME"
+    mkdir -p "$DISTDIR/$AMNAME/extractor"
 
-mkdir -p "$DISTDIR/$AMNAME/conf"
-cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
-cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
-cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
 
-pushd $DISTDIR
-tar cfv "$AMNAME.tar" $AMNAME
-xz -v -8 -T 12 "$AMNAME.tar"
-popd
+    cp data/dst/speech/${LANG}/kaldi/RESULTS.txt $DISTDIR/$AMNAME/
+    cp README.md "$DISTDIR/$AMNAME"
+    cp LICENSE   "$DISTDIR/$AMNAME"
+    cp AUTHORS   "$DISTDIR/$AMNAME"
 
-rm -r "$DISTDIR/$AMNAME"
+    mkdir -p "$DISTDIR/$AMNAME/conf"
+    cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
+    cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
+    cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
 
-#
-# cont sphinx model
-#
+    pushd $DISTDIR
+    tar cfv "$AMNAME.tar" $AMNAME
+    xz -v -8 -T 12 "$AMNAME.tar"
+    popd
 
-AMNAME="cmusphinx-cont-voxforge-${LANG}-r$datum"
+    rm -r "$DISTDIR/$AMNAME"
 
-mkdir -p "$DISTDIR/$AMNAME"
-mkdir -p "$DISTDIR/$AMNAME/model_parameters"
+fi
 
-cp -r data/dst/speech/${LANG}/cmusphinx_cont/model_parameters/voxforge.cd_cont_6000 "$DISTDIR/$AMNAME/model_parameters"
-cp -r data/dst/speech/${LANG}/cmusphinx_cont/etc "$DISTDIR/$AMNAME"
-cp data/dst/speech/${LANG}/cmusphinx_cont/voxforge.html "$DISTDIR/$AMNAME"
-cp README.md "$DISTDIR/$AMNAME"
-cp LICENSE   "$DISTDIR/$AMNAME"
-cp AUTHORS   "$DISTDIR/$AMNAME"
+if [ \( $WHAT = "all" \) -o \( $WHAT = "sphinx" \) ] ; then
 
-pushd $DISTDIR
-tar cfv "$AMNAME.tar" $AMNAME
-xz -v -8 -T 12 "$AMNAME.tar"
-popd
+    #
+    # cont sphinx model
+    #
 
-rm -r "$DISTDIR/$AMNAME"
+    AMNAME="cmusphinx-cont-voxforge-${LANG}-r$datum"
+    echo "$AMNAME ..."
 
-#
-# ptm sphinx model
-#
+    mkdir -p "$DISTDIR/$AMNAME"
+    mkdir -p "$DISTDIR/$AMNAME/model_parameters"
 
-AMNAME="cmusphinx-ptm-voxforge-${LANG}-r$datum"
+    cp -r data/dst/speech/${LANG}/cmusphinx_cont/model_parameters/voxforge.cd_cont_6000 "$DISTDIR/$AMNAME/model_parameters"
+    cp -r data/dst/speech/${LANG}/cmusphinx_cont/etc "$DISTDIR/$AMNAME"
+    cp data/dst/speech/${LANG}/cmusphinx_cont/voxforge.html "$DISTDIR/$AMNAME"
+    cp README.md "$DISTDIR/$AMNAME"
+    cp LICENSE   "$DISTDIR/$AMNAME"
+    cp AUTHORS   "$DISTDIR/$AMNAME"
 
-mkdir -p "$DISTDIR/$AMNAME"
-mkdir -p "$DISTDIR/$AMNAME/model_parameters"
+    pushd $DISTDIR
+    tar cfv "$AMNAME.tar" $AMNAME
+    xz -v -8 -T 12 "$AMNAME.tar"
+    popd
 
-cp -r data/dst/speech/${LANG}/cmusphinx_ptm/model_parameters/voxforge.cd_ptm_5000 "$DISTDIR/$AMNAME/model_parameters"
-cp -r data/dst/speech/${LANG}/cmusphinx_ptm/etc "$DISTDIR/$AMNAME"
-cp data/dst/speech/${LANG}/cmusphinx_ptm/voxforge.html "$DISTDIR/$AMNAME"
-cp README.md "$DISTDIR/$AMNAME"
-cp LICENSE   "$DISTDIR/$AMNAME"
-cp AUTHORS   "$DISTDIR/$AMNAME"
+    rm -r "$DISTDIR/$AMNAME"
 
-pushd $DISTDIR
-tar cfv "$AMNAME.tar" $AMNAME
-xz -v -8 -T 12 "$AMNAME.tar"
-popd
+    #
+    # ptm sphinx model
+    #
 
-rm -r "$DISTDIR/$AMNAME"
+    AMNAME="cmusphinx-ptm-voxforge-${LANG}-r$datum"
+    echo "$AMNAME ..."
 
-#
-# srilm
-#
+    mkdir -p "$DISTDIR/$AMNAME"
+    mkdir -p "$DISTDIR/$AMNAME/model_parameters"
 
-LMNAME="srilm-voxforge-${LANG}-r$datum.arpa"
-cp data/dst/speech/${LANG}/srilm/lm.arpa ${DISTDIR}/$LMNAME
-gzip ${DISTDIR}/$LMNAME
+    cp -r data/dst/speech/${LANG}/cmusphinx_ptm/model_parameters/voxforge.cd_ptm_5000 "$DISTDIR/$AMNAME/model_parameters"
+    cp -r data/dst/speech/${LANG}/cmusphinx_ptm/etc "$DISTDIR/$AMNAME"
+    cp data/dst/speech/${LANG}/cmusphinx_ptm/voxforge.html "$DISTDIR/$AMNAME"
+    cp README.md "$DISTDIR/$AMNAME"
+    cp LICENSE   "$DISTDIR/$AMNAME"
+    cp AUTHORS   "$DISTDIR/$AMNAME"
 
-# 
-# cmuclmtk
-#
+    pushd $DISTDIR
+    tar cfv "$AMNAME.tar" $AMNAME
+    xz -v -8 -T 12 "$AMNAME.tar"
+    popd
 
-# LMNAME="cmuclmtk-voxforge-${LANG}-r$datum.arpa"
-# cp data/dst/speech/${LANG}/cmusphinx_cont/voxforge.arpa $DISTDIR/$LMNAME
-# gzip $DISTDIR/$LMNAME
+    rm -r "$DISTDIR/$AMNAME"
 
-#
-# sequitur
-#
+fi
 
-MODELNAME="sequitur-voxforge-${LANG}-r$datum"
-cp data/dst/speech/${LANG}/sequitur/model-6 $DISTDIR/$MODELNAME
-gzip $DISTDIR/$MODELNAME
+if [ \( $WHAT = "all" \) -o \( $WHAT = "srilm" \) ] ; then
+    #
+    # srilm
+    #
+
+    LMNAME="srilm-voxforge-${LANG}-r$datum.arpa"
+    echo "$LMNAME ..."
+    cp data/dst/speech/${LANG}/srilm/lm.arpa ${DISTDIR}/$LMNAME
+    gzip ${DISTDIR}/$LMNAME
+fi
+
+if [ \( $WHAT = "all" \) -o \( $WHAT = "sequitur" \) ] ; then
+    #
+    # sequitur
+    #
+
+    MODELNAME="sequitur-voxforge-${LANG}-r$datum"
+    echo "$MODELNAME ..."
+    cp data/dst/speech/${LANG}/sequitur/model-6 $DISTDIR/$MODELNAME
+    gzip $DISTDIR/$MODELNAME
+fi
 
 #
 # copyright info
@@ -153,13 +164,21 @@ cp AUTHORS   "$DISTDIR"
 # upload
 #
 
-echo rsync -avPz --delete --bwlimit=256 data/dist/${LANG} goofy:/var/www/html/voxforge/$LANG
+echo rsync -avPz --bwlimit=256 data/dist/${LANG} goofy:/var/www/html/voxforge/$LANG
 
 #
 # FIXME: remove deprecated code below
 #
 
 exit 0
+
+# 
+# cmuclmtk
+#
+
+# LMNAME="cmuclmtk-voxforge-${LANG}-r$datum.arpa"
+# cp data/dst/speech/${LANG}/cmusphinx_cont/voxforge.arpa $DISTDIR/$LMNAME
+# gzip $DISTDIR/$LMNAME
 
 #
 # kaldi nnet3 models 
