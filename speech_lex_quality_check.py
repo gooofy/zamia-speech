@@ -84,30 +84,30 @@ for token in lex:
 
     ipa = entry['ipa']
 
-    failed = False
+    failed = None
 
     if not (u"'" in ipa):
-        failed = True
+        failed = 'no stress marker'
 
     if u"--" in ipa:
-        failed = True
+        failed = 'double stress marker'
 
     c_prev  = None
     for c in ipa:
         if c_prev==u'ʔ' and c == u'-':
-            failed = True
+            failed = u'ʔ- found'
         if c_prev != u"-" and c_prev and c == u"'":
-            failed = True
+            failed = "stress not at beginning of syllable"
         c_prev = c
 
     if len(ipa) == 0:
-        failed = True
+        failed = "empty"
 
     if not failed:
         continue
 
     cnt += 1
-    print cnt, token, ipa
+    print cnt, token, ipa, failed
 
     failed_tokens.append(token)
 
