@@ -57,6 +57,7 @@ def main(verbose=False, *speech_corpora):
 
     config = misc.load_config('.speechrc')
 
+    speech_corpora_dir = Path(config.get("speech", "speech_corpora"))
     wav16 = Path(config.get("speech", "wav16"))
 
     if len(speech_corpora) < 1:
@@ -73,25 +74,37 @@ def main(verbose=False, *speech_corpora):
     else:
         logging.basicConfig(level=logging.INFO)
 
+    exit_if_corpus_is_missing(speech_corpora_dir, speech_corpora)
+
     for speech_corpus in speech_corpora:
         transcripts = Transcripts(lang=speech_corpus)
         out_wav16_subdir = wav16 / speech_corpus
         out_wav16_subdir.mkdir(parents=True, exist_ok=True)
+        in_root_corpus_dir = speech_corpora_dir / speech_corpus
 
-        in_root_corpus_dir = Path(config.get("speech", speech_corpus))
-        if speech_corpus == "gspv2":
-            in_audio_dirs = [in_root_corpus_dir / subdir
-                             for subdir in ("train", "dev", "test")]
-        else:
-            in_audio_dirs = [in_root_corpus_dir]
-
-        for in_audio_dir in in_audio_dirs:
-            scan_audiodir(str(in_audio_dir), transcripts, str(out_wav16_subdir))
-            print "scanning done."
+        scan_audiodir(str(in_root_corpus_dir),
+                      transcripts,
+                      str(out_wav16_subdir))
 
         transcripts.save()
         print "new transcripts saved."
         print
+
+
+def exit_if_corpus_is_missing(speech_corpora_dir, speech_corpora):
+    missing_directories = []
+    for speech_corpus in speech_corpora:
+        corpus_dir = speech_corpora_dir / speech_corpus
+        if not corpus_dir.is_dir():
+            missing_directories.append(str(corpus_dir))
+
+    if missing_directories:
+        logging.error(
+            "Could not find the following directories. Please update the var "
+            "`speech_corpora` in ~/.speechrc or move the missing corpus under "
+            "the directory set by `speech_corpora`. Missing directories: " +
+            ", ".join(missing_directories))
+        sys.exit(1)
 
 
 def scan_audiodir(audiodir, transcripts, out_wav16_subdir):

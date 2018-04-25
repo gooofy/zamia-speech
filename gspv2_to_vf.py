@@ -17,10 +17,8 @@
 # limitations under the License.
 
 import logging
-import os
 import codecs
 from bs4 import BeautifulSoup
-import errno
 import shutil
 
 import plac
@@ -37,11 +35,13 @@ from nltools import misc
 def main(verbose=False):
     """Convert gspv2 corpus to the VoxForge corpus format
 
-    The variable `gspv2_orig` in ~/.speechrc must point to the original source
-    folder of the German Speechdata Corpus V2, i.e. under the folder
-    `gspv2_orig` must be the three folders 'dev', 'train', and 'test'. The
-    resulting corpus is written to the folder defined by the variable `gspv2`
-    in ~/.speechrc.
+    The variable `speech_corpora` in ~/.speechrc must point to a folder
+    containing all corpora. Then this script takes the subfolder gspv2_orig
+    as the source containing the original gspv2 corpus, i.e. containing the
+    subfolders dev, test, and train.
+
+    The resulting corpus is written to the folder gspv2 under the folder set by
+    `speech_corpora`.
     """
     misc.init_app('speech_audio_scan')
     config = misc.load_config('.speechrc')
@@ -51,8 +51,9 @@ def main(verbose=False):
     else:
         logging.basicConfig(level=logging.INFO)
 
-    src_root_dir = Path(config.get("speech", "gspv2_orig"))
-    dst_root_dir = Path(config.get("speech", "gspv2"))
+    speech_corpora_dir = Path(config.get("speech", "speech_corpora"))
+    src_root_dir = speech_corpora_dir / "gspv2_orig"
+    dst_root_dir = speech_corpora_dir / "gspv2"
 
     speakers = set()
     speaker_gender = {}
@@ -86,13 +87,12 @@ def main(verbose=False):
                 speaker_id = (soup.recording.speaker_id.string).strip()
                 gender = (soup.recording.gender.string).strip()
                 name = 'gsp%s' % speaker_id.replace('-', '')
-                speakerdir = destdir / name
+                speakerdir = destdir / (name + "-1")
 
                 if not speaker_id in speakers:
                     speakers.add(speaker_id)
-                    year = Path(fbase).name.split("-")[0]
-                    name_year = "%s_%s" % (name, year)
-                    speaker_gender[name_year] = 'm' if gender == 'male' else 'f'
+                    speaker_gender[name] = \
+                        'm' if gender == 'male' else 'f'
                     (speakerdir / "wav").mkdir(parents=True, exist_ok=True)
                     (speakerdir / "etc").mkdir(parents=True, exist_ok=True)
 
@@ -118,19 +118,11 @@ def main(verbose=False):
 
                     copy_file(str(srcaudiofn), str(dstaudiofn))
 
-    # The file data/src/speech/gspv2/spk2gender contains corrections, so we
-    # don't write gender.txt to disk.
+    # Usually, you don't to run this code. It was taken as the source for
+    # data/src/speech/gspv2/spk2gender.
     #with open('gender.txt', 'w') as genderf:
-    #    for name_year in sorted(speaker_gender.keys()):
-    #        genderf.write('%s %s\n' % (name_year, speaker_gender[name_year]))
-
-
-def mkdirs(path):
-    try:
-        os.makedirs(path)
-    except OSError as exception:
-        if exception.errno != errno.EEXIST:
-            raise
+    #    for name in sorted(speaker_gender.keys()):
+    #        genderf.write('%s %s\n' % (name, speaker_gender[name]))
 
 
 def copy_file (src, dst):
