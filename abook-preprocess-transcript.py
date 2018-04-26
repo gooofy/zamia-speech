@@ -41,6 +41,7 @@ from lex_edit           import LexEdit
 
 PROC_TITLE = 'abook-preprocess-transcript'
 LANG       = 'de'
+DEFAULT_WRT = 'data/src/speech/de/wrt.csv'
 
 #
 # init terminal
@@ -63,6 +64,8 @@ parser = OptionParser("usage: %prog [options] transcript.txt")
 
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
+parser.add_option("-w", "--wrt", dest="wrt", type = "str", default=DEFAULT_WRT,
+                  help="Word replacement table, default: %s" % DEFAULT_WRT)
 
 (options, args) = parser.parse_args()
 
@@ -77,8 +80,7 @@ if len(args) != 1:
     sys.exit(1)
 
 inputfn        = args[0]
-outputfn       = 'prompts.txt'
-replfn         = 'repl.txt'
+outputfn       = os.path.splitext(args[0])[0] + ".prompt"
 
 #
 # load lexicon
@@ -89,6 +91,23 @@ lex = Lexicon(lang=LANG)
 logging.info("loading lexicon...done.")
 
 lex_edit = LexEdit(lex)
+
+#
+# load wrt
+#
+
+wrt = {}
+
+if os.path.exists(options.wrt):
+    logging.info("loading %s" % options.wrt)
+
+    with codecs.open(options.wrt, 'r', 'utf8') as wrtf:
+
+        for line in wrtf:
+            parts = line.strip().split(';')
+            if len(parts) != 2:
+                continue
+            wrt[parts[0]] = parts[1]
 
 #
 # linecount
@@ -103,68 +122,66 @@ with codecs.open(inputfn, 'r', 'utf8') as inputf:
 # main
 #
 
-wrt     = {}
 linecnt = 0
 
 with codecs.open(inputfn, 'r', 'utf8') as inputf:
     with codecs.open(outputfn, 'w', 'utf8') as outputf:
-        with codecs.open(replfn, 'w', 'utf8') as replf:
 
-            for line in inputf:
+        for line in inputf:
 
-                line = line.strip()
-                linecnt += 1
+            line = line.strip()
+            linecnt += 1
 
-                while True:
+            while True:
 
-                    oovs = set()
-                    for token in tokenize(line, lang='de'):
-                        token = wrt[token] if token in wrt else token
-                        # print repr(token)
-                        if not token in lex:
-                            oovs.add(token)
+                oovs = set()
+                for token in tokenize(line, lang=LANG):
+                    token = wrt[token] if token in wrt else token
+                    # print repr(token)
+                    if not token in lex:
+                        oovs.add(token)
 
-                    out_tokens = []
-                    for token in tokenize(line, lang=LANG, keep_punctuation=True):
-                        token = wrt[token] if token in wrt else token
-                        out_tokens.append(token)
+                out_tokens = []
+                for token in tokenize(line, lang=LANG, keep_punctuation=True):
+                    token = wrt[token] if token in wrt else token
+                    out_tokens.append(token)
 
-                    outline = u" ".join(out_tokens)
+                outline = u" ".join(out_tokens)
 
-                    for t in wrt:
-                        outline = outline.replace(t, wrt[t])
+                for t in wrt:
+                    outline = outline.replace(t, wrt[t])
 
-                    if not oovs:
-                        break
+                if not oovs:
+                    break
 
-                    oovs = sorted(list(oovs))
-                    oov = oovs[0]
+                oovs = sorted(list(oovs))
+                oov = oovs[0]
 
-                    print
-                    print u"%4d/%4d: %s" % (linecnt, linetot, line)
-                    print u"%4d/%4d: %s" % (linecnt, linetot, outline)
-                    print
-                    print u"OOV: %s" % oov
-                    print
-                    
-                    resp = raw_input("E:Edit L:Lex R:Replace Q:Quit >" )
+                print
+                print u"%4d/%4d: %s" % (linecnt, linetot, line)
+                print u"%4d/%4d: %s" % (linecnt, linetot, outline)
+                print
+                print u"OOV: %s" % oov
+                print
+                
+                resp = raw_input("E:Edit L:Lex R:Replace Q:Quit >" )
 
-                    if resp.lower() == 'q':
-                        sys.exit(0)
-                    elif resp.lower() == 'e':
-                        readline.add_history(line)
-                        line = raw_input("Prompt> ")
-                    elif resp.lower() == 'r':
-                        oov_repl = raw_input("Replacement for %s> " % oov).decode('utf8')
-                        wrt[oov] = oov_repl
-                        replf.write(u"        u'%s'           : u'%s',\n" % (oov, wrt[oov]))
-                        replf.flush()
-                    elif resp.lower() == 'l':
-                        lex_edit.edit(oov)
+                if resp.lower() == 'q':
+                    sys.exit(0)
+                elif resp.lower() == 'e':
+                    readline.add_history(line)
+                    line = raw_input("Prompt> ")
+                elif resp.lower() == 'r':
+                    oov_repl = raw_input("Replacement for %s> " % oov).decode('utf8')
+                    wrt[oov] = oov_repl
+                    with codecs.open(options.wrt, 'w', 'utf8') as wrtf:
+                        for w in sorted(wrt):
+                            wrtf.write('%s;%s\n' % (w, wrt[w]))
+                elif resp.lower() == 'l':
+                    lex_edit.edit(oov)
 
-                outputf.write(u"%s\n" % outline)
-                outputf.flush()
+            outputf.write(u"%s\n" % outline)
+            outputf.flush()
 
 print "%s written." % outputfn
-print "%s written." % replfn
 
