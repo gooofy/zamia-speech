@@ -56,10 +56,11 @@ SEQUITUR_MODEL_DIR = Path('data/models/sequitur')
     debug=("Limit number of sentences (debug purposes only), default: 0 "
            "(unlimited)", "option", "d", int),
     verbose=("Enable verbose logging", "flag", "v"),
+    prompt_words=("Limit dict to tokens covered in prompts", "flag", "p"),
     audio_corpora=("The audio corpora to train the acoustic model on.",
                    "positional", None, None, None, "audio_corpus"))
 def main(model_name, dictionary, language_model, sequitur_model=None, debug=0,
-         verbose=False, *audio_corpora):
+         verbose=False, prompt_words=False, *audio_corpora):
 
     misc.init_app('speech_kaldi_export')
 
@@ -99,7 +100,8 @@ def main(model_name, dictionary, language_model, sequitur_model=None, debug=0,
                                      debug,
                                      sequitur_model_path,
                                      dictionary,
-                                     audio_corpora)
+                                     audio_corpora,
+                                     prompt_words)
 
     copy_scripts_and_config_files(work_dir, kaldi_root)
 
@@ -114,7 +116,7 @@ def exit_if_language_model_dir_doesnt_exist(language_model_dir):
 
 def create_basic_work_dir_structure(data_dir, wav16_dir, mfcc_dir, work_dir,
                                     language_model_dir, kaldi_root):
-    misc.mkdirs('%s/lexicon' % data_dir)
+    # FIXME: unused, remove misc.mkdirs('%s/lexicon' % data_dir)
     misc.mkdirs('%s/local/dict' % data_dir)
     misc.mkdirs(wav16_dir)
     misc.mkdirs(mfcc_dir)
@@ -128,7 +130,8 @@ def generate_speech_and_text_corpora(data_dir,
                                      debug,
                                      sequitur_model_path,
                                      lexicon_file_name,
-                                     audio_corpora):
+                                     audio_corpora,
+                                     prompt_words):
     logging.info("loading lexicon...")
     lex = Lexicon(file_name=lexicon_file_name)
     logging.info("loading lexicon...done.")
@@ -166,7 +169,8 @@ def generate_speech_and_text_corpora(data_dir,
 
     ps, utt_dict = export_dictionary(ts_all,
                                      lex,
-                                     '%s/local/dict/lexicon.txt' % data_dir)
+                                     '%s/local/dict/lexicon.txt' % data_dir,
+                                     prompt_words)
     write_nonsilence_phones(
         ps, '%s/local/dict/nonsilence_phones.txt' % data_dir)
 
@@ -249,28 +253,33 @@ def add_missing_words(transcripts, lex, sequitur_model_path):
     return lex
 
 
-def export_dictionary(ts_all, lex, dictfn2):
+def export_dictionary(ts_all, lex, dictfn2, prompt_words):
     logging.info("Exporting dictionary...")
     utt_dict = {}
-    for ts in ts_all:
+    if prompt_words:
+        for ts in ts_all:
 
-        tsd = ts_all[ts]
+            tsd = ts_all[ts]
 
-        tokens = tsd['ts'].split(' ')
+            tokens = tsd['ts'].split(' ')
 
-        # logging.info ( '%s %s' % (repr(ts), repr(tokens)) )
+            # logging.info ( '%s %s' % (repr(ts), repr(tokens)) )
 
-        for token in tokens:
-            if token in utt_dict:
-                continue
+            for token in tokens:
+                if token in utt_dict:
+                    continue
 
-            if not token in lex.dictionary:
-                logging.error(
-                    "*** ERROR: missing token in dictionary: '%s' (tsd=%s, tokens=%s)" % (
-                    token, repr(tsd), repr(tokens)))
-                sys.exit(1)
+                if not token in lex.dictionary:
+                    logging.error(
+                        "*** ERROR: missing token in dictionary: '%s' (tsd=%s, tokens=%s)" % (
+                        token, repr(tsd), repr(tokens)))
+                    sys.exit(1)
 
+                utt_dict[token] = lex.dictionary[token]['ipa']
+    else:
+        for token in lex:
             utt_dict[token] = lex.dictionary[token]['ipa']
+
     ps = {}
     with open(dictfn2, 'w') as dictf:
 
