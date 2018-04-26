@@ -71,20 +71,12 @@ instructions, just some hints to get you started.
 [speech]
 vf_login              = <your voxforge login>
 
-vf_audiodir_de        = /home/bofh/projects/ai/data/speech/de/voxforge/audio
-vf_contribdir_de      = /home/bofh/projects/ai/data/speech/de/voxforge/audio-contrib
-extrasdir_de          = /home/bofh/projects/ai/data/speech/de/kitchen
-gspv2_dir             = /home/bofh/projects/ai/data/speech/de/gspv2
-
-vf_audiodir_en        = /home/bofh/projects/ai/data/speech/en/voxforge/audio
-extrasdir_en          = /home/bofh/projects/ai/data/speech/en/kitchen
-librivoxdir           = /home/bofh/projects/ai/data/speech/en/lsvf
+speech_corpora        = /home/bofh/projects/ai/data/speech_corpora
 
 kaldi_root            = /apps/kaldi-cuda
 srilm_root            = /apps/kaldi-cuda/tools/srilm
 
-wav16_dir_de          = /home/bofh/projects/ai/data/speech/de/16kHz
-wav16_dir_en          = /home/bofh/projects/ai/data/speech/en/16kHz
+wav16                 = /home/bofh/projects/ai/data/speech/16kHz
 noise_dir             = /home/bofh/projects/ai/data/speech/noise
 
 europarl_de           = /home/bofh/projects/ai/data/corpora/de/europarl-v7.de-en.de
@@ -112,6 +104,26 @@ host                  = localhost
 port                  = 8300
 ```
 
+Speech Corpora
+==============
+
+The following list contains speech corpora supported by this script collection.
+
+- [VoxForge (German)](http://www.repository.voxforge1.org/downloads/de/Trunk/Audio/Main/16kHz_16bit/):
+  Put the tar.gz archives into the directory
+  `<~/.speechrc:speech_corpora>/voxforge_de` and unpack them. You can find
+  manually corrected prompts in `data/src/speech/voxforge_de/transcripts_*.csv`.
+  These prompts are used during training of ASR models.
+
+- [German Speechdata Package Version 2](http://www.repository.voxforge1.org/downloads/de/german-speechdata-package-v2.tar.gz):
+  Unpack the archive such that the directories `dev`, `test`, and `train` are
+  direct subdirectories of `<~/.speechrc:audio_corpora>/gspv2_orig`. Then run
+  run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
+  format. The resulting corpus will be written to
+  `<~/.speechrc:speech_corpora>/gspv2`. You can find corrected prompts in
+  `data/src/speech/gspv2/transcripts_*.csv`. These prompts are used during
+  training of ASR models.
+
 Links to Text Corpora
 =====================
 
@@ -129,7 +141,7 @@ corpus is the corresponding variable in `.speechrc`.
 Language Model
 ==============
 
-extract sentences from corpuses:
+extract sentences from corpora:
 
 ```bash
 ./speech_sentences.py
@@ -149,6 +161,16 @@ download latest audio data from voxforge, add them to submissions:
 ```bash
 ./speech_pull_voxforge.sh
 ./speech_audio_scan.py
+```
+
+gspv2
+=====
+
+To train an ASR system based on these scripts the German Speechdata Package
+Version 2 has to be transformed into the VoxForge format with
+
+```bash
+./gspv2_to_vf.py
 ```
 
 Submission Review and Transcription
@@ -241,14 +263,23 @@ just a sample invocation for live audio from mic:
 Kaldi Models
 ============
 
-NNet3 Chain Models
-------------------
+NNet3 Models
+------------
 
-To build the kaldi models:
+The following example trains a Kaldi model for German. Before running it, make
+sure to have downloaded the text corpora Europarl and Parole. Furthermore, you
+need the German VoxForge corpus and the gspv2 corpus. Unpack the German VoxForge
+corpus under `<~/.speechrc:speech_corpora>/voxforge_de/` and the gspv2 corpus
+under `<~/.speechrc:speech_corpora>/gspv2_orig/`.
 
 ```bash
-./speech_kaldi_export.py
-cd data/dst/speech/de/kaldi/
+./speech_sentences.py europarl-de
+./speech_sentences.py parole
+./speech_build_lm.py my_lang_model europarl-de parole
+./gspv2_to_vf.py
+./speech_audio_scan.py voxforge_de gspv2
+./speech_kaldi_export.py my_asr_model dict-de.ipa my_lang_model voxforge_de gspv2
+cd data/dst/asr-models/my_asr_model
 ./run-lm.sh
 ./run-chain.sh
 ```
