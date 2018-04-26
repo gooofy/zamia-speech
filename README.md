@@ -274,6 +274,7 @@ under `<~/.speechrc:speech_corpora>/gspv2_orig/`.
 
 ```bash
 ./speech_sentences.py europarl-de
+./speech_train_punkt_tokenizer.py  # Required for ./speech_sentences.py parole
 ./speech_sentences.py parole
 ./speech_build_lm.py my_lang_model europarl-de parole
 ./gspv2_to_vf.py
