@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 #
-# Copyright 2016, 2017, 2018 Guenter Bartsch
 # Copyright 2018 Marc Puels
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by

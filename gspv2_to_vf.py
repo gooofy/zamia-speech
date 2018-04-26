@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Copyright 2018 by Marc Puels
 # Copyright 2016 by G.Bartsch
 # Copyright 2015 Language Technology, Technische Universitaet Darmstadt (author: Benjamin Milde)
 #
