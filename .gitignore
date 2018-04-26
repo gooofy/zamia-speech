@@ -15,4 +15,8 @@ abook/work
 abook/in/
 abook/out/
 abook/segments/
+abook/do-eval.sh
+abook/hypothesis.txt
+abook/incoming/
+abook/reference.txt
 wav2goofy.py
