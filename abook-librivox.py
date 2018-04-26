@@ -19,7 +19,7 @@
 #
 
 #
-# retrieve audiobooks from librivox
+# retrieve audiobooks from librivox, unpack individual ones if needed
 #
 
 import os
@@ -31,12 +31,11 @@ import urllib2
 import json
 
 from optparse import OptionParser
+from zipfile  import ZipFile
 
-from nltools                import misc
+from nltools  import misc
 
-ZIPDIR        = 'abook/incoming'
 DBFN          = 'data/dst/speech/de/librivox.json'
-# LIMIT         = 500
 LIMIT         = 50
 
 #
@@ -46,6 +45,8 @@ LIMIT         = 50
 misc.init_app ('abook-librivox')
 
 config = misc.load_config ('.speechrc')
+
+librivox_zipdir = config.get("speech", "librivox_de")
 
 #
 # commandline parsing
@@ -117,6 +118,8 @@ if not os.path.exists(DBFN):
 
 else:
 
+    print "loading %s..." % DBFN
+
     with open(DBFN, 'r') as dbf:
         books = json.loads(dbf.read())
 
@@ -142,7 +145,7 @@ def mangle_reader(title):
 
 total_time = 0
 
-scriptfn = '%s/download.sh' % ZIPDIR
+scriptfn = 'abook/librivox-download.sh'
 
 with open(scriptfn, 'w', 0755) as scriptf:
 
@@ -176,38 +179,76 @@ print "total time: %f h in %d books" % (float(total_time) / 3600.0, len(books))
 print "%s written." % scriptfn
 print
 
-# #
-# # download book(s)
-# #
-# 
-# for book_id in args[1:]:
-# 
-#     book = books[book_id]
-# 
-#     title = book['id'] + '-' + mangle_title(book['title'])
-# 
-#     print book['id'], title, book['totaltime']
-#     print "    ", book['url_project']
-# 
-# #     for section in book['sections']:
-# # 
-# #         stitle   = section['title']
-# #         sn       = section['section_number']
-# #         readers  = section['readers']
-# #         if not readers:
-# #             continue
-# #         reader   = mangle_reader(readers[0]['display_name'])
-# #         playtime = int(section['playtime'])
-# #         url      = section['listen_url']
-# #         if not url:
-# #             continue
-# # 
-# #         total_time += playtime
-# # 
-# #         dirfn = '%s/%s' % (dstdirfn, title)
-# #         misc.mkdirs(dirfn)
-# # 
-# #         wavfn = '%s/%s/%s-%s-%s.wav' % (dstdirfn, title, reader, title, sn)
-# #         print total_time, wavfn, playtime
-# #         print url
-    
+#
+# extract wav audios of book(s), if requested
+#
+
+for book_id in args[1:]:
+
+    for book in books:
+        if book['id'] != book_id:
+            continue
+
+        title = book['id'] + '-' + mangle_title(book['title'])
+
+        print book['id'], title, book['totaltime']
+        print "    ", book['url_project']
+
+        book_dir = 'abook/in/librivox/%s' % title
+        misc.mkdirs(book_dir)
+
+        print "%s created." % book_dir
+
+        url = book['url_zip_file']
+        zipfilefn = '%s/%s' % (librivox_zipdir, url[url.rfind("/")+1:])
+
+        print "Extracting audio from zip file %s ..." % zipfilefn
+
+        with ZipFile(zipfilefn, 'r') as zipfile:
+      
+            mp3s = []
+            for mp3fn in sorted (zipfile.namelist()):
+                if not mp3fn.endswith('.mp3'):
+                    continue
+                mp3s.append(mp3fn)
+
+            # print mp3s
+ 
+            for i, section in enumerate(book['sections']):
+
+                stitle   = section['title']
+                sn       = section['section_number']
+                readers  = section['readers']
+                if not readers:
+                    continue
+                reader   = mangle_reader(readers[0]['display_name'])
+
+                wavfn = '%s/%s-%s-%s.wav' % (book_dir, reader, title, sn)
+
+                if not os.path.exists(wavfn):
+
+                    mp3fn = mp3s[i]
+
+                    print "Extracting %s -> %s..." % (mp3fn, wavfn)
+
+                    with zipfile.open(mp3fn, 'r') as mp3f, \
+                         open('abook/_tmp.mp3', 'w') as mp3tmpf:
+                        mp3tmpf.write(mp3f.read())
+
+                    cmd = 'ffmpeg -i abook/_tmp.mp3 abook/_tmp.wav'
+                    os.system(cmd)
+                    cmd = 'sox abook/_tmp.wav -r 16000 -c 1 %s' % wavfn
+                    os.system(cmd)
+                    cmd = 'rm abook/_tmp.wav abook/_tmp.mp3'
+                    os.system(cmd)
+
+                txtfn = '%s/%s-%s-%s.txt' % (book_dir, reader, title, sn)
+
+                if not os.path.exists(txtfn):
+
+                    print "Creating empty %s ..." % txtfn
+
+                    with open(txtfn, 'w') as txtf:
+                        txtf.write('')
+
+
