@@ -77,7 +77,7 @@ def main(verbose=False, *speech_corpora):
     exit_if_corpus_is_missing(speech_corpora_dir, speech_corpora)
 
     for speech_corpus in speech_corpora:
-        transcripts = Transcripts(lang=speech_corpus)
+        transcripts = Transcripts(corpus_name=speech_corpus)
         out_wav16_subdir = wav16 / speech_corpus
         out_wav16_subdir.mkdir(parents=True, exist_ok=True)
         in_root_corpus_dir = speech_corpora_dir / speech_corpus

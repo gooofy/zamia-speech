@@ -18,9 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import sys
-import re
-import unittest
 import codecs
 
 from nltools.phonetics import _normalize, IPA_normalization
@@ -29,15 +26,21 @@ from nltools.phonetics import _normalize, IPA_normalization
 # Lexicon load/save abstraction
 #
 
+DICT_PATH = 'data/src/dicts/%s'
+
 class Lexicon(object):
 
-    def __init__(self, lang='de'):
+    def __init__(self, file_name):
+        """Load a lexicon
 
-        self.lang       = lang
+        :param file_name: E.g. dict-de.ipa or dict-en.ipa.
+        """
+
+        self.file_name  = file_name
         self.dictionary = {}
         self.multidict  = {}
 
-        with open('data/src/speech/%s/dict.ipa' % self.lang, 'r') as f:
+        with open(DICT_PATH % self.file_name, 'r') as f:
 
             while True:
 
@@ -85,11 +88,10 @@ class Lexicon(object):
         return self.multidict[b]
 
     def save(self):
-        with codecs.open('data/src/speech/%s/dict.ipa' % self.lang, 'w', 'utf8') as f:
+        with codecs.open(DICT_PATH % self.file_name, 'w', 'utf8') as f:
             for w in sorted(self.dictionary):
                 entry = self.dictionary[w]
                 f.write(u"%s;%s\n" % (w, entry['ipa']))
 
     def remove(self, key):
         del self.dictionary[key]
-

@@ -65,7 +65,7 @@ workdir = 'data/dst/speech/%s/sequitur' % lang
 #
 
 logging.info("loading lexicon...")
-lex = Lexicon(lang=lang)
+lex = Lexicon(file_name=lang)
 logging.info("loading lexicon...done.")
 
 #

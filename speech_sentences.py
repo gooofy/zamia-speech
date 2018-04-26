@@ -143,7 +143,7 @@ def proc_europarl_en(corpus_path, tokenize):
 
 
 def proc_gspv2():
-    transcripts = Transcripts(lang='gspv2')
+    transcripts = Transcripts(corpus_name='gspv2')
     transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
     for ts in transcripts_set:
         yield ts
@@ -159,7 +159,7 @@ def proc_parole_de(corpus_path, load_punkt_tokenizer, outf):
 
 
 def proc_voxforge_de():
-    transcripts = Transcripts(lang='voxforge_de')
+    transcripts = Transcripts(corpus_name='voxforge_de')
     transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
     for ts in transcripts_set:
         yield ts

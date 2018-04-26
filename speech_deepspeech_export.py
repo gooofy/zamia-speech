@@ -79,7 +79,7 @@ wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
 #
 
 logging.info ( "loading transcripts...")
-transcripts = Transcripts(lang=options.lang)
+transcripts = Transcripts(corpus_name=options.lang)
 logging.info ( "loading transcripts...done. %d transcripts." % len(transcripts))
 logging.info ("splitting transcripts...")
 ts_all, ts_train, ts_test = transcripts.split()
