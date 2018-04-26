@@ -20,6 +20,7 @@ import logging
 import codecs
 from bs4 import BeautifulSoup
 import shutil
+import sys
 
 import plac
 from pathlib2 import Path
@@ -54,6 +55,8 @@ def main(verbose=False):
     speech_corpora_dir = Path(config.get("speech", "speech_corpora"))
     src_root_dir = speech_corpora_dir / "gspv2_orig"
     dst_root_dir = speech_corpora_dir / "gspv2"
+
+    exit_if_dst_root_dir_exists(dst_root_dir)
 
     speakers = set()
     speaker_gender = {}
@@ -123,6 +126,14 @@ def main(verbose=False):
     #with open('gender.txt', 'w') as genderf:
     #    for name in sorted(speaker_gender.keys()):
     #        genderf.write('%s %s\n' % (name, speaker_gender[name]))
+
+
+def exit_if_dst_root_dir_exists(dst_root_dir):
+    if dst_root_dir.is_dir():
+        logging.error(
+            "Destination folder {} already exists. Please either rename or "
+            "remove it.".format(dst_root_dir))
+        sys.exit(1)
 
 
 def copy_file (src, dst):
