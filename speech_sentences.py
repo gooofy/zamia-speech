@@ -47,17 +47,26 @@ TEXT_CORPORA = {
         lambda corpus_path: proc_europarl_de(corpus_path, tokenize),
     "europarl_en":
         lambda corpus_path: proc_europarl_en(corpus_path, tokenize),
-    "gspv2":
-        lambda _: proc_gspv2(),
     "parole_de":
         None,
-    "voxforge_de":
-        lambda _: proc_voxforge_de(),
     "web_questions":
         lambda corpus_path: proc_web_questions(corpus_path, tokenize),
     "yahoo_answers":
         lambda corpus_path: proc_yahoo_answers(corpus_path, tokenize),
 }
+
+SPEECH_CORPORA = {
+    "forschergeist":
+        lambda: proc_forschergeist(),
+    "gspv2":
+        lambda: proc_gspv2(),
+    "voxforge_de":
+        lambda: proc_voxforge_de(),
+}
+
+CORPORA = {}
+CORPORA.update(TEXT_CORPORA)
+CORPORA.update(SPEECH_CORPORA)
 
 SENTENCES_STATS = 1000
 DEBUG_LIMIT = 0
@@ -65,10 +74,10 @@ DEBUG_SGM_LIMIT_PAROLE = 0
 
 
 @plac.annotations(
-    text_corpus=("Name of text corpus to extract sentences from.",
-                 "positional", None, str, sorted(TEXT_CORPORA.keys())),
+    corpus=("Name of corpus to extract sentences from.",
+            "positional", None, str, sorted(CORPORA.keys())),
     verbose=("Enable verbose logging", "flag", "v"))
-def main(text_corpus, verbose=False):
+def main(corpus, verbose=False):
     """Generate training sentences for language models
 
     Let text_corpus be the argument given on the command line.
@@ -85,20 +94,25 @@ def main(text_corpus, verbose=False):
 
     config = load_config('.speechrc')
 
-    corpus_path = config.get("speech", text_corpus)
-
     TEXT_CORPORA_DIR.mkdir(parents=True, exist_ok=True)
 
-    out_file = TEXT_CORPORA_DIR / (text_corpus + ".txt")
+    out_file = TEXT_CORPORA_DIR / (corpus + ".txt")
 
     with codecs.open(str(out_file), "w", "utf-8") as outf:
         # I haven't figured out how to refactor the processing algorithms of the
         # parole corpus to implement a generator.
-        if text_corpus == "parole_de":
+        if corpus == "parole_de":
+            corpus_path = config.get("speech", corpus)
             proc_parole_de(corpus_path, load_punkt_tokenizer, outf)
-        else:
-            for sentence in TEXT_CORPORA[text_corpus](corpus_path):
+        elif corpus in TEXT_CORPORA:
+            corpus_path = config.get("speech", corpus)
+            for sentence in TEXT_CORPORA[corpus](corpus_path):
                 outf.write(sentence + "\n")
+        elif corpus in SPEECH_CORPORA:
+            for sentence in SPEECH_CORPORA[corpus]():
+                outf.write(sentence + "\n")
+        else:
+            raise Exception("This shouldn't happen.")
 
     logging.info('%s written.' % out_file)
 
@@ -162,6 +176,13 @@ def proc_europarl_en(corpus_path, tokenize):
             if DEBUG_LIMIT and num_sentences >= DEBUG_LIMIT:
                 logging.warn('europarl: debug limit reached, stopping.')
                 break
+
+
+def proc_forschergeist():
+    transcripts = Transcripts(corpus_name='forschergeist')
+    transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
+    for ts in transcripts_set:
+        yield ts
 
 
 def proc_gspv2():

@@ -35,7 +35,8 @@ from speech_transcripts import Transcripts
 
 
 SPEECH_CORPORA = ["voxforge_de", "voxforge_contrib_de", "audio_extras_de",
-                  "gspv2", "voxforge_en", "audio_extras_en", "librivox"]
+                  "gspv2", "voxforge_en", "audio_extras_en", "librivox",
+                  "forschergeist"]
 
 
 @plac.annotations(
