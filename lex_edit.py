@@ -31,6 +31,7 @@ import readline
 from nltools.tts            import TTS
 from nltools.sequiturclient import sequitur_gen_ipa
 from nltools.phonetics      import ipa2xsampa, xsampa2ipa
+from seqif                  import SeqIf
 
 SEQUITUR_MODEL    = 'data/models/sequitur-voxforge-de-latest'
 
@@ -46,13 +47,20 @@ class LexEdit(object):
 
         self.tts = TTS ('local', 0, locale='de', voice='bits3', engine='espeak')
 
+        #
+        # sequitur interface
+        #
+
+        self.si = SeqIf(SEQUITUR_MODEL)
+
     def lex_gen_ipa (self, lex_base, locale, engine, voice, speak=False):
 
         ipas = u''
         try:
 
             if engine == 'sequitur':
-                ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
+                # ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
+                ipas = self.si.g2p(lex_base)
             
             else:
                 self.tts.locale = locale
