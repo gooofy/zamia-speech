@@ -15,21 +15,21 @@ export PATH="$SEQUITUR_ROOT/bin:$PATH"
 
 cd $WORKDIR
 
-g2p.py --train train.lex --devel 5% --write-model model-1
-g2p.py --model model-1 --test test.lex > model-1.test
-g2p.py --model model-1 --ramp-up --train train.lex --devel 5% --write-model model-2
-g2p.py --model model-2 --test test.lex > model-2.test
-g2p.py --model model-2 --ramp-up --train train.lex --devel 5% --write-model model-3
-g2p.py --model model-3 --test test.lex > model-3.test
-g2p.py --model model-3 --ramp-up --train train.lex --devel 5% --write-model model-4
-g2p.py --model model-4 --test test.lex > model-4.test
-g2p.py --model model-4 --ramp-up --train train.lex --devel 5% --write-model model-5
-g2p.py --model model-5 --test test.lex > model-5.test
-g2p.py --model model-5 --ramp-up --train train.lex --devel 5% --write-model model-6
-g2p.py --model model-6 --test test.lex > model-6.test
+g2p.py --encoding=UTF8 --train train.lex --devel 5% --write-model model-1
+g2p.py --encoding=UTF8 --model model-1 --test test.lex > model-1.test
+g2p.py --encoding=UTF8 --model model-1 --ramp-up --train train.lex --devel 5% --write-model model-2
+g2p.py --encoding=UTF8 --model model-2 --test test.lex > model-2.test
+g2p.py --encoding=UTF8 --model model-2 --ramp-up --train train.lex --devel 5% --write-model model-3
+g2p.py --encoding=UTF8 --model model-3 --test test.lex > model-3.test
+g2p.py --encoding=UTF8 --model model-3 --ramp-up --train train.lex --devel 5% --write-model model-4
+g2p.py --encoding=UTF8 --model model-4 --test test.lex > model-4.test
+g2p.py --encoding=UTF8 --model model-4 --ramp-up --train train.lex --devel 5% --write-model model-5
+g2p.py --encoding=UTF8 --model model-5 --test test.lex > model-5.test
+g2p.py --encoding=UTF8 --model model-5 --ramp-up --train train.lex --devel 5% --write-model model-6
+g2p.py --encoding=UTF8 --model model-6 --test test.lex > model-6.test
 
 # useful to check for inconsitencies in manual entries
-g2p.py --model model-6 --test all.lex > model-6-all.test
+g2p.py --encoding=UTF8 --model model-6 --test all.lex > model-6-all.test
 
 #
 # these show no improvements in my tests so far:
