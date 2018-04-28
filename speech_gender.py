@@ -90,7 +90,7 @@ print "loading %s ...done." % SPK2GENDERFN
 #
 
 print "loading transcripts..."
-transcripts = Transcripts(lang=lang)
+transcripts = Transcripts(corpus_name=lang)
 print "loading transcripts...done."
 
 #

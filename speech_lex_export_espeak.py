@@ -70,7 +70,7 @@ else:
 #
 
 logging.info ( "loading lexicon...")
-lex = Lexicon(lang=options.lang)
+lex = Lexicon(file_name=options.lang)
 logging.info ( "loading lexicon...done.")
 
 #

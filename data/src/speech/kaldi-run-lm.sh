@@ -61,9 +61,9 @@ cp -r data/lang data/lang_test
 echo
 echo "creating G.fst..."
 
-cat ../srilm/lm.arpa | utils/find_arpa_oovs.pl $lang/words.txt  > $lmdir/oovs_lm.txt
+cat lm/lm.arpa | utils/find_arpa_oovs.pl $lang/words.txt  > $lmdir/oovs_lm.txt
 
-cat ../srilm/lm.arpa | \
+cat lm/lm.arpa | \
     grep -v '<s> <s>' | \
     grep -v '</s> <s>' | \
     grep -v '</s> </s>' | \

@@ -33,12 +33,11 @@ SPK_TEST = 'data/src/speech/%s/spk_test.txt'
 MAXLINES = 100000 # used to split up transcript.csvs
  
 class Transcripts(object):
+    def __init__(self, corpus_name):
 
-    def __init__(self, lang='de'):
-
-        self.lang  = lang
+        self.corpus_name  = corpus_name
         self.ts    = {}
-        self.tsdir = TSDIR % lang
+        self.tsdir = TSDIR % corpus_name
 
         for tsfn in os.listdir(self.tsdir):
 
@@ -68,18 +67,20 @@ class Transcripts(object):
                     quality = int(parts[5])
                     spk     = cfn.split('-')[0]
 
-                    v = { 'cfn'     : cfn,
-                          'dirfn'   : dirfn,
-                          'audiofn' : audiofn,
-                          'prompt'  : prompt,
-                          'ts'      : ts,
-                          'quality' : quality,
-                          'spk'     : spk}
+                    v = { 'cfn'        : cfn,
+                          'dirfn'      : dirfn,
+                          'audiofn'    : audiofn,
+                          'prompt'     : prompt,
+                          'ts'         : ts,
+                          'quality'    : quality,
+                          'spk'        : spk,
+                          'corpus_name': self.corpus_name
+                          }
 
                     self.ts[cfn] = v
 
         self.spk_test = []
-        with codecs.open(SPK_TEST % lang, 'r', 'utf8') as f:
+        with codecs.open(SPK_TEST % corpus_name, 'r', 'utf8') as f:
             for line in f:
                 self.spk_test.append(line.strip())
 

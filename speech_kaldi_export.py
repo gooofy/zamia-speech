@@ -1,7 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
 #
+# Copyright 2018 Marc Puels
 # Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
@@ -13,7 +14,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -21,15 +22,11 @@
 # export speech training data to create a kaldi case
 #
 
-import os
 import sys
 import logging
-import readline
-import atexit
-import traceback
+from pathlib2 import Path
 
-from optparse import OptionParser
-from StringIO import StringIO
+import plac
 
 from nltools                import misc
 from nltools.tokenizer      import tokenize
@@ -39,87 +36,151 @@ from nltools.sequiturclient import sequitur_gen_ipa
 from speech_lexicon     import Lexicon
 from speech_transcripts import Transcripts
 
-WORKDIR          = 'data/dst/speech/%s/kaldi'
-SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-%s-latest'
+from paths import ASR_MODELS_DIR, LANGUAGE_MODELS_DIR
 
-#
-# init 
-#
+SEQUITUR_MODEL_DIR = Path('data/models/sequitur')
 
-misc.init_app ('speech_kaldi_export')
+@plac.annotations(
+    model_name="The name of the resulting speech recognition system. All files "
+               "belonging to the experiment will be written to the "
+               "directory data/dst/asr-models/<model_name>/.",
+    dictionary="The pronunciation dictionary to use. Valid values are the "
+               "names of the files in data/src/dicts/.",
+    language_model="The language model to use. Valid values are the names of "
+                   "the directories in data/dst/lm/.",
+    sequitur_model=("Name of a sequitur model. Valid values are the names of "
+                    "the files in data/models/sequitur/. If a name is given, "
+                    "then missing entries in the pronunciation dictionary will "
+                    "be automaticially generated with the sequitur model.",
+                    "option", "s", str),
+    debug=("Limit number of sentences (debug purposes only), default: 0 "
+           "(unlimited)", "option", "d", int),
+    verbose=("Enable verbose logging", "flag", "v"),
+    prompt_words=("Limit dict to tokens covered in prompts", "flag", "p"),
+    audio_corpora=("The audio corpora to train the acoustic model on.",
+                   "positional", None, None, None, "audio_corpus"))
+def main(model_name, dictionary, language_model, sequitur_model=None, debug=0,
+         verbose=False, prompt_words=False, *audio_corpora):
 
-config = misc.load_config ('.speechrc')
+    misc.init_app('speech_kaldi_export')
 
-#
-# commandline parsing
-#
+    if verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
-parser = OptionParser("usage: %prog [options] )")
+    language_model_dir = LANGUAGE_MODELS_DIR.resolve() / language_model
+    exit_if_language_model_dir_doesnt_exist(language_model_dir)
 
-parser.add_option ("-a", "--add-all", action="store_true", dest="add_all",
-                   help="use all transcripts, generate missing words using sequitur g2p")
-parser.add_option ("-d", "--debug", dest="debug", type='int', default=0,
-                   help="limit number of transcripts (debug purposes only), default: 0 (unlimited)")
-parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
-                   help="language (default: de)")
-parser.add_option ("-p", "--prompt-words", action="store_true", dest="prompt_words",
-                   help="limit dict to tokens covered in prompts")
-parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
-                   help="enable verbose logging")
+    config = misc.load_config ('.speechrc')
 
-(options, args) = parser.parse_args()
+    work_dir = ASR_MODELS_DIR / model_name
+    kaldi_root = config.get("speech", "kaldi_root")
 
-if options.verbose:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.INFO)
+    data_dir = work_dir / "data"
+    mfcc_dir = work_dir / "mfcc"
 
-#
-# config
-#
+    wav16_dir = config.get("speech", "wav16")
 
-work_dir    = WORKDIR %options.lang 
-kaldi_root  = config.get("speech", "kaldi_root")
+    create_basic_work_dir_structure(
+        str(data_dir),
+        wav16_dir,
+        str(mfcc_dir),
+        str(work_dir),
+        str(language_model_dir),
+        kaldi_root)
 
-data_dir    = "%s/data" % work_dir
-mfcc_dir    = "%s/mfcc" % work_dir
+    if sequitur_model:
+        sequitur_model_path = str(SEQUITUR_MODEL_DIR / sequitur_model)
+    else:
+        sequitur_model_path = None
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
+    generate_speech_and_text_corpora(data_dir,
+                                     wav16_dir,
+                                     debug,
+                                     sequitur_model_path,
+                                     dictionary,
+                                     audio_corpora,
+                                     prompt_words)
 
-#
-# load lexicon, transcripts
-#
-
-logging.info ( "loading lexicon...")
-lex = Lexicon(lang=options.lang)
-logging.info ( "loading lexicon...done.")
-
-logging.info ( "loading transcripts...")
-transcripts = Transcripts(lang=options.lang)
-ts_all, ts_train, ts_test = transcripts.split(limit=options.debug, add_all=options.add_all)
-logging.info ( "loading transcripts (%d train, %d test) ...done." % (len(ts_train), len(ts_test)))
-
-#
-# create work_dir structure
-#
+    copy_scripts_and_config_files(work_dir, kaldi_root)
 
 
-# FIXME: unused, remove misc.mkdirs('%s/lexicon' % data_dir)
-misc.mkdirs('%s/local/dict' % data_dir)
-misc.mkdirs(wav16_dir)
-misc.mkdirs(mfcc_dir)
+def exit_if_language_model_dir_doesnt_exist(language_model_dir):
+    if not language_model_dir.is_dir():
+        logging.error(
+            "Could not find language model directory {}. Create a language "
+            "model first with speech_build_lm.py.".format(language_model_dir))
+        sys.exit(1)
 
-misc.symlink('%s/egs/wsj/s5/steps' % kaldi_root, '%s/steps' % work_dir)
-misc.symlink('%s/egs/wsj/s5/utils' % kaldi_root, '%s/utils' % work_dir)
 
-#
-# kaldi data part
-#
+def create_basic_work_dir_structure(data_dir, wav16_dir, mfcc_dir, work_dir,
+                                    language_model_dir, kaldi_root):
+    # FIXME: unused, remove misc.mkdirs('%s/lexicon' % data_dir)
+    misc.mkdirs('%s/local/dict' % data_dir)
+    misc.mkdirs(wav16_dir)
+    misc.mkdirs(mfcc_dir)
+    misc.symlink(language_model_dir, '%s/lm' % work_dir)
+    misc.symlink('%s/egs/wsj/s5/steps' % kaldi_root, '%s/steps' % work_dir)
+    misc.symlink('%s/egs/wsj/s5/utils' % kaldi_root, '%s/utils' % work_dir)
 
-def export_kaldi_data (destdirfn, tsdict):
 
-    global wav16_dir
+def generate_speech_and_text_corpora(data_dir,
+                                     wav16_dir,
+                                     debug,
+                                     sequitur_model_path,
+                                     lexicon_file_name,
+                                     audio_corpora,
+                                     prompt_words):
+    logging.info("loading lexicon...")
+    lex = Lexicon(file_name=lexicon_file_name)
+    logging.info("loading lexicon...done.")
+    logging.info("loading transcripts...")
 
+    if sequitur_model_path:
+        add_all = True
+    else:
+        add_all = False
+
+    ts_all = {}
+    ts_train = {}
+    ts_test = {}
+    transcript_objs = []
+    for audio_corpus in audio_corpora:
+        transcripts = Transcripts(corpus_name=audio_corpus)
+
+        ts_all_, ts_train_, ts_test_ = transcripts.split(limit=debug,
+                                                         add_all=add_all)
+
+        ts_all.update(ts_all_)
+        ts_train.update(ts_train_)
+        ts_test.update(ts_test_)
+        transcript_objs.append(transcripts)
+
+    logging.info("loading transcripts (%d train, %d test) ...done." % (
+        len(ts_train), len(ts_test)))
+
+    export_kaldi_data(wav16_dir, audio_corpora, '%s/train/' % data_dir, ts_train)
+    export_kaldi_data(wav16_dir, audio_corpora, '%s/test/' % data_dir, ts_test)
+
+    if sequitur_model_path:
+        for transcript_obj in transcript_objs:
+            lex = add_missing_words(transcript_obj, lex, sequitur_model_path)
+
+    ps, utt_dict = export_dictionary(ts_all,
+                                     lex,
+                                     '%s/local/dict/lexicon.txt' % data_dir,
+                                     prompt_words)
+    write_nonsilence_phones(
+        ps, '%s/local/dict/nonsilence_phones.txt' % data_dir)
+
+    write_silence_phones('%s/local/dict/silence_phones.txt' % data_dir)
+    write_optional_silence('%s/local/dict/optional_silence.txt' % data_dir)
+    write_extra_questions(ps, '%s/local/dict/extra_questions.txt' % data_dir)
+    create_training_data_for_language_model(transcript_objs, utt_dict, data_dir)
+
+
+def export_kaldi_data (wav16_dir, audio_corpora, destdirfn, tsdict):
     logging.info ( "Exporting to %s..." % destdirfn)
 
     misc.mkdirs(destdirfn)
@@ -133,39 +194,42 @@ def export_kaldi_data (destdirfn, tsdict):
 
             textf.write((u'%s %s\n' % (utt_id, ts['ts'])).encode('utf8'))
 
-            wavscpf.write('%s %s/%s.wav\n' % (utt_id, wav16_dir, utt_id))
+            wavscpf.write('%s %s/%s/%s.wav\n' % (utt_id, wav16_dir,
+                                                 ts['corpus_name'], utt_id))
 
             utt2spkf.write('%s %s\n' % (utt_id, ts['spk']))
 
-    misc.copy_file ('data/src/speech/%s/spk2gender' % options.lang, '%s/spk2gender' % destdirfn)
+    concat_sort_write(
+        ['data/src/speech/%s/spk2gender' % audio_corpus
+         for audio_corpus in audio_corpora],
+        '%s/spk2gender' % destdirfn)
 
-export_kaldi_data('%s/train/' % data_dir, ts_train)
-export_kaldi_data('%s/test/'  % data_dir, ts_test)
+
+def concat_sort_write(src_paths, dst_path):
+    lines = []
+    for src_path in src_paths:
+        with open(src_path) as f:
+            lines += [line for line in f]
+
+    with open(dst_path, "wt") as f:
+        for line in sorted(lines):
+            f.write(line)
 
 
-#
-# add missing words to dictionary using sequitur, if add_all is set
-#
-
-if options.add_all:
-
-    logging.info ( "looking for missing words..." )
-
-    missing = {} # word -> count
-
+def add_missing_words(transcripts, lex, sequitur_model_path):
+    logging.info("looking for missing words...")
+    missing = {}  # word -> count
     num = len(transcripts)
     cnt = 0
-
     for cfn in transcripts:
         ts = transcripts[cfn]
 
         cnt += 1
 
-        if ts['quality']>0:
+        if ts['quality'] > 0:
             continue
 
         for word in tokenize(ts['prompt']):
-
             if word in lex:
                 continue
 
@@ -173,181 +237,185 @@ if options.add_all:
                 missing[word] += 1
             else:
                 missing[word] = 1
-
     cnt = 0
     for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
+        lex_base = item[0]
 
-        lex_base = item[0] 
+        ipas = sequitur_gen_ipa(sequitur_model_path, lex_base)
 
-        ipas = sequitur_gen_ipa (SEQUITUR_MODEL % options.lang, lex_base)
-
-        logging.info ( u"%5d/%5d Adding missing word : %s [ %s ]" % (cnt, len(missing), item[0], ipas) )
+        logging.info(u"%5d/%5d Adding missing word : %s [ %s ]" % (
+        cnt, len(missing), item[0], ipas))
 
         lex_entry = {'ipa': ipas}
         lex[lex_base] = lex_entry
         cnt += 1
-        
+
+    return lex
 
 
-#
-# dictionary export
-#
+def export_dictionary(ts_all, lex, dictfn2, prompt_words):
+    logging.info("Exporting dictionary...")
+    utt_dict = {}
+    if prompt_words:
+        for ts in ts_all:
 
-dictfn2 = '%s/local/dict/lexicon.txt' % data_dir
+            tsd = ts_all[ts]
 
-logging.info ( "Exporting dictionary..." )
+            tokens = tsd['ts'].split(' ')
 
-utt_dict = {}
+            # logging.info ( '%s %s' % (repr(ts), repr(tokens)) )
 
-if options.prompt_words:
-    for ts in ts_all:
+            for token in tokens:
+                if token in utt_dict:
+                    continue
 
-        tsd = ts_all[ts]
+                if not token in lex.dictionary:
+                    logging.error(
+                        "*** ERROR: missing token in dictionary: '%s' (tsd=%s, tokens=%s)" % (
+                        token, repr(tsd), repr(tokens)))
+                    sys.exit(1)
 
-        tokens = tsd['ts'].split(' ')
-
-        # logging.info ( '%s %s' % (repr(ts), repr(tokens)) )
-
-        for token in tokens:
-            if token in utt_dict:
-                continue
-
-            if not token in lex.dictionary:
-                logging.error ( "*** ERROR: missing token in dictionary: '%s' (tsd=%s, tokens=%s)" % (token, repr(tsd), repr(tokens)) )
-                sys.exit(1)
-
+                utt_dict[token] = lex.dictionary[token]['ipa']
+    else:
+        for token in lex:
             utt_dict[token] = lex.dictionary[token]['ipa']
 
-else:
+    ps = {}
+    with open(dictfn2, 'w') as dictf:
 
-    for token in lex:
-        utt_dict[token] = lex.dictionary[token]['ipa']
+        dictf.write('!SIL SIL\n')
 
-ps = {}
+        for token in sorted(utt_dict):
 
-with open (dictfn2, 'w') as dictf:
+            ipa = utt_dict[token]
+            xsr = ipa2xsampa(token, ipa, spaces=True)
 
-    dictf.write('!SIL SIL\n')
+            xs = (xsr.replace('-', '')
+                     .replace('\' ', '\'')
+                     .replace('  ', ' ')
+                     .replace('#', 'nC'))
 
-    for token in sorted(utt_dict):
+            dictf.write((u'%s %s\n' % (token, xs)).encode('utf8'))
 
-        ipa = utt_dict[token]
-        xsr = ipa2xsampa (token, ipa, spaces=True)
+            for p in xs.split(' '):
 
-        xs = xsr.replace('-','').replace('\' ', '\'').replace('  ', ' ').replace('#', 'nC')
+                if len(p) < 1:
+                    logging.error(
+                        u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s')" % (
+                        xs, xsr, ipa))
 
-        dictf.write((u'%s %s\n' % (token, xs)).encode('utf8'))
+                pws = p[1:] if p[0] == '\'' else p
 
-        for p in xs.split(' '):
+                if not pws in ps:
+                    ps[pws] = {p}
+                else:
+                    ps[pws].add(p)
+    logging.info("%s written." % dictfn2)
+    logging.info("Exporting dictionary ... done.")
 
-            if len(p)<1:
-                logging.error ( u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s', token: '%s')" % (xs, xsr, ipa, token) )
+    return ps, utt_dict
 
-            pws = p[1:] if p[0] == '\'' else p
 
-            if not pws in ps:
-                ps[pws] = set([p])
-            else:
-                ps[pws].add(p)
+def write_nonsilence_phones(ps, psfn):
+    with open(psfn, 'w') as psf:
+        for pws in ps:
+            for p in sorted(list(ps[pws])):
+                psf.write((u'%s ' % p).encode('utf8'))
 
-logging.info ( "%s written." % dictfn2 )
+            psf.write('\n')
+    logging.info('%s written.' % psfn)
 
-logging.info ( "Exporting dictionary ... done." )
 
-#
-# phoneme sets
-#
+def write_silence_phones(psfn):
+    with open(psfn, 'w') as psf:
+        psf.write('SIL\nSPN\nNSN\n')
+    logging.info('%s written.' % psfn)
 
-# logging.info ( "Phoneme set: %s" % repr(ps) )
 
-psfn = '%s/local/dict/nonsilence_phones.txt' % data_dir
-with open(psfn, 'w') as psf:
-    for pws in sorted(ps):
-        for p in sorted(list(ps[pws])):
-            psf.write((u'%s ' % p).encode('utf8'))
+def write_optional_silence(psfn):
+    with open(psfn, 'w') as psf:
+        psf.write('SIL\n')
+    logging.info('%s written.' % psfn)
 
+
+def write_extra_questions(ps, psfn):
+    with open(psfn, 'w') as psf:
+        psf.write('SIL SPN NSN\n')
+
+        for pws in ps:
+            for p in ps[pws]:
+                if '\'' in p:
+                    continue
+                psf.write((u'%s ' % p).encode('utf8'))
         psf.write('\n')
 
-logging.info ( '%s written.' % psfn )
+        for pws in ps:
+            for p in ps[pws]:
+                if not '\'' in p:
+                    continue
+                psf.write((u'%s ' % p).encode('utf8'))
 
-psfn = '%s/local/dict/silence_phones.txt' % data_dir
-with open(psfn, 'w') as psf:
-    psf.write('SIL\nSPN\nNSN\n')
-logging.info ( '%s written.' % psfn )
+        psf.write('\n')
+    logging.info('%s written.' % psfn)
 
-psfn = '%s/local/dict/optional_silence.txt' % data_dir
-with open(psfn, 'w') as psf:
-    psf.write('SIL\n')
-logging.info ( '%s written.' % psfn )
 
-psfn = '%s/local/dict/extra_questions.txt' % data_dir
-with open(psfn, 'w') as psf:
-    psf.write('SIL SPN NSN\n')
+def create_training_data_for_language_model(transcript_objs, utt_dict, data_dir):
+    transcripts = {}
+    for transcript_obj in transcript_objs:
+        transcripts.update(transcript_obj.ts)
+    misc.mkdirs('%s/local/lm' % data_dir)
+    fn = '%s/local/lm/train_nounk.txt' % data_dir
+    with open(fn, 'w') as f:
 
-    for pws in sorted(ps):
-        for p in sorted(list(ps[pws])):
-            if '\'' in p:
-                continue
-            psf.write((u'%s ' % p).encode('utf8'))
-    psf.write('\n')
+        for utt_id in sorted(transcripts):
+            ts = transcripts[utt_id]
+            f.write((u'%s\n' % ts['ts']).encode('utf8'))
+    logging.info("%s written." % fn)
+    fn = '%s/local/lm/wordlist.txt' % data_dir
+    with open(fn, 'w') as f:
 
-    for pws in sorted(ps):
-        for p in sorted(list(ps[pws])):
-            if not '\'' in p:
-                continue
-            psf.write((u'%s ' % p).encode('utf8'))
+        for token in sorted(utt_dict):
+            f.write((u'%s\n' % token).encode('utf8'))
+    logging.info("%s written." % fn)
 
-    psf.write('\n')
 
-logging.info ( '%s written.' % psfn )
+def copy_scripts_and_config_files(work_dir, kaldi_root):
+    misc.copy_file('data/src/speech/kaldi-run-lm.sh', '%s/run-lm.sh' % work_dir)
+    # misc.copy_file ('data/src/speech/kaldi-run-am.sh', '%s/run-am.sh' % work_dir)
+    # misc.copy_file ('data/src/speech/kaldi-run-nnet3.sh', '%s/run-nnet3.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-chain.sh',
+                   '%s/run-chain.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-chain-wrapper.sh',
+                   '%s/run-chain-wrapper.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-chain-cfg.sh',
+                   '%s/run-chain-cfg.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-chain-cpu.sh',
+                   '%s/run-chain-cpu.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-chain-cpu-wrapper.sh',
+                   '%s/run-chain-cpu-wrapper.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-chain-gpu.sh',
+                   '%s/run-chain-gpu.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-chain-gpu-wrapper.sh',
+                   '%s/run-chain-gpu-wrapper.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-cmd.sh', '%s/cmd.sh' % work_dir)
+    misc.render_template('data/src/speech/kaldi-path.sh.template',
+                         '%s/path.sh' % work_dir, kaldi_root=kaldi_root)
+    misc.mkdirs('%s/conf' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-mfcc.conf',
+                   '%s/conf/mfcc.conf' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-mfcc-hires.conf',
+                   '%s/conf/mfcc_hires.conf' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-online-cmvn.conf',
+                   '%s/conf/online_cmvn.conf' % work_dir)
+    misc.mkdirs('%s/local' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-score.sh',
+                   '%s/local/score.sh' % work_dir)
+    misc.mkdirs('%s/local/nnet3' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-ivector-common.sh',
+                   '%s/local/nnet3/run_ivector_common.sh' % work_dir)
 
-#
-# language model
-#
 
-misc.mkdirs ('%s/local/lm' % data_dir)
-
-fn = '%s/local/lm/train_nounk.txt' % data_dir
-
-with open(fn, 'w') as f:
-    
-    for utt_id in sorted(transcripts):
-        ts = transcripts[utt_id]
-        f.write((u'%s\n' % ts['ts']).encode('utf8'))
-
-logging.info ( "%s written." % fn )
-
-fn = '%s/local/lm/wordlist.txt' % data_dir
-
-with open(fn, 'w') as f:
-    
-    for token in sorted(utt_dict):
-        f.write((u'%s\n' % token).encode('utf8'))
-
-logging.info ( "%s written." % fn )
-
-#
-# copy scripts and config files
-#
-
-misc.copy_file ('data/src/speech/kaldi-run-lm.sh', '%s/run-lm.sh' % work_dir)
-# misc.copy_file ('data/src/speech/kaldi-run-am.sh', '%s/run-am.sh' % work_dir)
-# misc.copy_file ('data/src/speech/kaldi-run-nnet3.sh', '%s/run-nnet3.sh' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-run-chain.sh', '%s/run-chain.sh' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-cmd.sh', '%s/cmd.sh' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-path.sh', '%s/path.sh' % work_dir)
-misc.mkdirs ('%s/conf' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-mfcc.conf', '%s/conf/mfcc.conf' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-mfcc-hires.conf', '%s/conf/mfcc_hires.conf' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-online-cmvn.conf', '%s/conf/online_cmvn.conf' % work_dir)
-misc.mkdirs ('%s/local' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-score.sh', '%s/local/score.sh' % work_dir)
-misc.mkdirs ('%s/local/nnet3' % work_dir)
-misc.copy_file ('data/src/speech/kaldi-run-ivector-common.sh', '%s/local/nnet3/run_ivector_common.sh' % work_dir)
-
-#
-# main
-#
-
-logging.info ( "All done." )
+if __name__ == "__main__":
+    plac.call(main)
+    logging.info ( "All done." )
 

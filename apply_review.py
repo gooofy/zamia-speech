@@ -78,7 +78,7 @@ else:
 #
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(lang=options.lang)
+transcripts = Transcripts(corpus_name=options.lang)
 logging.info("loading transcripts...done.")
 
 #
