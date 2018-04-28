@@ -16,8 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# scan voxforge and kitchen dirs for new audio data and transcripts
-# convert to 16kHz wav, add transcripts entries
+# Parser and Punkt Tokenizer working on the German Parole Corpus
 #
 
 import codecs
