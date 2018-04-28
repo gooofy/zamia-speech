@@ -57,11 +57,13 @@ TEXT_CORPORA = {
 
 SPEECH_CORPORA = {
     "forschergeist":
-        lambda: proc_forschergeist(),
+        lambda: proc_transcripts("forschergeist"),
     "gspv2":
-        lambda: proc_gspv2(),
+        lambda: proc_transcripts("gspv2"),
     "voxforge_de":
-        lambda: proc_voxforge_de(),
+        lambda: proc_transcripts("voxforge_de"),
+    "zamia_de":
+        lambda: proc_transcripts("zamia_de"),
 }
 
 CORPORA = {}
@@ -178,20 +180,6 @@ def proc_europarl_en(corpus_path, tokenize):
                 break
 
 
-def proc_forschergeist():
-    transcripts = Transcripts(corpus_name='forschergeist')
-    transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
-    for ts in transcripts_set:
-        yield ts
-
-
-def proc_gspv2():
-    transcripts = Transcripts(corpus_name='gspv2')
-    transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
-    for ts in transcripts_set:
-        yield ts
-
-
 def proc_parole_de(corpus_path, load_punkt_tokenizer, outf):
     punkt_tokenizer = load_punkt_tokenizer()
 
@@ -199,13 +187,6 @@ def proc_parole_de(corpus_path, load_punkt_tokenizer, outf):
 
     parole.parole_crawl(corpus_path, apply_punkt_wrapper.apply_punkt,
                         DEBUG_SGM_LIMIT_PAROLE)
-
-
-def proc_voxforge_de():
-    transcripts = Transcripts(corpus_name='voxforge_de')
-    transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
-    for ts in transcripts_set:
-        yield ts
 
 
 def proc_web_questions(corpus_path, tokenize):
@@ -267,6 +248,13 @@ def proc_yahoo_answers(corpus_path, tokenize):
         if DEBUG_LIMIT and num_sentences >= DEBUG_LIMIT:
             logging.warn('yahoo answers: debug limit reached, stopping.')
             break
+
+
+def proc_transcripts(corpus_name):
+    transcripts = Transcripts(corpus_name=corpus_name)
+    transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
+    for ts in transcripts_set:
+        yield ts
 
 
 if __name__ == "__main__":

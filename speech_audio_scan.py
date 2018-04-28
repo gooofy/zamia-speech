@@ -34,9 +34,17 @@ from nltools import misc
 from speech_transcripts import Transcripts
 
 
-SPEECH_CORPORA = ["voxforge_de", "voxforge_contrib_de", "audio_extras_de",
-                  "gspv2", "voxforge_en", "audio_extras_en", "librivox",
-                  "forschergeist"]
+SPEECH_CORPORA = [
+    "audio_extras_de",
+    "audio_extras_en",
+    "forschergeist",
+    "gspv2",
+    "librivox",
+    "voxforge_contrib_de",
+    "voxforge_de",
+    "voxforge_en",
+    "zamia_de",
+]
 
 
 @plac.annotations(
