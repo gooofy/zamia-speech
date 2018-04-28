@@ -71,6 +71,7 @@ instructions, just some hints to get you started.
 [speech]
 vf_login              = <your voxforge login>
 
+speech_arc            = /home/bofh/projects/ai/data/speech/arc
 speech_corpora        = /home/bofh/projects/ai/data/speech/corpora
 
 kaldi_root            = /apps/kaldi-cuda

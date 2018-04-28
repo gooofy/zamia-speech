@@ -46,7 +46,8 @@ misc.init_app ('abook-librivox')
 
 config = misc.load_config ('.speechrc')
 
-librivox_zipdir = config.get("speech", "librivox_de")
+speech_arc_dir = config.get("speech", "speech_arc")
+librivox_zipdir = '%s/librivox_de' % speech_arc_dir
 
 #
 # commandline parsing
