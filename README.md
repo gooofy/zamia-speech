@@ -109,11 +109,9 @@ Speech Corpora
 
 The following list contains speech corpora supported by this script collection.
 
-- [VoxForge (German)](http://www.repository.voxforge1.org/downloads/de/Trunk/Audio/Main/16kHz_16bit/):
-  Put the tar.gz archives into the directory
-  `<~/.speechrc:speech_corpora>/voxforge_de` and unpack them. You can find
-  manually corrected prompts in `data/src/speech/voxforge_de/transcripts_*.csv`.
-  These prompts are used during training of ASR models.
+- [Forschergeist (German)](http://goofy.zamia.org/voxforge/de/audio/forschergeist/):
+  Download all tar.xz files into the directory
+  `<~/.speechrc:audio_corpora>/zamia_de` and unpack them.
 
 - [German Speechdata Package Version 2](http://www.repository.voxforge1.org/downloads/de/german-speechdata-package-v2.tar.gz):
   Unpack the archive such that the directories `dev`, `test`, and `train` are
@@ -123,6 +121,16 @@ The following list contains speech corpora supported by this script collection.
   `<~/.speechrc:speech_corpora>/gspv2`. You can find corrected prompts in
   `data/src/speech/gspv2/transcripts_*.csv`. These prompts are used during
   training of ASR models.
+
+- [VoxForge (German)](http://www.repository.voxforge1.org/downloads/de/Trunk/Audio/Main/16kHz_16bit/):
+  Put the tar.gz archives into the directory
+  `<~/.speechrc:speech_corpora>/voxforge_de` and unpack them. You can find
+  manually corrected prompts in `data/src/speech/voxforge_de/transcripts_*.csv`.
+  These prompts are used during training of ASR models.
+
+- [Zamia (German)](http://goofy.zamia.org/voxforge/de/audio/zamia_de/):
+  Download all tar.xz files into the directory
+  `<~/.speechrc:audio_corpora>/zamia_de` and unpack them.
 
 Links to Text Corpora
 =====================
