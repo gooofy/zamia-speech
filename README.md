@@ -71,7 +71,7 @@ instructions, just some hints to get you started.
 [speech]
 vf_login              = <your voxforge login>
 
-speech_corpora        = /home/bofh/projects/ai/data/speech_corpora
+speech_corpora        = /home/bofh/projects/ai/data/speech/corpora
 
 kaldi_root            = /apps/kaldi-cuda
 srilm_root            = /apps/kaldi-cuda/tools/srilm
@@ -88,16 +88,6 @@ web_questions         = /home/bofh/projects/ai/data/corpora/en/WebQuestions
 yahoo_answers         = /home/bofh/projects/ai/data/corpora/en/YahooAnswers
 
 wiktionary_de         = /home/bofh/projects/ai/data/corpora/de/dewiktionary-20180320-pages-meta-current.xml
-
-host_asr              = localhost
-port_asr              = 8301
-
-kaldi_model_dir_de    = /home/bofh/projects/ai/speech/data/models/kaldi-nnet3-voxforge-de-latest
-kaldi_model_de        = nnet_tdnn_a
-
-host_getty            = localhost
-port_getty            = 8298
-port_gettyp           = 8299
 
 [tts]
 host                  = localhost
