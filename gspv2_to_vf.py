@@ -37,13 +37,13 @@ from nltools import misc
 def main(verbose=False):
     """Convert gspv2 corpus to the VoxForge corpus format
 
-    The variable `speech_corpora` in ~/.speechrc must point to a folder
-    containing all corpora. Then this script takes the subfolder gspv2_orig
-    as the source containing the original gspv2 corpus, i.e. containing the
-    subfolders dev, test, and train.
+    The variable `speech_arc` in ~/.speechrc must point to a folder
+    gspv2 which is used as the source containing the original gspv2 corpus, 
+    i.e. containing the subfolders dev, test, and train.
 
-    The resulting corpus is written to the folder gspv2 under the folder set by
-    `speech_corpora`.
+    The variable `speech_corpora` in ~/.speechrc must point to a folder
+    where the resulting corpus should be written. The script will create
+    a subfolder gspv2 here for the resulting voxforge-formatted data.
     """
     misc.init_app('speech_audio_scan')
     config = misc.load_config('.speechrc')
@@ -53,8 +53,9 @@ def main(verbose=False):
     else:
         logging.basicConfig(level=logging.INFO)
 
+    speech_arc_dir     = Path(config.get("speech", "speech_arc"))
     speech_corpora_dir = Path(config.get("speech", "speech_corpora"))
-    src_root_dir = speech_corpora_dir / "gspv2_orig"
+    src_root_dir = speech_arc_dir / "gspv2"
     dst_root_dir = speech_corpora_dir / "gspv2"
 
     exit_if_dst_root_dir_exists(dst_root_dir)
