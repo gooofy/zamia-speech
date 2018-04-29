@@ -141,18 +141,31 @@ Once you have downloaded and, if necessary, converted the corpus you need to run
 on it. This will add missing prompts to the CSV databases and convert audio files to 16kHz mono WAVE format.
 
 
-Links to Text Corpora
-=====================
+Text Corpora
+============
 
 The following list contains text corpora that can be used to train language
-models with the scripts contained in this repository. Right of the name of the
-corpus is the corresponding variable in `.speechrc`.
+models with the scripts contained in this repository:
 
-- [Europarl](http://www.statmt.org/europarl/), specifically [parallel corpus German-English](http://www.statmt.org/europarl/v7/de-en.tgz): `europarl_de`, `europarl_en`
-- [Cornell Movie--Dialogs Corpus](http://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html): `cornell_movie_dialogs`
-- [German Parole Corpus](http://ota.ox.ac.uk/desc/2467): `parole_de`
+- [Europarl](http://www.statmt.org/europarl/), specifically [parallel corpus German-English](http://www.statmt.org/europarl/v7/de-en.tgz): 
+    + corresponding variable in `.speechrc`: `europarl_de`, `europarl_en`
+    + sentences extraction: run `./speech_sentences.py europarl_de` and `./speech_sentences.py europarl_en`
+
+- [Cornell Movie--Dialogs Corpus](http://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html): 
+    + corresponding variable in `.speechrc`: `cornell_movie_dialogs`
+    + sentences extraction: run `./speech_sentences.py cornell_movie_dialogs`
+
+- [German Parole Corpus](http://ota.ox.ac.uk/desc/2467): 
+    + corresponding variable in `.speechrc`: `parole_de`
+    + sentences extraction: train punkt tokenizer using `./speech_train_punkt_tokenizer.py`, then run `./speech_sentences.py parole_de`
+
 - [WebQuestions](https://nlp.stanford.edu/software/sempre/): `web_questions`
+    + corresponding variable in `.speechrc`: `web_questions`
+    + sentences extraction: run `./speech_sentences.py web_questions`
+
 - [Yahoo! Answers dataset](https://cogcomp.org/page/resource_view/89): `yahoo_answers`
+    + corresponding variable in `.speechrc`: `yahoo_answers`
+    + sentences extraction: run `./speech_sentences.py yahoo_answers`
 
 
 Language Model
