@@ -171,16 +171,15 @@ models with the scripts contained in this repository:
 Language Model
 ==============
 
-extract sentences from corpora:
+German
+------
+
+Prerequisites: text corpora `europarl_de` and `parole_de` are installed, sentences extracted (see instructions above).
+
+To train a german language model using SRILM for use in both sphinx and kaldi builds run:
 
 ```bash
-./speech_sentences.py
-```
-
-train language model using SRILM for use in both sphinx and kaldi builds:
-
-```bash
-./speech_build_lm.py
+./speech_build_lm.py generic_de_lang_model europarl_de parole_de
 ```
 
 Submission Review and Transcription
@@ -280,16 +279,12 @@ The following recipe trains a Kaldi model for German.
 
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
-- text corpora Europarl and Parole are installed
+- language model `generic_de_lang_model` built
 - speech corpora `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
 
 ```bash
-./speech_sentences.py europarl-de
-./speech_train_punkt_tokenizer.py  # Required for ./speech_sentences.py parole
-./speech_sentences.py parole
-./speech_build_lm.py my_lang_model europarl-de parole
-./speech_kaldi_export.py my_asr_model dict-de.ipa my_lang_model voxforge_de gspv2
-cd data/dst/asr-models/my_asr_model
+./speech_kaldi_export.py generic_de_asr_model dict-de.ipa generic_de_lang_model voxforge_de gspv2
+cd data/dst/asr-models/generic_de_asr_model
 ./run-lm.sh
 ./run-chain.sh
 ```
