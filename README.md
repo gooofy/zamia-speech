@@ -101,8 +101,8 @@ Speech Corpora
 The following list contains speech corpora supported by this script collection.
 
 - [Forschergeist (German)](http://goofy.zamia.org/voxforge/de/audio/forschergeist/):
-  Download all tar.gz files into the directory
-  `<~/.speechrc:audio_corpora>/forschergeist` and unpack them.
+    + Download all tar.gz files into the directory `<~/.speechrc:audio_arc>/forschergeist` 
+    + unpack them into the directory `<~/.speechrc:audio_corpora>/forschergeist`
 
 - [German Speechdata Package Version 2](http://www.repository.voxforge1.org/downloads/de/german-speechdata-package-v2.tar.gz):
   Unpack the archive such that the directories `dev`, `test`, and `train` are
