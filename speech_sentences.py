@@ -137,6 +137,7 @@ def proc_cornell_movie_dialogs(corpus_path, tokenize):
 
             yield u'%s' % sentence
 
+            num_sentences += 1
             if num_sentences % SENTENCES_STATS == 0:
                 logging.info('movie dialogs: %8d sentences.' % num_sentences)
 
@@ -225,7 +226,7 @@ def proc_yahoo_answers(corpus_path, tokenize):
 
         logging.debug('yahoo answers: reading file %s' % infn)
 
-        with codecs.open('%s/text/%s' % (proc_yahoo_answers, infn), 'r',
+        with codecs.open('%s/text/%s' % (corpus_path, infn), 'r',
                          'latin1') as inf:
             for line in inf:
                 sentence = u' '.join(tokenize(line, lang='en'))
