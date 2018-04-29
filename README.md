@@ -110,6 +110,14 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/gspv2`. 
 
+- [Noise](http://goofy.zamia.org/voxforge/):
+    + Download the tarball 
+    + unpack it into the directory `<~/.speechrc:speech_corpora>/` (it will generate a `noise` subdirectory there)
+
+- [VoxForge (English)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
+    + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_en` 
+    + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_en`
+
 - [VoxForge (German)](http://www.repository.voxforge1.org/downloads/de/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_de`
