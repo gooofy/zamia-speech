@@ -132,6 +132,15 @@ in `data/src/speech/<corpus_name>/transcripts_*.csv`. As these have been created
 manual review they should be of higher quality than the original prompts so they will be used during
 training of our ASR models.
 
+Once you have downloaded and, if necessary, converted the corpus you need to run
+
+```bash
+./speech_audio_scan <corpus name>
+```
+
+on it. This will add missing prompts to the CSV databases and convert audio files to 16kHz mono WAVE format.
+
+
 Links to Text Corpora
 =====================
 
@@ -159,26 +168,6 @@ train language model using SRILM for use in both sphinx and kaldi builds:
 
 ```bash
 ./speech_build_lm.py
-```
-
-voxforge
-========
-
-download latest audio data from voxforge, add them to submissions:
-
-```bash
-./speech_pull_voxforge.sh
-./speech_audio_scan.py
-```
-
-gspv2
-=====
-
-To train an ASR system based on these scripts the German Speechdata Package
-Version 2 has to be transformed into the VoxForge format with
-
-```bash
-./gspv2_to_vf.py
 ```
 
 Submission Review and Transcription
@@ -271,22 +260,21 @@ just a sample invocation for live audio from mic:
 Kaldi Models
 ============
 
-NNet3 Models
-------------
+NNet3 Chain Models
+------------------
 
-The following example trains a Kaldi model for German. Before running it, make
-sure to have downloaded the text corpora Europarl and Parole. Furthermore, you
-need the German VoxForge corpus and the gspv2 corpus. Unpack the German VoxForge
-corpus under `<~/.speechrc:speech_corpora>/voxforge_de/` and the gspv2 corpus
-under `<~/.speechrc:speech_corpora>/gspv2_orig/`.
+The following recipe trains a Kaldi model for German. 
+
+Before running it, make sure all prerequisites are met (see above for instructions on these):
+
+- text corpora Europarl and Parole are installed
+- speech corpora `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
 
 ```bash
 ./speech_sentences.py europarl-de
 ./speech_train_punkt_tokenizer.py  # Required for ./speech_sentences.py parole
 ./speech_sentences.py parole
 ./speech_build_lm.py my_lang_model europarl-de parole
-./gspv2_to_vf.py
-./speech_audio_scan.py voxforge_de gspv2
 ./speech_kaldi_export.py my_asr_model dict-de.ipa my_lang_model voxforge_de gspv2
 cd data/dst/asr-models/my_asr_model
 ./run-lm.sh
