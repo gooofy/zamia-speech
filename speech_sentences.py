@@ -137,6 +137,7 @@ def proc_cornell_movie_dialogs(corpus_path, tokenize):
 
             yield u'%s' % sentence
 
+            num_sentences += 1
             if num_sentences % SENTENCES_STATS == 0:
                 logging.info('movie dialogs: %8d sentences.' % num_sentences)
 
