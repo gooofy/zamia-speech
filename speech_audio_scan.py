@@ -18,9 +18,17 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 #
-# scan voxforge and kitchen dirs for new audio data and transcripts
-# convert to 16kHz wav, add transcripts entries
+# Scan directory for audio files and convert them to wav files
+#
+# For each speech corpus `speech_corpus`
+#
+# 1. the resulting wav files are written to the directory
+#    `.speechrc.wav16`/<speech_corpus>/
+#
+# 2. the transcripts in data/src/speech/<speech_corpus>/transcripts_*.csv are
+#    updated.
 #
 
 import os
@@ -35,12 +43,9 @@ from speech_transcripts import Transcripts
 
 
 SPEECH_CORPORA = [
-    "audio_extras_de",
-    "audio_extras_en",
     "forschergeist",
     "gspv2",
     "librivox",
-    "voxforge_contrib_de",
     "voxforge_de",
     "voxforge_en",
     "zamia_de",
