@@ -1,6 +1,6 @@
-# Speech
+# Zamia Speech
 
-Python scripts to compute audio and language models from voxforge.org speech data.
+Python scripts to compute audio and language models from voxforge.org speech data and many sources.
 Models that can be built include:
 
 * CMU Sphinx continous and PTM audio models
@@ -127,12 +127,12 @@ The following list contains speech corpora supported by this script collection.
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_de`
 
 
-Technical note: For most corpora we have corrected transcripts in our databases which can be found
+*Technical note*: For most corpora we have corrected transcripts in our databases which can be found
 in `data/src/speech/<corpus_name>/transcripts_*.csv`. As these have been created by many hours of (semi-) 
 manual review they should be of higher quality than the original prompts so they will be used during
 training of our ASR models.
 
-Once you have downloaded and, if necessary, converted the corpus you need to run
+Once you have downloaded and, if necessary, converted a corpus you need to run
 
 ```bash
 ./speech_audio_scan <corpus name>
