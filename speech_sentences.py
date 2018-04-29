@@ -226,7 +226,7 @@ def proc_yahoo_answers(corpus_path, tokenize):
 
         logging.debug('yahoo answers: reading file %s' % infn)
 
-        with codecs.open('%s/text/%s' % (proc_yahoo_answers, infn), 'r',
+        with codecs.open('%s/text/%s' % (corpus_path, infn), 'r',
                          'latin1') as inf:
             for line in inf:
                 sentence = u' '.join(tokenize(line, lang='en'))
