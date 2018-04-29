@@ -101,27 +101,28 @@ Speech Corpora
 The following list contains speech corpora supported by this script collection.
 
 - [Forschergeist (German)](http://goofy.zamia.org/voxforge/de/audio/forschergeist/):
-    + Download all tar.gz files into the directory `<~/.speechrc:audio_arc>/forschergeist` 
-    + unpack them into the directory `<~/.speechrc:audio_corpora>/forschergeist`
+    + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/forschergeist` 
+    + unpack them into the directory `<~/.speechrc:speech_corpora>/forschergeist`
 
 - [German Speechdata Package Version 2](http://www.repository.voxforge1.org/downloads/de/german-speechdata-package-v2.tar.gz):
-  Unpack the archive such that the directories `dev`, `test`, and `train` are
-  direct subdirectories of `<~/.speechrc:audio_corpora>/gspv2_orig`. Then run
-  run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
-  format. The resulting corpus will be written to
-  `<~/.speechrc:speech_corpora>/gspv2`. You can find corrected prompts in
-  `data/src/speech/gspv2/transcripts_*.csv`. These prompts are used during
-  training of ASR models.
+    + Unpack the archive such that the directories `dev`, `test`, and `train` are
+      direct subdirectories of `<~/.speechrc:speech_arc>/gspv2`. 
+    + Then run run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/gspv2`. 
 
 - [VoxForge (German)](http://www.repository.voxforge1.org/downloads/de/Trunk/Audio/Main/16kHz_16bit/):
-  Put the tar.gz archives into the directory
-  `<~/.speechrc:speech_corpora>/voxforge_de` and unpack them. You can find
-  manually corrected prompts in `data/src/speech/voxforge_de/transcripts_*.csv`.
-  These prompts are used during training of ASR models.
+    + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_de` 
+    + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_de`
 
 - [Zamia (German)](http://goofy.zamia.org/voxforge/de/audio/zamia_de/):
-  Download all tar.gz files into the directory
-  `<~/.speechrc:audio_corpora>/zamia_de` and unpack them.
+    + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_de` 
+    + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_de`
+
+
+Technical note: For most corpora we have corrected transcripts in our databases which can be found
+in `data/src/speech/<corpus_name>/transcripts_*.csv`. As these have been created by many hours of (semi-) 
+manual review they should be of higher quality than the original prompts so they will be used during
+training of our ASR models.
 
 Links to Text Corpora
 =====================
