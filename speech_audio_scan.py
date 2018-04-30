@@ -102,7 +102,7 @@ def main(verbose=False, *speech_corpora):
                       str(out_wav16_subdir))
 
         transcripts.save()
-        print "new transcripts saved."
+        print speech_corpus, "new transcripts saved."
         print
 
 
@@ -123,6 +123,9 @@ def exit_if_corpus_is_missing(speech_corpora_dir, speech_corpora):
 
 
 def scan_audiodir(audiodir, transcripts, out_wav16_subdir):
+
+    # keep track of all cfns we have audio files for
+    cfn_audio = set()
 
     for subdir in os.listdir(audiodir):
 
@@ -169,6 +172,7 @@ def scan_audiodir(audiodir, transcripts, out_wav16_subdir):
 
                 audiofn = audiofullfn.split('.')[0]
                 cfn = '%s_%s' % (subdir, audiofn)
+                cfn_audio.add(cfn)
 
                 if not cfn in transcripts:
                     # print repr(prompts)
@@ -188,6 +192,12 @@ def scan_audiodir(audiodir, transcripts, out_wav16_subdir):
                     transcripts[cfn] = v
 
                 audio_convert (cfn, subdir, audiofn, audiodir, out_wav16_subdir)
+
+    # report missing audio files
+    for cfn in sorted(transcripts):
+        if cfn in cfn_audio:
+            continue
+        logging.warn('audio file missing for %s' % cfn)
 
 
 def audio_convert(cfn, subdir, fn, audiodir, wav16_dir):
