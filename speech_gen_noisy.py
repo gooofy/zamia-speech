@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2017 Guenter Bartsch
+# Copyright 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -17,9 +17,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 #
-# create new set of recordings from existing ones by adding
-# noise and echo effects
+# create corpus from an existing one by adding noise and echo effects to the
+# recordings
 #
 # these additional, artifically created recordings should help with
 # noise resistance when used in training
@@ -41,9 +42,7 @@ from speech_transcripts     import Transcripts
 
 PROC_TITLE      = 'noisy_gen'
 
-LANG            = 'en'
-DEBUG_LIMIT     = 0
-OUT_DIR         = 'tmp/noisy_%s' % LANG # FIXME
+DEBUG_LIMIT     = 12
 FRAMERATE       = 16000
 MIN_QUALITY     = 2
 
@@ -57,7 +56,7 @@ misc.init_app(PROC_TITLE)
 # command line
 #
 
-parser = OptionParser("usage: %prog [options])")
+parser = OptionParser("usage: %prog [options] corpus")
 
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
@@ -71,12 +70,19 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
 
+if len(args) != 1:
+    parser.print_usage()
+    sys.exit(1)
+
+corpus_in  = args[0]
+corpus_out = corpus_in + '_noisy'
+
 #
 # load transcripts
 #
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(corpus_name=LANG)
+transcripts = Transcripts(corpus_name=corpus_in)
 logging.info("loading transcripts...done.")
 
 #
@@ -85,12 +91,20 @@ logging.info("loading transcripts...done.")
 
 config = misc.load_config('.speechrc')
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % LANG)
+corpora     = config.get("speech", "speech_corpora")
 noise_dir   = config.get("speech", "noise_dir")
+wav16_dir   = config.get("speech", "wav16")
 
 bg_dir = '%s/bg' % noise_dir
 fg_dir = '%s/fg/16kHz' % noise_dir
-out_dir = OUT_DIR
+out_dir = '%s/%s' % (corpora, corpus_out)
+
+if os.path.exists(out_dir):
+    logging.error("%s already exists!" % out_dir)
+    sys.exit(1)
+
+logging.info ("creating %s ..." % out_dir)
+misc.mkdirs(out_dir)
 
 #
 # read fg file lengths
@@ -153,6 +167,7 @@ for ts in transcripts:
 #
 
 cnt = 1
+random.seed(42)
 
 for ts in transcripts:
 
@@ -164,20 +179,20 @@ for ts in transcripts:
     else:
         cfn   = transcripts[ts]['cfn']
 
-    if cfn.startswith('gsp'):
-        continue
-    cfn2 = 'noisy'+cfn
-
     entry = transcripts[cfn]
 
     if entry['quality']<MIN_QUALITY:
         continue
 
-    infn  = '%s/%s.wav' % (wav16_dir, cfn)
-    outfn = '%s/%s.wav' % (out_dir, cfn2)
+    infn     = '%s/%s/%s.wav' % (wav16_dir, corpus_in, cfn)
+    pkgdirfn = '%s/%s' % (out_dir, entry['dirfn'])
+    audiofn2 = entry['audiofn'] + '-noisy'
 
-    if os.path.exists(outfn):
-        continue
+    if not os.path.exists(pkgdirfn):
+        misc.mkdirs('%s/etc' % pkgdirfn)
+        misc.mkdirs('%s/wav' % pkgdirfn)
+
+    outfn = '%s/wav/%s.wav' % (pkgdirfn, audiofn2)
 
     wav = wave.open(infn, 'r')
 
@@ -240,15 +255,10 @@ for ts in transcripts:
 
         os.system(cmd)
 
-        entry2 = { 'dirfn'   : entry['dirfn'],
-                   'audiofn' : entry['audiofn'],
-                   'prompt'  : entry['prompt'],
-                   'ts'      : ts2,
-                   'quality' : 2,
-                   'spk'     : entry['spk'],
-                   'cfn'     : cfn2 }
+        promptfn = '%s/etc/prompts-original' % pkgdirfn
 
-        transcripts[cfn2] = entry2
+        with codecs.open(promptfn, 'a', 'utf8') as promptf:
+            promptf.write('%s %s\n' % (audiofn2, ts2))
 
     else:
         logging.error ('%s: wrong framerate %d' % (infn, fr))
@@ -259,7 +269,4 @@ for ts in transcripts:
 
     if DEBUG_LIMIT>0 and cnt>DEBUG_LIMIT:
         break
-
-transcripts.save()
-logging.info ("new transcripts saved.")
 
