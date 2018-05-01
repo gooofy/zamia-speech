@@ -148,6 +148,7 @@ To improve noise resistance it is possible to derive corpora from existing ones 
 ```bash
 ./speech_gen_noisy.py zamia_de
 ./speech_audio_scan.py zamia_de_noisy
+cp data/src/speech/zamia_de/spk2gender data/src/speech/zamia_de_noisy/
 ```
 
 This script will run recording through typical telephone codecs. Such a corpus can be used to train models
@@ -156,6 +157,7 @@ that support 8kHz phone recordings:
 ```bash
 ./speech_gen_phone.py zamia_de
 ./speech_audio_scan.py zamia_de_phone
+cp data/src/speech/zamia_de/spk2gender data/src/speech/zamia_de_phone/
 ```
 
 Text Corpora
@@ -310,10 +312,11 @@ The following recipe trains a Kaldi model for German.
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
 - language model `generic_de_lang_model` built
-- speech corpora `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
+- some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
+- optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
-./speech_kaldi_export.py generic_de_asr_model dict-de.ipa generic_de_lang_model voxforge_de gspv2
+./speech_kaldi_export.py generic_de_asr_model dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
 cd data/dst/asr-models/generic_de_asr_model
 ./run-lm.sh
 ./run-chain.sh
