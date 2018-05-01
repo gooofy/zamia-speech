@@ -185,7 +185,7 @@ def merge_check(token, ipa_r, ipa_w):
 #
 
 print "loading lexicon..."
-lex = Lexicon()
+lex = Lexicon('dict-de.ipa')
 print "loading lexicon...done."
 
 #
