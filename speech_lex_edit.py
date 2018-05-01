@@ -48,6 +48,7 @@ from speech_lexicon     import Lexicon
 
 TOKENIZER_ERRORS = 'data/src/speech/de/tokenizer_errors.txt'
 SEQUITUR_MODEL   = 'data/models/sequitur-voxforge-de-latest'
+LEXICON_NAME     = 'dict-de.ipa'
 
 def lex_paint_main():
 
@@ -172,7 +173,7 @@ lex_tokens    = map(lambda x: x.decode('utf8'), args)
 #
 
 print "loading lexicon..."
-lex = Lexicon()
+lex = Lexicon(LEXICON_NAME)
 print "loading lexicon...done."
 
 #
