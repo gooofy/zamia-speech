@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016, 2017 Guenter Bartsch
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -35,9 +35,9 @@ from speech_transcripts import Transcripts
 
 def play_wav(cfn):
 
-    global wav16_dir, tts
+    global wav16_dir, tts, corpus
 
-    wavfn = '%s/%s.wav' % (wav16_dir, cfn)
+    wavfn = '%s/%s/%s.wav' % (wav16_dir, corpus, cfn)
 
     with open(wavfn) as wavf:
         wav = wavf.read()
@@ -59,16 +59,17 @@ logging.basicConfig(level=logging.INFO)
 # commandline
 #
 
-parser = OptionParser("usage: %prog [options] ")
-
-parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
-           help="language (default: de)")
+parser = OptionParser("usage: %prog [options] corpus")
 
 (options, args) = parser.parse_args()
 
-lang = options.lang
+if len(args) != 1:
+    parser.print_usage()
+    sys.exit(1)
 
-SPK2GENDERFN = 'data/src/speech/%s/spk2gender' % lang
+corpus = args[0]
+
+SPK2GENDERFN = 'data/src/speech/%s/spk2gender' % corpus
 
 #
 # load spk2gender
@@ -90,14 +91,14 @@ print "loading %s ...done." % SPK2GENDERFN
 #
 
 print "loading transcripts..."
-transcripts = Transcripts(corpus_name=lang)
+transcripts = Transcripts(corpus_name=corpus)
 print "loading transcripts...done."
 
 #
 # config
 #
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % lang)
+wav16_dir   = config.get("speech", "wav16")
 host        = config.get('tts', 'host')
 port        = int(config.get('tts', 'port'))
 
