@@ -17,9 +17,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 #
-# create new set of recordings from existing ones by adding
-# phone codec effects
+# create corpus from an existing one by adding phone codec effects to the
+# recordings
 #
 # these additional, artifically created recordings should improve
 # model performance for (8kHz) phone recordings
@@ -40,11 +41,9 @@ from optparse               import OptionParser
 from nltools                import misc
 from speech_transcripts     import Transcripts
 
-PROC_TITLE      = 'phone_gen'
+PROC_TITLE      = 'speech_gen_phone'
 
-LANG            = 'de'
 DEBUG_LIMIT     = 0
-OUT_DIR         = 'tmp/phone_%s' % LANG # FIXME
 FRAMERATE       = 16000
 MIN_QUALITY     = 2
 SKIP            = 4 # only generate phone-variant of every 4th existing entry
@@ -59,7 +58,7 @@ misc.init_app(PROC_TITLE)
 # command line
 #
 
-parser = OptionParser("usage: %prog [options])")
+parser = OptionParser("usage: %prog [options] corpus")
 
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
@@ -73,12 +72,19 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
 
+if len(args) != 1:
+    parser.print_usage()
+    sys.exit(1)
+
+corpus_in  = args[0]
+corpus_out = corpus_in + '_phone'
+
 #
 # load transcripts
 #
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(corpus_name=LANG)
+transcripts = Transcripts(corpus_name=corpus_in)
 logging.info("loading transcripts...done.")
 
 #
@@ -87,10 +93,18 @@ logging.info("loading transcripts...done.")
 
 config = misc.load_config('.speechrc')
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % LANG)
+corpora     = config.get("speech", "speech_corpora")
+wav16_dir   = config.get("speech", "wav16")
 
+out_dir     = '%s/%s' % (corpora, corpus_out)
 tmpfn_base  = '/tmp/tmp16_%08x' % os.getpid()
-out_dir = OUT_DIR
+
+if os.path.exists(out_dir):
+    logging.error("%s already exists!" % out_dir)
+    sys.exit(1)
+
+logging.info ("creating %s ..." % out_dir)
+misc.mkdirs(out_dir)
 
 #
 # count good transcripts
@@ -101,11 +115,6 @@ for ts in transcripts:
 
     if transcripts[ts]['quality']<MIN_QUALITY:
         continue
-    cfn   = transcripts[ts]['cfn']
-    if cfn.startswith('gsp'):
-        continue
-    if cfn.startswith('noisy'):
-        continue
     total_good += 1
 
 #
@@ -113,31 +122,34 @@ for ts in transcripts:
 #
 
 cnt = 1
-transcripts2 = copy.deepcopy(transcripts)
-for ts in transcripts2:
+random.seed(42)
+
+for ts in transcripts:
 
     # print type(transcripts)
 
-    cfn   = transcripts[ts]['cfn']
-
-    if cfn.startswith('gsp'):
-        continue
-    if cfn.startswith('noisy'):
-        continue
-    cfn2 = 'phone'+cfn
+    if DEBUG_LIMIT:
+        ts2 = random.choice(transcripts.keys())
+        cfn   = transcripts[ts2]['cfn']
+    else:
+        cfn   = transcripts[ts]['cfn']
 
     entry = transcripts[cfn]
 
     if entry['quality']<MIN_QUALITY:
         continue
 
-    infn  = '%s/%s.wav' % (wav16_dir, cfn)
-    outfn = '%s/%s.wav' % (out_dir, cfn2)
-
-    if os.path.exists(outfn):
-        continue
-
     if cnt % SKIP == 0:
+
+        infn     = '%s/%s/%s.wav' % (wav16_dir, corpus_in, cfn)
+        pkgdirfn = '%s/%s' % (out_dir, entry['dirfn'])
+        audiofn2 = entry['audiofn'] + '-phone'
+
+        if not os.path.exists(pkgdirfn):
+            misc.mkdirs('%s/etc' % pkgdirfn)
+            misc.mkdirs('%s/wav' % pkgdirfn)
+
+        outfn = '%s/wav/%s.wav' % (pkgdirfn, audiofn2)
 
         wav = wave.open(infn, 'r')
 
@@ -165,15 +177,11 @@ for ts in transcripts2:
             logging.debug('   cmd: %s' % cmd)
             os.system(cmd)
 
-            entry2 = { 'dirfn'   : entry['dirfn'],
-                       'audiofn' : entry['audiofn'],
-                       'prompt'  : entry['prompt'],
-                       'ts'      : entry['ts'],
-                       'quality' : 2,
-                       'spk'     : entry['spk'],
-                       'cfn'     : cfn2 }
 
-            transcripts[cfn2] = entry2
+            promptfn = '%s/etc/prompts-original' % pkgdirfn
+
+            with codecs.open(promptfn, 'a', 'utf8') as promptf:
+                promptf.write('%s %s\n' % (audiofn2, entry['ts']))
 
         else:
             logging.error ('%s: wrong framerate %d' % (infn, fr))
@@ -183,9 +191,5 @@ for ts in transcripts2:
     cnt += 1
 
     if DEBUG_LIMIT>0 and cnt>DEBUG_LIMIT:
-        logging.warn('debug limit reached.')
         break
-
-transcripts.save()
-logging.info ("new transcripts saved.")
 
