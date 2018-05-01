@@ -140,6 +140,23 @@ Once you have downloaded and, if necessary, converted a corpus you need to run
 
 on it. This will add missing prompts to the CSV databases and convert audio files to 16kHz mono WAVE format.
 
+Adding Artificial Noise or Other Effects
+----------------------------------------
+
+To improve noise resistance it is possible to derive corpora from existing ones with noise added:
+
+```bash
+./speech_gen_noisy.py zamia_de
+./speech_audio_scan.py zamia_de_noisy
+```
+
+This script will run recording through typical telephone codecs. Such a corpus can be used to train models
+that support 8kHz phone recordings:
+
+```bash
+./speech_gen_phone.py zamia_de
+./speech_audio_scan.py zamia_de_phone
+```
 
 Text Corpora
 ============
