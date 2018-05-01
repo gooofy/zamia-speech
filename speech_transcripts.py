@@ -25,7 +25,9 @@
 
 import os
 import codecs
+import logging
 
+from nltools           import misc
 from nltools.tokenizer import tokenize
 
 TSDIR    = 'data/src/speech/%s'
@@ -33,11 +35,17 @@ SPK_TEST = 'data/src/speech/%s/spk_test.txt'
 MAXLINES = 100000 # used to split up transcript.csvs
  
 class Transcripts(object):
-    def __init__(self, corpus_name):
+
+    def __init__(self, corpus_name, create_db=False):
 
         self.corpus_name  = corpus_name
         self.ts    = {}
         self.tsdir = TSDIR % corpus_name
+
+        if create_db:
+            if not os.path.exists(self.tsdir):
+                logging.info ('creating %s' % self.tsdir)
+                misc.mkdirs(self.tsdir)
 
         for tsfn in os.listdir(self.tsdir):
 
@@ -79,8 +87,16 @@ class Transcripts(object):
 
                     self.ts[cfn] = v
 
+        spk_test_fn = SPK_TEST % corpus_name
+
+        if create_db:
+            if not os.path.exists(spk_test_fn):
+                logging.info ('creating empty %s' % spk_test_fn)
+                with codecs.open(spk_test_fn, 'w', 'utf8') as f:
+                    pass
+
         self.spk_test = []
-        with codecs.open(SPK_TEST % corpus_name, 'r', 'utf8') as f:
+        with codecs.open(spk_test_fn, 'r', 'utf8') as f:
             for line in f:
                 self.spk_test.append(line.strip())
 

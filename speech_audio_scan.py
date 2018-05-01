@@ -54,7 +54,7 @@ SPEECH_CORPORA = [
 
 @plac.annotations(
     verbose=("Enable verbose logging", "flag", "v"),
-    speech_corpora=("Name of the speech corpus to scan. Allowed values: "
+    speech_corpora=("Name of the speech corpus to scan. Example values: "
                     + ", ".join(SPEECH_CORPORA), "positional", None, str, None,
                     "speech_corpus"))
 def main(verbose=False, *speech_corpora):
@@ -79,11 +79,6 @@ def main(verbose=False, *speech_corpora):
         logging.error("At least one speech corpus must be provided.")
         sys.exit(1)
 
-    for speech_corpus in speech_corpora:
-        if speech_corpus not in SPEECH_CORPORA:
-            logging.error("Unsupported corpus: " + speech_corpus)
-            sys.exit(1)
-
     if verbose:
         logging.basicConfig(level=logging.DEBUG)
     else:
@@ -92,7 +87,7 @@ def main(verbose=False, *speech_corpora):
     exit_if_corpus_is_missing(speech_corpora_dir, speech_corpora)
 
     for speech_corpus in speech_corpora:
-        transcripts = Transcripts(corpus_name=speech_corpus)
+        transcripts = Transcripts(corpus_name=speech_corpus, create_db=True)
         out_wav16_subdir = wav16 / speech_corpus
         out_wav16_subdir.mkdir(parents=True, exist_ok=True)
         in_root_corpus_dir = speech_corpora_dir / speech_corpus
