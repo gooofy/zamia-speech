@@ -40,9 +40,9 @@ from optparse               import OptionParser
 from nltools                import misc
 from speech_transcripts     import Transcripts
 
-PROC_TITLE      = 'noisy_gen'
+PROC_TITLE      = 'speech_gen_noisy'
 
-DEBUG_LIMIT     = 12
+DEBUG_LIMIT     = 0
 FRAMERATE       = 16000
 MIN_QUALITY     = 2
 
