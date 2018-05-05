@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016, 2017 Guenter Bartsch
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -60,13 +60,13 @@ config = misc.load_config ('.speechrc')
 # command line
 #
 
-parser = OptionParser("usage: %prog [options] [filter])")
+parser = OptionParser("usage: %prog [options] corpus")
 
 parser.add_option ("-a", "--all", action="store_true", dest="do_all", 
                    help="do not use ASR but auto-rate all matching submissions")
 
-parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
-                   help="language (default: de)")
+parser.add_option ("-f", "--filter", dest="ts_filter", type = "str", 
+                   help="filter (default: no filtering)")
 
 parser.add_option ("-R", "--result-file", dest="outfn", type = "str", default='review-result.csv',
                    help="result file (default: review-result.csv)")
@@ -95,28 +95,24 @@ parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
 
 (options, args) = parser.parse_args()
 
-ts_filter = None
+ts_filter = options.ts_filter.decode('utf8') if options.ts_filter else None
 
 if len(args)==1:
-    ts_filter = args[0].decode('utf8')
+    corpus = args[0]
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.INFO)
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
+wav16_dir   = config.get("speech", "wav16")
 
 #
-# load lexicon, transcripts
+# load transcripts
 #
-
-logging.info("loading lexicon...")
-lex = Lexicon(file_name=options.lang)
-logging.info("loading lexicon...done.")
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(corpus_name=options.lang)
+transcripts = Transcripts(corpus_name=corpus)
 logging.info("loading transcripts...done.")
 
 #
@@ -156,7 +152,7 @@ with open (options.outfn, 'w') as outf:
 
         next_idx += options.step
 
-        wavfn = '%s/%s.wav' % (wav16_dir, utt_id)
+        wavfn = '%s/%s/%s.wav' % (wav16_dir, corpus, utt_id)
 
         prompt = ' '.join(tokenize(ts['prompt']))
 
@@ -169,6 +165,8 @@ with open (options.outfn, 'w') as outf:
             logging.info("%7d, # rated: %5d %-20s manual rating: %d" % (idx, num_rated, utt_id, options.rating))
     
             outf.write ('%s;%d\n' % (utt_id, options.rating))
+
+            num_rated += 1
     
         else:    
 
@@ -185,6 +183,7 @@ with open (options.outfn, 'w') as outf:
                         outf.write ('%s;%d\n' % (utt_id, options.rating))
                         outf.flush()
                         logging.debug ('    %s written.' % options.outfn)
+                        num_rated += 1
                     else:
                         logging.info("%7d, # rated: %5d %-20s no match" % (idx, num_rated, utt_id))
                         logging.debug("    hyp   : %s" % repr(hyp))
@@ -195,4 +194,6 @@ with open (options.outfn, 'w') as outf:
 
             except:
                 logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
+
+logging.info ("%s written." % options.outfn)
 

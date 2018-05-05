@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016, 2017 Guenter Bartsch
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -51,20 +51,20 @@ config = misc.load_config ('.speechrc')
 # command line
 #
 
-parser = OptionParser("usage: %prog foo.csv [bar.csv ...])")
-
-parser.add_option ("-f", "--force", action="store_true", dest="force", 
-                   help="force: apply quality rating also on already reviewed entries")
+parser = OptionParser("usage: %prog corpus foo.csv [bar.csv ...])")
 
 parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
                   help="language (default: de)")
+
+parser.add_option ("-f", "--force", action="store_true", dest="force", 
+                   help="force: apply quality rating also on already reviewed entries")
 
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
                    help="enable debug output")
 
 (options, args) = parser.parse_args()
 
-if len(args)<1:
+if len(args)<2:
     parser.print_help()
     sys.exit(1)
 
@@ -73,12 +73,14 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
 
+corpus = args[0]
+
 #
 # load lexicon, transcripts
 #
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(corpus_name=options.lang)
+transcripts = Transcripts(corpus_name=corpus)
 logging.info("loading transcripts...done.")
 
 #
@@ -87,7 +89,7 @@ logging.info("loading transcripts...done.")
 
 cnt       = 0
 
-for csvfn in args:
+for csvfn in args[1:]:
 
     logging.info ("applying results from %s ..." % csvfn)
 
@@ -104,7 +106,7 @@ for csvfn in args:
             quality = int(parts[1])
 
             if transcripts[utt_id]['quality'] != 0:
-                if not force:
+                if not options.force:
                     logging.warn ('skipping %s because it is already rated.' % utt_id)
                     continue
            
