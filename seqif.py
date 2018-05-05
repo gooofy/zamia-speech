@@ -71,8 +71,7 @@ class SeqIf(object):
 
     def g2p(self, word):
 
-        # FIXME: we should train the sequitur model for the right encoding
-        res = self.translator(word.encode('UTF8').decode('ISO-8859-15'))
+        res = self.translator(word)
 
         xs = u' '.join(res)
         ipa = xsampa2ipa(word, xs)
