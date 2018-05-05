@@ -149,6 +149,8 @@ To improve noise resistance it is possible to derive corpora from existing ones 
 ./speech_gen_noisy.py zamia_de
 ./speech_audio_scan.py zamia_de_noisy
 cp data/src/speech/zamia_de/spk2gender data/src/speech/zamia_de_noisy/
+./auto_review.py -a zamia_de_noisy
+./apply_review.py -l de zamia_de_noisy review-result.csv 
 ```
 
 This script will run recording through typical telephone codecs. Such a corpus can be used to train models
@@ -158,6 +160,8 @@ that support 8kHz phone recordings:
 ./speech_gen_phone.py zamia_de
 ./speech_audio_scan.py zamia_de_phone
 cp data/src/speech/zamia_de/spk2gender data/src/speech/zamia_de_phone/
+./auto_review.py -a zamia_de_phone
+./apply_review.py -l de zamia_de_phone review-result.csv 
 ```
 
 Text Corpora
