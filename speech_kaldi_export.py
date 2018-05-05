@@ -385,18 +385,18 @@ def copy_scripts_and_config_files(work_dir, kaldi_root):
     # misc.copy_file ('data/src/speech/kaldi-run-nnet3.sh', '%s/run-nnet3.sh' % work_dir)
     misc.copy_file('data/src/speech/kaldi-run-chain.sh',
                    '%s/run-chain.sh' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-run-chain-wrapper.sh',
-                   '%s/run-chain-wrapper.sh' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-run-chain-cfg.sh',
-                   '%s/run-chain-cfg.sh' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-run-chain-cpu.sh',
-                   '%s/run-chain-cpu.sh' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-run-chain-cpu-wrapper.sh',
-                   '%s/run-chain-cpu-wrapper.sh' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-run-chain-gpu.sh',
-                   '%s/run-chain-gpu.sh' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-run-chain-gpu-wrapper.sh',
-                   '%s/run-chain-gpu-wrapper.sh' % work_dir)
+    # misc.copy_file('data/src/speech/kaldi-run-chain-wrapper.sh',
+    #                '%s/run-chain-wrapper.sh' % work_dir)
+    # misc.copy_file('data/src/speech/kaldi-run-chain-cfg.sh',
+    #                '%s/run-chain-cfg.sh' % work_dir)
+    # misc.copy_file('data/src/speech/kaldi-run-chain-cpu.sh',
+    #                '%s/run-chain-cpu.sh' % work_dir)
+    # misc.copy_file('data/src/speech/kaldi-run-chain-cpu-wrapper.sh',
+    #                '%s/run-chain-cpu-wrapper.sh' % work_dir)
+    # misc.copy_file('data/src/speech/kaldi-run-chain-gpu.sh',
+    #                '%s/run-chain-gpu.sh' % work_dir)
+    # misc.copy_file('data/src/speech/kaldi-run-chain-gpu-wrapper.sh',
+    #                '%s/run-chain-gpu-wrapper.sh' % work_dir)
     misc.copy_file('data/src/speech/kaldi-cmd.sh', '%s/cmd.sh' % work_dir)
     misc.render_template('data/src/speech/kaldi-path.sh.template',
                          '%s/path.sh' % work_dir, kaldi_root=kaldi_root)
