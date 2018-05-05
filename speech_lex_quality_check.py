@@ -34,8 +34,9 @@ from optparse               import OptionParser
 from nltools                import misc
 from speech_lexicon         import Lexicon
 
-PROC_TITLE = 'speech_lex_quality_check'
-NUM_TOKENS = 40
+PROC_TITLE    = 'speech_lex_quality_check'
+NUM_TOKENS    = 40
+LEXICON_NAME  = 'dict-de.ipa'
 
 #
 # init
@@ -64,7 +65,7 @@ else:
 #
 
 print "loading lexicon..."
-lex = Lexicon()
+lex = Lexicon(LEXICON_NAME)
 print "loading lexicon...done."
 
 #
@@ -98,6 +99,8 @@ for token in lex:
             failed = u'ʔ- found'
         if c_prev != u"-" and c_prev and c == u"'":
             failed = "stress not at beginning of syllable"
+        if c_prev != u"'" and c_prev != u"-" and c_prev and c == u"ʔ":
+            failed = "ʔ not at beginning of syllable"
         c_prev = c
 
     if len(ipa) == 0:
