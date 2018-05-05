@@ -1,14 +1,15 @@
 #!/bin/bash
 
 if [ $# -ne 1 ] ; then
-    echo "usage: $0 lang"
+    echo "usage: $0 dict"
+    echo "example dicts: dict-de.ipa dict-en.ipa"
     exit 1
 fi
 
-LANG=$1
+DICT=$1
 
 SEQUITUR_ROOT=/apps/sequitur
-WORKDIR=data/dst/speech/${LANG}/sequitur
+WORKDIR=data/dst/dict-models/${DICT}/sequitur
 
 export PYTHONPATH="$SEQUITUR_ROOT/lib64/python2.7/site-packages/:$PYTHONPATH"
 export PATH="$SEQUITUR_ROOT/bin:$PATH"

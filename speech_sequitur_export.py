@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016, 2017 Guenter Bartsch
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -33,6 +33,8 @@ from nltools.phonetics  import ipa2xsampa
 
 from speech_lexicon     import Lexicon
 
+DEFAULT_DICT='dict-de.ipa'
+
 #
 # init terminal
 #
@@ -45,8 +47,8 @@ misc.init_app ('speech_sequitur_export')
 
 parser = OptionParser("usage: %prog [options] ")
 
-parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
-           help="language (default: de)")
+parser.add_option ("-d", "--dict", dest="dict_name", type = "str", default=DEFAULT_DICT,
+           help="dict to export (default: %s)" % DEFAULT_DICT)
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="verbose output")
 
@@ -56,8 +58,8 @@ if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.INFO)
-lang = options.lang
-workdir = 'data/dst/speech/%s/sequitur' % lang
+dict_name = options.dict_name
+workdir = 'data/dst/dict-models/%s/sequitur' % dict_name
 
 
 #
@@ -65,7 +67,7 @@ workdir = 'data/dst/speech/%s/sequitur' % lang
 #
 
 logging.info("loading lexicon...")
-lex = Lexicon(file_name=lang)
+lex = Lexicon(file_name=dict_name)
 logging.info("loading lexicon...done.")
 
 #
