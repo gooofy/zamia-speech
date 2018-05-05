@@ -149,8 +149,9 @@ def generate_speech_and_text_corpora(data_dir,
     for audio_corpus in audio_corpora:
         transcripts = Transcripts(corpus_name=audio_corpus)
 
-        ts_all_, ts_train_, ts_test_ = transcripts.split(limit=debug,
-                                                         add_all=add_all)
+        ts_all_, ts_train_, ts_test_ = transcripts.split(limit=debug, add_all=add_all)
+
+        logging.info("loading transcripts from %s (%d train, %d test) ..." % (audio_corpus, len(ts_train_), len(ts_test_)))
 
         ts_all.update(ts_all_)
         ts_train.update(ts_train_)
