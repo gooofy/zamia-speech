@@ -1,26 +1,23 @@
 #!/bin/bash
 
 if [ $# != 2 ] ; then
-    echo "usage: $0 <lang> [all|kaldi|sphinx|sequitur|srilm]"
+    echo "usage: $0 <model> [kaldi|sphinx|sequitur|srilm]"
     exit 1
 fi
 
-LANG=$1
+MODEL=$1
 WHAT=$2
-DISTDIR=data/dist/$LANG
-
-# rm -rf $DISTDIR
-# mkdir -p $DISTDIR
+DISTDIR=data/dist
 
 datum=`date +%Y%m%d`
 
-if [ \( $WHAT = "all" \) -o \( $WHAT = "kaldi" \) ] ; then
+if [ $WHAT = "kaldi" ] ; then
 
     #
     # kaldi chain models 
     #
 
-    AMNAME="kaldi-chain-voxforge-${LANG}-r$datum"
+    AMNAME="kaldi-chain-${MODEL}-r$datum"
 
     echo "$AMNAME ..."
 
@@ -78,7 +75,7 @@ if [ \( $WHAT = "all" \) -o \( $WHAT = "kaldi" \) ] ; then
 
 fi
 
-if [ \( $WHAT = "all" \) -o \( $WHAT = "sphinx" \) ] ; then
+if [ $WHAT = "sphinx" ] ; then
 
     #
     # cont sphinx model
@@ -130,7 +127,7 @@ if [ \( $WHAT = "all" \) -o \( $WHAT = "sphinx" \) ] ; then
 
 fi
 
-if [ \( $WHAT = "all" \) -o \( $WHAT = "srilm" \) ] ; then
+if [ $WHAT = "srilm" ] ; then
     #
     # srilm
     #
@@ -141,14 +138,14 @@ if [ \( $WHAT = "all" \) -o \( $WHAT = "srilm" \) ] ; then
     gzip ${DISTDIR}/$LMNAME
 fi
 
-if [ \( $WHAT = "all" \) -o \( $WHAT = "sequitur" \) ] ; then
+if [ $WHAT = "sequitur" ] ; then
     #
     # sequitur
     #
 
-    MODELNAME="sequitur-voxforge-${LANG}-r$datum"
+    MODELNAME="sequitur-${MODEL}-r$datum"
     echo "$MODELNAME ..."
-    cp data/dst/speech/${LANG}/sequitur/model-6 $DISTDIR/$MODELNAME
+    cp data/dst/dict-models/${MODEL}/sequitur/model-6 $DISTDIR/$MODELNAME
     gzip $DISTDIR/$MODELNAME
 fi
 
@@ -164,7 +161,7 @@ cp AUTHORS   "$DISTDIR"
 # upload
 #
 
-echo rsync -avPz --bwlimit=256 data/dist/${LANG} goofy:/var/www/html/voxforge/$LANG
+echo rsync -avPz --bwlimit=256 data/dist/ goofy:/var/www/html/voxforge/
 
 #
 # FIXME: remove deprecated code below
