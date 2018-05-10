@@ -74,7 +74,7 @@ def main(model_name, dictionary, language_model, sequitur_model=None, debug=0,
 
     config = misc.load_config ('.speechrc')
 
-    work_dir = ASR_MODELS_DIR / model_name
+    work_dir = ASR_MODELS_DIR / 'kaldi' / model_name
     kaldi_root = config.get("speech", "kaldi_root")
 
     data_dir = work_dir / "data"

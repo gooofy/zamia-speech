@@ -322,10 +322,16 @@ Before running it, make sure all prerequisites are met (see above for instructio
 - optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
-./speech_kaldi_export.py generic_de_asr_model dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
-cd data/dst/asr-models/generic_de_asr_model
+./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+cd data/dst/asr-models/kaldi/generic-de
 ./run-lm.sh
 ./run-chain.sh
+```
+
+complete export run with noise augmented corpora included:
+
+```bash
+./speech_kaldi_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
 ```
 
 Audiobook Segmentation and Transcription (Manual)

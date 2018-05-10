@@ -30,17 +30,17 @@ if [ $WHAT = "kaldi" ] ; then
 
         mkdir -p "$DISTDIR/$AMNAME/$EXPNAME"
 
-        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
-        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$EXPNAME/tree                       $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
+        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
+        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$EXPNAME/tree                       $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
 
-        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/num_pdfs                 $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones/*                 $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/$GRAPHNAME/phones.txt               $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/num_pdfs                 $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/phones/*                 $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/phones.txt               $DISTDIR/$AMNAME/$EXPNAME/
 
-        cp data/dst/speech/${LANG}/kaldi/data/local/dict/*                                   $DISTDIR/$AMNAME/$EXPNAME/
+        cp data/dst/asr-models/kaldi/${MODEL}/data/local/dict/*                                   $DISTDIR/$AMNAME/$EXPNAME/
 
     }
 
@@ -49,14 +49,14 @@ if [ $WHAT = "kaldi" ] ; then
 
     mkdir -p "$DISTDIR/$AMNAME/extractor"
 
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/speech/${LANG}/kaldi/exp/nnet3_chain/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
+    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
 
-    cp data/dst/speech/${LANG}/kaldi/RESULTS.txt $DISTDIR/$AMNAME/
+    cp data/dst/asr-models/kaldi/${MODEL}/RESULTS.txt $DISTDIR/$AMNAME/
     cp README.md "$DISTDIR/$AMNAME"
     cp LICENSE   "$DISTDIR/$AMNAME"
     cp AUTHORS   "$DISTDIR/$AMNAME"
