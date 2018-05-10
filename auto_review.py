@@ -42,10 +42,10 @@ from speech_transcripts import Transcripts
 
 from kaldiasr.nnet3     import KaldiNNet3OnlineModel, KaldiNNet3OnlineDecoder
 
-MODELDIR    = 'data/models/kaldi-chain-voxforge-%s-latest'
-# MODELDIR    = 'data/models/kaldi-nnet3-voxforge-%s-latest'
+DEFAULT_ASR_MODEL = 'kaldi-chain-voxforge-de-latest'
+
+MODELDIR    = 'data/models/%s'
 MODEL       = 'tdnn_sp'
-# MODEL       = 'nnet_tdnn_a' 
 SAVE_RATE   = 10
 
 #
@@ -67,6 +67,9 @@ parser.add_option ("-a", "--all", action="store_true", dest="do_all",
 
 parser.add_option ("-f", "--filter", dest="ts_filter", type = "str", 
                    help="filter (default: no filtering)")
+
+parser.add_option ("-m", "--asr-model", dest="asr_model", type = "str", default=DEFAULT_ASR_MODEL,
+                   help="kaldi asr model to use (default: %s)" % DEFAULT_ASR_MODEL)
 
 parser.add_option ("-R", "--result-file", dest="outfn", type = "str", default='review-result.csv',
                    help="result file (default: review-result.csv)")
@@ -97,8 +100,11 @@ parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
 
 ts_filter = options.ts_filter.decode('utf8') if options.ts_filter else None
 
-if len(args)==1:
-    corpus = args[0]
+if len(args)!=1:
+    parser.print_usage()
+    sys.exit(1)
+
+corpus = args[0]
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
@@ -121,7 +127,7 @@ logging.info("loading transcripts...done.")
 
 if not options.do_all:
     logging.info("loading kaldi model...")
-    kaldi_model = KaldiNNet3OnlineModel (MODELDIR % options.lang, MODEL, acoustic_scale=1.0, beam=7.0, frame_subsampling_factor=3)
+    kaldi_model = KaldiNNet3OnlineModel (MODELDIR % options.asr_model, MODEL, acoustic_scale=1.0, beam=7.0, frame_subsampling_factor=3)
     logging.info("loading kaldi model...done.")
 
 #
