@@ -95,6 +95,7 @@ ts_all = {}
 ts_train = {}
 ts_test = {}
 transcripts = {}
+cfn2corpus = {}
 for audio_corpus in audio_corpora:
     transcripts_ = Transcripts(corpus_name=audio_corpus)
 
@@ -106,6 +107,9 @@ for audio_corpus in audio_corpora:
     ts_train.update(ts_train_)
     ts_test.update(ts_test_)
     transcripts.update(transcripts_)
+
+    for cfn in transcripts_:
+        cfn2corpus[cfn] = audio_corpus
 
 logging.info("loading transcripts (%d train, %d test) ...done." % ( len(ts_train), len(ts_test)))
 
@@ -234,7 +238,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
         cnt = 0
         for cfn in ts_all:
 
-            w16filename = "%s/%s.wav" % (wav16_dir, cfn)
+            w16filename = "%s/%s/%s.wav" % (wav16_dir, cfn2corpus[cfn], cfn)
             mfcfilename = "mfcc/%s.mfc" % cfn
             runfeatf.write(SPHINXFE % (w16filename, mfcfilename, cnt) )
             cnt = (cnt + 1) % NJOBS
