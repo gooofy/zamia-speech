@@ -283,32 +283,8 @@ this script produces two output files: `data/dst/speech/de/dict_wiktionary_gen.t
 `data/dst/speech/de/dict_wiktionary_rej.txt` contains rejected entries.
 
 
-CMU Sphinx Model
-================
-
-To build the CMU Sphinx continous model:
-
-```bash
-./speech_sphinx_export.py
-cd data/dst/speech/de/cmusphinx_cont/
-./sphinx-run.sh
-```
-
-Running pocketsphinx
---------------------
-
-just a sample invocation for live audio from mic:
-
-    pocketsphinx_continuous \
-        -hmm model_parameters/voxforge.cd_cont_6000 \
-        -lw 10 -feat 1s_c_d_dd -beam 1e-80 -wbeam 1e-40 \
-        -dict etc/voxforge.dic \
-        -lm etc/voxforge.lm.bin \
-        -wip 0.2 \
-        -agc none -varnorm no -cmn current
-
-Kaldi Models
-============
+Kaldi Models (recommended)
+==========================
 
 NNet3 Chain Models
 ------------------
@@ -333,6 +309,51 @@ complete export run with noise augmented corpora included:
 ```bash
 ./speech_kaldi_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
 ```
+
+CMU Sphinx Models
+=================
+
+The following recipe trains a continous CMU Sphinx model for German. 
+
+Before running it, make sure all prerequisites are met (see above for instructions on these):
+
+- language model `generic_de_lang_model` built
+- some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
+- optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
+
+```bash
+./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+cd data/dst/asr-models/cmusphinx_cont/generic-de
+./sphinx-run.sh
+```
+
+complete export run with noise augmented corpora included:
+
+```bash
+./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
+```
+
+for resource constrained applications PTM models can be trained:
+
+```bash
+./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+cd data/dst/asr-models/cmusphinx_ptm/generic-de
+./sphinx-run.sh
+```
+
+
+Running pocketsphinx
+--------------------
+
+just a sample invocation for live audio from mic:
+
+    pocketsphinx_continuous \
+        -hmm model_parameters/voxforge.cd_cont_6000 \
+        -lw 10 -feat 1s_c_d_dd -beam 1e-80 -wbeam 1e-40 \
+        -dict etc/voxforge.dic \
+        -lm etc/voxforge.lm.bin \
+        -wip 0.2 \
+        -agc none -varnorm no -cmn current
 
 Audiobook Segmentation and Transcription (Manual)
 =================================================
