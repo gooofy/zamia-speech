@@ -132,9 +132,10 @@ if [ $WHAT = "srilm" ] ; then
     # srilm
     #
 
-    LMNAME="srilm-voxforge-${LANG}-r$datum.arpa"
+    LMNAME="srilm-${MODEL}-r$datum.arpa"
     echo "$LMNAME ..."
-    cp data/dst/speech/${LANG}/srilm/lm.arpa ${DISTDIR}/$LMNAME
+    # data/dst/lm/generic_de_lang_model/
+    cp data/dst/lm/${MODEL}/lm.arpa ${DISTDIR}/$LMNAME
     gzip ${DISTDIR}/$LMNAME
 fi
 
