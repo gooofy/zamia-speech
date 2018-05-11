@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -37,10 +37,10 @@ from nltools.phonetics  import ipa2xsampa, xsampa2ipa, xsampa2xarpabet
 from speech_lexicon     import Lexicon
 from speech_transcripts import Transcripts
 
-WORKDIR_CONT = 'data/dst/speech/%s/cmusphinx_cont'
-WORKDIR_PTM  = 'data/dst/speech/%s/cmusphinx_ptm'
+WORKDIR_CONT = 'data/dst/asr-models/cmusphinx_cont/%s'
+WORKDIR_PTM  = 'data/dst/asr-models/cmusphinx_ptm/%s'
 
-NJOBS = 8
+NJOBS = 12
 
 ENABLE_NOISE_FILLER = False # CMU Sphinx decoding seems to become unstable otherwise
 NOISE_WORD = 'nspc'
@@ -57,12 +57,10 @@ config = misc.load_config ('.speechrc')
 # commandline parsing
 #
 
-parser = OptionParser("usage: %prog [options] )")
+parser = OptionParser("usage: %prog [options] model_name dict lm corpus [corpus2 ...]")
 
 parser.add_option ("-d", "--debug", dest="debug", type='int', default=0,
                    help="limit number of transcripts (debug purposes only), default: 0 (unlimited)")
-parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
-                   help="language (default: de)")
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="enable verbose logging")
 
@@ -73,20 +71,43 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
+if len(args)<4:
+    parser.print_usage()
+    sys.exit(1)
+
+model_name    = args[0]
+dict_name     = args[1]
+lm_name       = args[2]
+audio_corpora = args[3:]
+
+wav16_dir     = config.get("speech", "wav16")
 
 #
 # load lexicon, transcripts
 #
 
 logging.info("loading lexicon...")
-lex = Lexicon(file_name=options.lang)
+lex = Lexicon(file_name=dict_name)
 logging.info("loading lexicon...done.")
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(corpus_name=options.lang)
-ts_all, ts_train, ts_test = transcripts.split(limit=options.debug)
-logging.info("loading transcripts (%d train, %d test) ...done." % (len(ts_train), len(ts_test)))
+ts_all = {}
+ts_train = {}
+ts_test = {}
+transcripts = {}
+for audio_corpus in audio_corpora:
+    transcripts_ = Transcripts(corpus_name=audio_corpus)
+
+    ts_all_, ts_train_, ts_test_ = transcripts_.split(limit=options.debug)
+
+    logging.info("loading transcripts from %s (%d train, %d test) ..." % (audio_corpus, len(ts_train_), len(ts_test_)))
+
+    ts_all.update(ts_all_)
+    ts_train.update(ts_train_)
+    ts_test.update(ts_test_)
+    transcripts.update(transcripts_)
+
+logging.info("loading transcripts (%d train, %d test) ...done." % ( len(ts_train), len(ts_test)))
 
 def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
@@ -245,6 +266,6 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
 # we create two different training cases in separate subdirs here, one for a continous and one for a ptm model
 
-export_sphinx_case(WORKDIR_CONT % options.lang, 'data/src/speech/sphinx_train_cont.cfg')
-export_sphinx_case(WORKDIR_PTM  % options.lang, 'data/src/speech/sphinx_train_ptm.cfg')
+export_sphinx_case(WORKDIR_CONT % model_name, 'data/src/speech/sphinx_train_cont.cfg')
+export_sphinx_case(WORKDIR_PTM  % model_name, 'data/src/speech/sphinx_train_ptm.cfg')
 
