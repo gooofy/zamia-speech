@@ -230,20 +230,70 @@ The main tool used for submission review, transcription and lexicon expansion is
 ```
 
 
-Lexicon
-=======
+Lexica/Dictionaries
+===================
 
-The lexicon used here (data/src/speech/de/dict.ipa) is my own creation, i.e. entries have been manually checked and
-added using my `speech_editor` / `lex_editor` tools. For new entries, I usually let MaryTTS, espeak and sequitur generate
-phonemes, listen to them using MaryTTS and pick the best one. Quite frequently I will still make manual adjustments
-(typically I will add or move stress markers, syllable boundaries, change vocal lengths, ...), often using additional
-sources like wiktionary which has IPA transcriptions for many words.
+*NOTE*: We use the terms lexicon and dictionary interchangably in this documentation and our scripts.
 
-In general it is recommended to use the `speech_editor.py` tool (see above) which ensures all lexicon entries
-are actually covered by audio submissions. However, there are tools which work on the lexicon directly:
+Currently, we have two lexica, one for english and one for german (in `data/src/dicts`):
+
+- dict-en.ipa
+    + english
+    + originally based on The CMU Pronouncing Dictionary (http://www.speech.cs.cmu.edu/cgi-bin/cmudict)
+    + additional manual and Sequitur G2P based entries
+
+- dict-de.ipa
+    + started manually from scratch
+    + once enough entries existed to train a reasonable Sequitur G2P model, many entries where converted from german wiktionary (see below)
+
+The native format of our lexica is in (UTF8) IPA with semicolons as separator. This format is then converted to
+whatever format is used by the target ASR engine by the corresponding export scripts.
+
+Sequitur G2P
+------------
+
+Many lexicon-related tools rely on Sequitur G2P to compute pronounciations for words missing from the dictionary. The
+necessary models can be downloaded from our file server: [english](http://goofy.zamia.org/voxforge/en/) and 
+[german](http://goofy.zamia.org/voxforge/de/). Fpr installation download and unpack them and then put links to them
+under `data/models` like so:
+
+```bash
+data/models/sequitur-dict-de.ipa-latest -> <your model dir>/sequitur-dict-de.ipa-r20180510
+data/models/sequitur-dict-en.ipa-latest -> <your model dir>/sequitur-dict-en.ipa-r20180510
+```
+
+To train your own Sequitur G2P models, use the export and train scripts provided, e.g.:
+
+```bash
+[guenter@dagobert speech]$ ./speech_sequitur_export.py -d dict-de.ipa
+INFO:root:loading lexicon...
+INFO:root:loading lexicon...done.
+INFO:root:sequitur workdir data/dst/dict-models/dict-de.ipa/sequitur done.
+[guenter@dagobert speech]$ ./speech_sequitur_train.sh dict-de.ipa
+training sample: 322760 + 16988 devel
+iteration: 0
+...
+```
+
+Manual Editing
+--------------
+
+```bash
+./speech_lex_edit.py word [word2 ...]
+```
+
+is the main curses based, interactive lexicon editor. It will automatically
+produce candidate entries for new new words using Sequitur G2P, MaryTTS and
+eSpeakNG. The user can then edit these entries manually if necessary and check
+them by listening to them being synthesized via MaryTTS in different voices.
+
+The lexicon editor is also integrated into various other tools, `speech_editor.py` in particular
+which allows you to transcribe, review and add missing words for new audio samples
+within one tool - which is recommended.
+
 
 I also tend to review lexicon entries randomly from time to time. For that I have a small script which will pick 20
-random entries where sequitur disagrees with the current transcription in the lexicon:
+random entries where Sequitur G2P disagrees with the current transcription in the lexicon:
 
 ```bash
 ./speech_lex_edit.py `./speech_lex_review.py`
@@ -266,14 +316,14 @@ To do that, the first step is to extract a set of candidate entries from an wikt
 ```
 
 this will output extracted entries to `data/dst/speech/de/dict_wiktionary_de.txt`. We now need to 
-train a sequitur model that translates these entries into our own IPA style and phoneme set:
+train a Sequitur G2P model that translates these entries into our own IPA style and phoneme set:
 
 ```bash
 ./wiktionary_sequitur_export.py
 ./wiktionary_sequitur_train.sh
 ```
 
-finally, we translate the entries and check them against the predictions from our regular sequitur model:
+finally, we translate the entries and check them against the predictions from our regular Sequitur G2P model:
 
 ```bash
 ./wiktionary_sequitur_gen.py
