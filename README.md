@@ -345,6 +345,10 @@ cd data/dst/asr-models/cmusphinx_ptm/generic-de
 Running pocketsphinx
 --------------------
 
+*IMPORTANT*: In order to use our pre-built models you have to use up-to-date CMU Sphinx. Unfortunately, at the time
+             of this writing even the latest "5prealpha" release is outdated. Until the CMU Sphinx project has a new release,
+             we highly recommend to check out and build it yourself from their github repository.
+
 Here are some sample invocations for pocketsphinx which should help get you started using our models:
 
 ```bash
