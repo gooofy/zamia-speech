@@ -345,15 +345,56 @@ cd data/dst/asr-models/cmusphinx_ptm/generic-de
 Running pocketsphinx
 --------------------
 
-just a sample invocation for live audio from mic:
+Here are some sample invocations for pocketsphinx which should help get you started using our models:
 
-    pocketsphinx_continuous \
-        -hmm model_parameters/voxforge.cd_cont_6000 \
-        -lw 10 -feat 1s_c_d_dd -beam 1e-80 -wbeam 1e-40 \
-        -dict etc/voxforge.dic \
-        -lm etc/voxforge.lm.bin \
-        -wip 0.2 \
-        -agc none -varnorm no -cmn current
+```bash
+pocketsphinx_continuous -lw 10 -fwdflatlw 10 -bestpathlw 10 -beam 1e-80 \
+                        -wbeam 1e-40 -fwdflatbeam 1e-80 -fwdflatwbeam 1e-40 \
+                        -pbeam 1e-80 -lpbeam 1e-80 -lponlybeam 1e-80 \
+                        -wip 0.2 -agc none -varnorm no -cmn current \
+                        -lowerf 130 -upperf 6800 -nfilt  25 \
+                        -transform dct -lifter 22 -ncep   13 \
+                        -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_6000 \
+                        -dict ${MODELDIR}/etc/voxforge.dic \
+                        -lm ${MODELDIR}/etc/voxforge.lm.bin \
+                        -infile $WAVFILE 
+
+
+sphinx_fe -c fileids -di wav -do mfcc \
+          -part 1 -npart 1 -ei wav -eo mfc -nist no -raw no -mswav yes \
+          -samprate 16000 -lowerf 130 -upperf 6800 -nfilt 25 -transform dct -lifter 22
+
+pocketsphinx_batch -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_6000 \
+                   -feat 1s_c_d_dd \
+                   -ceplen 13 \
+                   -ncep 13 \
+                   -lw 10 \
+                   -fwdflatlw 10 \
+                   -bestpathlw 10 \
+                   -beam 1e-80 \
+                   -wbeam 1e-40 \
+                   -fwdflatbeam 1e-80 \
+                   -fwdflatwbeam 1e-40 \
+                   -pbeam 1e-80 \
+                   -lpbeam 1e-80 \
+                   -lponlybeam 1e-80 \
+                   -dict ${MODELDIR}/etc/voxforge.dic \
+                   -wip 0.2 \
+                   -ctl fileids \
+                   -cepdir ./mfcc \
+                   -cepext .mfc \
+                   -hyp test_batch.match \
+                   -logfn test_batch.log \
+                   -agc none -varnorm no -cmn current -lm ${MODELDIR}/etc/voxforge.lm.bin
+```
+
+You can download a complete tarball with example scripts and WAV files here:
+
+http://goofy.zamia.org/voxforge/sphinx-example.tgz
+
+*NOTE*: According to https://github.com/cmusphinx/pocketsphinx/issues/116 
+        pocketsphinx\_continuous will have worse results compared to pocketsphinx\_batch using the same model and parameters.
+
 
 Audiobook Segmentation and Transcription (Manual)
 =================================================
