@@ -266,7 +266,7 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
     logging.info ("%s written." % test_tsfn)
     logging.info ("%s written." % test_fifn)
 
-    misc.copy_file ('data/src/speech/sphinx-run.sh', '%s/sphinx-run.sh' % work_dir)
+    misc.render_template('data/src/speech/sphinx-run.sh.template', '%s/sphinx-run.sh' % work_dir, lm_name=lm_name)
 
 # we create two different training cases in separate subdirs here, one for a continous and one for a ptm model
 
