@@ -33,7 +33,7 @@ from nltools.sequiturclient import sequitur_gen_ipa
 from nltools.phonetics      import ipa2xsampa, xsampa2ipa
 from seqif                  import SeqIf
 
-SEQUITUR_MODEL    = 'data/models/sequitur-voxforge-de-latest'
+SEQUITUR_MODEL    = 'data/models/sequitur-dict-de.ipa-latest'
 
 class LexEdit(object):
 

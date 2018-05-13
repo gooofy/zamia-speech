@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016, 2017 Guenter Bartsch
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -41,7 +41,7 @@ from nltools.sequiturclient import sequitur_gen_ipa
 from speech_transcripts     import Transcripts
 from speech_lexicon         import Lexicon
 
-SEQUITUR_MODEL  = 'data/models/sequitur-voxforge-%s-latest'
+SEQUITUR_MODEL  = 'data/models/sequitur-dict-%s-latest'
 
 #
 # init 
@@ -53,12 +53,12 @@ misc.init_app ('speech_lex_missing')
 # command line
 #
 
-parser = OptionParser("usage: %prog [options] [filter])")
+parser = OptionParser("usage: %prog [options] [filter] lex corpus")
 
 parser.add_option ("-g", "--generate", action="store_true", dest="generate", 
                    help="generate phoneme transcriptions using sequitur g2p")
 
-parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+parser.add_option ("-m", "--lang", dest="lang", type = "str", default='de',
                    help="language (default: de)")
 
 parser.add_option ("-n", "--num-words", dest="num_words", type="int", default=50,
@@ -76,18 +76,25 @@ else:
     logging.basicConfig(level=logging.INFO)
     verbose=False
 
-sequitur_model = SEQUITUR_MODEL % options.lang
+if len(args)<2:
+    parser.print_usage()
+    sys.exit(1)
+
+lex_name    = args[0]
+corpus_name = args[1]
+
+sequitur_model = SEQUITUR_MODEL % lex_name
 
 #
 # load lexicon, transcripts
 #
 
 logging.info("loading lexicon...")
-lex = Lexicon(file_name=options.lang)
+lex = Lexicon(file_name=lex_name)
 logging.info("loading lexicon...done.")
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(corpus_name=options.lang)
+transcripts = Transcripts(corpus_name=corpus_name)
 logging.info("loading transcripts...done.")
 
 #

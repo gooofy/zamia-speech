@@ -35,7 +35,7 @@ from nltools.phonetics      import ipa2xsampa, xsampa2ipa
 import SequiturTool
 from sequitur import Translator
 
-SEQUITUR_MODEL    = 'data/models/sequitur-voxforge-de-latest'
+SEQUITUR_MODEL    = 'data/models/sequitur-dict-de.ipa-latest'
 
 class SeqOptionsObject(object):
     pass

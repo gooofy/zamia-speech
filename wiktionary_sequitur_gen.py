@@ -40,7 +40,7 @@ PROC_TITLE       = 'wiktionary_sequitur_gen'
 DICTFN           = 'data/dst/speech/de/dict_wiktionary_de.txt'
 OUTDICTFN        = 'data/dst/speech/de/dict_wiktionary_gen.txt'
 OUTREJFN         = 'data/dst/speech/de/dict_wiktionary_rej.txt'
-REGULAR_MODEL    = 'data/models/sequitur-voxforge-de-latest'
+REGULAR_MODEL    = 'data/models/sequitur-dict-de.ipa-latest'
 WIKTIONARY_MODEL = 'data/dst/speech/de/wiktionary_sequitur/model-6'
 TEST_TOKEN       = u'aalbestand'
 

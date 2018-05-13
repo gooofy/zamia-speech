@@ -45,7 +45,7 @@ from speech_lexicon         import Lexicon
 
 PROC_TITLE      = 'speech_editor'
 DEFAULT_MARY    = False # switch between mary and sequitur default g2p
-SEQUITUR_MODEL  = 'data/models/sequitur-voxforge-de-latest'
+SEQUITUR_MODEL  = 'data/models/sequitur-dict-de.ipa-latest'
 
 def play_wav(ts):
 

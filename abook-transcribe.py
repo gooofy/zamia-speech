@@ -47,7 +47,7 @@ SAMPLE_RATE       = 16000
 
 PROC_TITLE        = 'abook-transcribe'
 AUDACITY_DURATION = 3.0
-SEQUITUR_MODEL    = 'data/models/sequitur-voxforge-de-latest'
+SEQUITUR_MODEL    = 'data/models/sequitur-dict-de.ipa-latest'
 
 #
 # menu subroutines
