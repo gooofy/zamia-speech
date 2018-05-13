@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# != 2 ] ; then
-    echo "usage: $0 <model> [kaldi|sphinx|sequitur|srilm]"
+    echo "usage: $0 <model> [kaldi|sphinx_cont|sphinx_ptm|sequitur|srilm]"
     exit 1
 fi
 
@@ -75,21 +75,21 @@ if [ $WHAT = "kaldi" ] ; then
 
 fi
 
-if [ $WHAT = "sphinx" ] ; then
+if [ $WHAT = "sphinx_cont" ] ; then
 
     #
     # cont sphinx model
     #
 
-    AMNAME="cmusphinx-cont-voxforge-${LANG}-r$datum"
+    AMNAME="cmusphinx-cont-${MODEL}-r$datum"
     echo "$AMNAME ..."
 
     mkdir -p "$DISTDIR/$AMNAME"
     mkdir -p "$DISTDIR/$AMNAME/model_parameters"
 
-    cp -r data/dst/speech/${LANG}/cmusphinx_cont/model_parameters/voxforge.cd_cont_6000 "$DISTDIR/$AMNAME/model_parameters"
-    cp -r data/dst/speech/${LANG}/cmusphinx_cont/etc "$DISTDIR/$AMNAME"
-    cp data/dst/speech/${LANG}/cmusphinx_cont/voxforge.html "$DISTDIR/$AMNAME"
+    cp -r data/dst/asr-models/cmusphinx_cont/${MODEL}/model_parameters/voxforge.cd_cont_6000 "$DISTDIR/$AMNAME/model_parameters"
+    cp -r data/dst/asr-models/cmusphinx_cont/${MODEL}/etc "$DISTDIR/$AMNAME"
+    cp    data/dst/asr-models/cmusphinx_cont/${MODEL}/voxforge.html "$DISTDIR/$AMNAME"
     cp README.md "$DISTDIR/$AMNAME"
     cp LICENSE   "$DISTDIR/$AMNAME"
     cp AUTHORS   "$DISTDIR/$AMNAME"
@@ -100,20 +100,23 @@ if [ $WHAT = "sphinx" ] ; then
     popd
 
     rm -r "$DISTDIR/$AMNAME"
+fi
+
+if [ $WHAT = "sphinx_ptm" ] ; then
 
     #
     # ptm sphinx model
     #
 
-    AMNAME="cmusphinx-ptm-voxforge-${LANG}-r$datum"
+    AMNAME="cmusphinx-ptm-${MODEL}-r$datum"
     echo "$AMNAME ..."
 
     mkdir -p "$DISTDIR/$AMNAME"
     mkdir -p "$DISTDIR/$AMNAME/model_parameters"
 
-    cp -r data/dst/speech/${LANG}/cmusphinx_ptm/model_parameters/voxforge.cd_ptm_5000 "$DISTDIR/$AMNAME/model_parameters"
-    cp -r data/dst/speech/${LANG}/cmusphinx_ptm/etc "$DISTDIR/$AMNAME"
-    cp data/dst/speech/${LANG}/cmusphinx_ptm/voxforge.html "$DISTDIR/$AMNAME"
+    cp -r data/dst/asr-models/cmusphinx_ptm/${MODEL}/model_parameters/voxforge.cd_ptm_5000 "$DISTDIR/$AMNAME/model_parameters"
+    cp -r data/dst/asr-models/cmusphinx_ptm/${MODEL}/etc "$DISTDIR/$AMNAME"
+    cp    data/dst/asr-models/cmusphinx_ptm/${MODEL}/voxforge.html "$DISTDIR/$AMNAME"
     cp README.md "$DISTDIR/$AMNAME"
     cp LICENSE   "$DISTDIR/$AMNAME"
     cp AUTHORS   "$DISTDIR/$AMNAME"
@@ -124,7 +127,6 @@ if [ $WHAT = "sphinx" ] ; then
     popd
 
     rm -r "$DISTDIR/$AMNAME"
-
 fi
 
 if [ $WHAT = "srilm" ] ; then
