@@ -22,6 +22,7 @@ Table of Contents
 
 * [Zamia Speech](#zamia-speech)
 * [Links](#links)
+* [Get Started with our Pre-Trained Models](#get-started-with-our-pre-trained-models)
 * [Requirements](#requirements)
 * [Setup Notes](#setup-notes)
 * [Speech Corpora](#speech-corpora)
