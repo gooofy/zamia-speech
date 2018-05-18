@@ -62,6 +62,59 @@ Links
 
 * [Code](https://github.com/gooofy/nlp "github")
 
+Get Started with our Pre-Trained Models 
+=======================================
+
+Raspbian on Raspberry Pi 3
+--------------------------
+
+### (1/3) setup apt-source and install packages
+
+```bash
+pi@raspberrypi:~ $ sudo -i
+
+root@raspberrypi:~# echo "deb http://goofy.zamia.org/raspbian-ai/ ./"
+>/etc/apt/sources.list.d/zamia-ai.list
+root@raspberrypi:~# wget -qO -
+http://goofy.zamia.org/raspbian-ai/bofh.asc | sudo apt-key add -
+root@raspberrypi:~# apt-get update
+root@raspberrypi:~# apt-get install kaldi-chain-voxforge-de
+kaldi-chain-voxforge-en python-kaldiasr python-nltools
+pulseaudio-utils pulseaudio
+root@raspberrypi:~# exit
+```
+
+### (2/3) determine the name of your pulseaudio mic source
+
+```bash
+pi@raspberrypi:~ $ pactl list sources
+Source #0
+    State: SUSPENDED
+    Name: alsa_input.usb-C-Media_Electronics_Inc._USB_PnP_Sound_Device-00.analog-mono
+    Description: CM108 Audio Controller Analog Mono
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+### (3/3) download and run demo
+
+```bash
+pi@raspberrypi:~ $ wget
+'https://raw.githubusercontent.com/gooofy/py-kaldi-asr/master/examples/chain_live.py'
+
+pi@raspberrypi:~ $ python chain_live.py -s 'CM108'
+Kaldi live demo V0.1
+Loading model from /opt/kaldi/model/kaldi-chain-voxforge-de ...
+Please speak.
+hallo computer
+schalte bitte das radio ein
+mach bitte das licht an
+wie wird das wetter in stuttgart
+wie geht es dir
+vielen dank
+auf wiedersehen
+```
+
+
 Requirements
 ============
 
