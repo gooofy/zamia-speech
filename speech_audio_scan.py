@@ -165,7 +165,7 @@ def scan_audiodir(audiodir, transcripts, out_wav16_subdir):
 
             for audiofullfn in os.listdir(audiodirfn):
 
-                audiofn = audiofullfn.split('.')[0]
+                audiofn = os.path.splitext(audiofullfn)[0]
                 cfn = '%s_%s' % (subdir, audiofn)
                 cfn_audio.add(cfn)
 
