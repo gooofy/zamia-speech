@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #
-# Copyright 2017 Guenter Bartsch
+# Copyright 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -33,12 +33,9 @@ import logging
 from optparse import OptionParser
 from nltools  import misc
 
-PROC_TITLE='libirvox_to_vf'
+PROC_TITLE='librispeech_to_vf'
 
 SUBSETS = set(['dev-clean', 'test-clean', 'train-clean-100', 'train-clean-360'])
-
-SRCDIR  = '/home/bofh/projects/ai/data/speech/en/LibriSpeech'
-DESTDIR = '/home/bofh/projects/ai/data/speech/en/lsvf'
 
 #
 # init
@@ -63,11 +60,25 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 #
+# config
+#
+
+config = misc.load_config('.speechrc')
+
+speech_arc     = config.get("speech", "speech_arc")
+speech_corpora = config.get("speech", "speech_corpora")
+
+srcdir  = '%s/LibriSpeech' % speech_arc
+destdir = '%s/librispeech' % speech_corpora
+
+misc.mkdirs(dstdir)
+
+#
 # speakers
 #
 
 with open ('spk2gender.txt', 'w') as genderf:
-    with open ('%s/SPEAKERS.TXT' % SRCDIR, 'r') as speakersf:
+    with open ('%s/SPEAKERS.TXT' % srcdir, 'r') as speakersf:
 
         for line in speakersf:
             if not line or line[0]==';':
@@ -90,22 +101,22 @@ with open ('spk2gender.txt', 'w') as genderf:
 # audio, prompts
 #
 
-for subset in os.listdir(SRCDIR):
+for subset in os.listdir(srcdir):
 
     if not subset in SUBSETS:
         continue
 
-    for speaker in os.listdir(SRCDIR + '/' + subset):
-        for book_id in os.listdir(SRCDIR + '/' + subset + '/' + speaker):
+    for speaker in os.listdir(srcdir + '/' + subset):
+        for book_id in os.listdir(srcdir + '/' + subset + '/' + speaker):
             
             folder = 'librispeech%s-%s' % (speaker, book_id)
-            dstdir = '%s/%s' % (DESTDIR, folder)
+            dstdir = '%s/%s' % (destdir, folder)
 
             misc.mkdirs('%s/flac' % dstdir)
             misc.mkdirs('%s/etc' % dstdir)
 
             promptsfn = '%s/etc/prompts-original' % dstdir
-            transfn = '%s/%s/%s/%s/%s-%s.trans.txt' % (SRCDIR, subset, speaker, book_id, speaker, book_id)
+            transfn = '%s/%s/%s/%s/%s-%s.trans.txt' % (srcdir, subset, speaker, book_id, speaker, book_id)
 
             with codecs.open (promptsfn, 'w', 'utf8') as promptsf:
                 with codecs.open(transfn, 'r', 'utf8') as transf:
@@ -113,7 +124,7 @@ for subset in os.listdir(SRCDIR):
                         parts = line.split()
                         promptsf.write(line)
 
-                        flac_src = '%s/%s/%s/%s/%s.flac' % (SRCDIR, subset, speaker, book_id, parts[0])
+                        flac_src = '%s/%s/%s/%s/%s.flac' % (srcdir, subset, speaker, book_id, parts[0])
                         flac_dst = '%s/flac/%s.flac' % (dstdir, parts[0])
 
                         logging.debug (' %s -> %s' % (flac_src, flac_dst))

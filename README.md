@@ -207,6 +207,13 @@ The following list contains speech corpora supported by this script collection.
     + Download the tarball 
     + unpack it into the directory `<~/.speechrc:speech_corpora>/` (it will generate a `noise` subdirectory there)
 
+- [LibriSpeech ASR (English)](http://www.openslr.org/12/):
+    + Download the set of 360 hours "clean" speech tarball
+    + Unpack the archive such that the directory `LibriSpeech` is a direct 
+      subdirectory of `<~/.speechrc:speech_arc>`. 
+    + Then run run the script `./librispeech_to_vf.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/librispeech`. 
+
 - [VoxForge (English)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_en` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_en`
