@@ -69,6 +69,9 @@ parser.add_option ("-a", "--all", action="store_true", dest="do_all",
 parser.add_option ("-f", "--filter", dest="ts_filter", type = "str", 
                    help="filter (default: no filtering)")
 
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default="de",
+                   help="tokenizer language (default: de)")
+
 parser.add_option ("-m", "--asr-model", dest="asr_model", type = "str", default=DEFAULT_ASR_MODEL,
                    help="kaldi asr model to use (default: %s)" % DEFAULT_ASR_MODEL)
 
@@ -162,7 +165,7 @@ with open (options.outfn, 'w') as outf:
 
         wavfn = '%s/%s/%s.wav' % (wav16_dir, corpus, utt_id)
 
-        prompt = ' '.join(tokenize(ts['prompt']))
+        prompt = ' '.join(tokenize(ts['prompt'], lang=options.lang))
 
         if not prompt:
             logging.info("%7d, # rated: %5d %-20s not prompt." % (idx, num_rated, utt_id))
@@ -184,7 +187,7 @@ with open (options.outfn, 'w') as outf:
 
                     s, l = decoder.get_decoded_string()
 
-                    hyp = ' '.join(tokenize(s))
+                    hyp = ' '.join(tokenize(s, lang=options.lang))
 
                     if hyp == prompt:
                         logging.info("%7d, # rated: %5d %-20s *** MATCH ***" % (idx, num_rated, utt_id))
