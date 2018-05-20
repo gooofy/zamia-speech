@@ -47,6 +47,7 @@ DEFAULT_ASR_MODEL = 'kaldi-chain-voxforge-de-latest'
 MODELDIR    = 'data/models/%s'
 MODEL       = 'tdnn_sp'
 SAVE_RATE   = 10
+FAILLOG     = 'tmp/decoding_fails.txt'
 
 #
 # init 
@@ -134,9 +135,10 @@ if not options.do_all:
 # main
 #
 
-num_rated = 0
-idx       = 0
-next_idx  = options.offset
+num_rated  = 0
+idx        = 0
+next_idx   = options.offset
+num_failed = 0
 if not options.do_all:
     decoder   = KaldiNNet3OnlineDecoder (kaldi_model)
 
@@ -199,7 +201,14 @@ with open (options.outfn, 'w') as outf:
                     logging.info("%7d, # rated: %5d %-20s decoder failed" % (idx, num_rated, utt_id))
 
             except:
-                logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
+                logging.error('EXCEPTION CAUGHT WHILE DECODING %s\n %s' % (wavfn, traceback.format_exc()))
+                with open(FAILLOG, 'a') as faillog:
+                    faillog.write('%s\n' % wavfn)
+                num_failed += 1
 
 logging.info ("%s written." % options.outfn)
+
+if num_failed:
+    logging.warn ("logged %d files where decoding failed to: %s" % (num_failed, FAILLOG))
+
 
