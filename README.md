@@ -16,12 +16,105 @@ At the time of this writing, the scripts here are focused on building the englis
 However, there is no reason why they couldn't be used to build other language models as well, feel free to 
 contribute support for those.
 
+
+Table of Contents
+=================
+
+* [Zamia Speech](#zamia-speech)
+* [Links](#links)
+* [Get Started with our Pre-Trained Models](#get-started-with-our-pre-trained-models)
+* [Requirements](#requirements)
+* [Setup Notes](#setup-notes)
+* [Speech Corpora](#speech-corpora)
+  * [Adding Artificial Noise or Other Effects](#adding-artificial-noise-or-other-effects)
+* [Text Corpora](#text-corpora)
+* [Language Model](#language-model)
+  * [German](#german)
+* [Submission Review and Transcription](#submission-review-and-transcription)
+* [Lexica/Dictionaries](#lexicadictionaries)
+  * [Sequitur G2P](#sequitur-g2p)
+  * [Manual Editing](#manual-editing)
+  * [Wiktionary](#wiktionary)
+* [Kaldi Models (recommended)](#kaldi-models-recommended)
+  * [NNet3 Chain Models](#nnet3-chain-models)
+* [CMU Sphinx Models](#cmu-sphinx-models)
+  * [Running pocketsphinx](#running-pocketsphinx)
+* [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
+  * [(0/3) Convert Audio to WAVE Format](#03-convert-audio-to-wave-format)
+  * [(1/3) Convert Audio to 16kHz mono](#13-convert-audio-to-16khz-mono)
+  * [(2/3) Split Audio into Segments](#23-split-audio-into-segments)
+  * [(3/3) Transcribe Audio](#33-transcribe-audio)
+* [Audiobook Segmentation and Transcription (kaldi)](#audiobook-segmentation-and-transcription-kaldi)
+  * [(0/4) Convert Audio to WAVE Format](#04-convert-audio-to-wave-format)
+  * [(1/4) Convert Audio to 16kHz mono](#14-convert-audio-to-16khz-mono)
+  * [(2/4) Preprocess the Transcript](#24-preprocess-the-transcript)
+  * [(3/4) Auto\-Segment using Kaldi](#34-auto-segment-using-kaldi)
+  * [(4/4) Retrieve Segmentation Result](#44-retrieve-segmentation-result)
+* [License](#license)
+* [Author](#author)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
+
+
 Links
 =====
 
 * [Data / Models](http://goofy.zamia.org/voxforge/ "models")
 
 * [Code](https://github.com/gooofy/nlp "github")
+
+Get Started with our Pre-Trained Models 
+=======================================
+
+Raspbian on Raspberry Pi 3
+--------------------------
+
+### (1/3) setup apt-source and install packages
+
+```bash
+pi@raspberrypi:~ $ sudo -i
+
+root@raspberrypi:~# echo "deb http://goofy.zamia.org/raspbian-ai/ ./"
+>/etc/apt/sources.list.d/zamia-ai.list
+root@raspberrypi:~# wget -qO -
+http://goofy.zamia.org/raspbian-ai/bofh.asc | sudo apt-key add -
+root@raspberrypi:~# apt-get update
+root@raspberrypi:~# apt-get install kaldi-chain-voxforge-de
+kaldi-chain-voxforge-en python-kaldiasr python-nltools
+pulseaudio-utils pulseaudio
+root@raspberrypi:~# exit
+```
+
+### (2/3) determine the name of your pulseaudio mic source
+
+```bash
+pi@raspberrypi:~ $ pactl list sources
+Source #0
+    State: SUSPENDED
+    Name: alsa_input.usb-C-Media_Electronics_Inc._USB_PnP_Sound_Device-00.analog-mono
+    Description: CM108 Audio Controller Analog Mono
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+### (3/3) download and run demo
+
+```bash
+pi@raspberrypi:~ $ wget
+'https://raw.githubusercontent.com/gooofy/py-kaldi-asr/master/examples/chain_live.py'
+
+pi@raspberrypi:~ $ python chain_live.py -s 'CM108'
+Kaldi live demo V0.1
+Loading model from /opt/kaldi/model/kaldi-chain-voxforge-de ...
+Please speak.
+hallo computer
+schalte bitte das radio ein
+mach bitte das licht an
+wie wird das wetter in stuttgart
+wie geht es dir
+vielen dank
+auf wiedersehen
+```
+
 
 Requirements
 ============
