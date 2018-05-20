@@ -41,7 +41,7 @@ from kaldiasr.nnet3 import KaldiNNet3OnlineModel, KaldiNNet3OnlineDecoder
 LANG        = 'de'
 PROC_TITLE  = 'abook-analyze'
 
-MODELDIR    = '../data/models/kaldi-chain-voxforge-%s-latest' % LANG
+MODELDIR    = '../data/models/kaldi-chain-generic-%s-latest' % LANG
 MODEL       = 'tdnn_sp'
 
 #
@@ -131,7 +131,7 @@ logging.info("Total duration: %fs" % total_duration)
 
 words_dict = set()
 
-dictfn = '../data/src/speech/%s/dict.ipa' % LANG
+dictfn = '../data/src/dicts/dict-%s.ipa' % LANG
 
 with open(dictfn, 'r') as f:
 
