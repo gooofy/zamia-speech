@@ -3,7 +3,7 @@
 
 #
 # Copyright 2018 Marc Puels
-# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -60,10 +60,16 @@ SPEECH_CORPORA = {
         lambda: proc_transcripts("forschergeist"),
     "gspv2":
         lambda: proc_transcripts("gspv2"),
+    "librispeech":
+        lambda: proc_transcripts("librispeech"),
     "voxforge_de":
         lambda: proc_transcripts("voxforge_de"),
+    "voxforge_en":
+        lambda: proc_transcripts("voxforge_en"),
     "zamia_de":
         lambda: proc_transcripts("zamia_de"),
+    "zamia_en":
+        lambda: proc_transcripts("zamia_en"),
 }
 
 CORPORA = {}
