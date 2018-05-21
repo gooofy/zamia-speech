@@ -1,0 +1,269 @@
+---
+layout: base
+title: Zamia Speech
+tag_line: Open tools and data for cloudless automatic speech recognition
+contact_us: Get in touch!
+
+intro_text: >
+   Automatic Speech Recognition has made big leaps forward thanks to
+   advances in Deep Learning in recent times. On specific tasks it's
+   reaching human parity. The algorithms making this possible are
+   published by researches and big tech companies' Deep Learning
+   frameworks are open source.
+
+intro_text2: >
+   Our mission is to make it as easy possible to take advantage of
+   these developments tailored to your business needs.
+
+benefit_ownership_of_data: >
+   There are numerous benefits of having a custom Automatic
+   Speech Recognition System that is tailored to your needs.
+
+benefit_no_cloud: >
+   For one,
+   no (audio) data ever has to leave your company or device - data
+   which potentially can bear sensitive personal or corporate
+   information.
+
+benefit_domain_specific_models: >
+   Furthermore, an Automatic Speech Recognition System trained for
+   your use case will probably perform better than a general
+   system. Sometimes it's enough to train a domain specific language
+   model, which can be trained in an unsupervised manner based on
+   existing texts. Sometimes it's necessary to train an acoustic
+   model. To this end a speech corpus consisting of audio data
+   together with its manually created transcriptions is necessary.
+
+benefit_stay_in_control_of_your_model: >
+   You have complete control over what data goes into the training of your model,
+   and how it should behave.
+
+benefit_fine_tuned_models_for_env: >
+   But not only the acoustic and language models can be tailored to
+   your needs - the underlying model can also be adapted to existing constraints
+   regarding computing power. Clearly, a full fledged server has more computing
+   resources than a mobile computer, e.g. a Raspberry Pi.
+
+benefit_cheaper_than_cloud: >
+   Most cloud based Speech
+   To Text systems charge per time unit of transcribed audio. The training of a
+   custom Speech To Text system on the other hand requires an investment upfront.
+   But in the long run a domain specific system can turn out to be cheaper.
+
+use_cases_intro: >
+   The use cases for Speech To Text technology can be broadly devided
+   into command and control and into large vocabulary transcription
+   tasks.
+
+tech_cards_row1:
+ - title: Customized Models
+   icon: extension
+   text: >
+     Choose among different speech and text corpora to create models
+     tailored to your use case, e.g. for phone calls, distant
+     microphone recordings, or television news.
+   url: https://github.com/gooofy/zamia-speech#nnet3-chain-models
+ - title: Pronunciation Lexica
+   icon: sort_by_alpha
+   text: >
+     We have created and are expanding a German pronunciation lexicon
+     containing more than 370k words and their phonetic
+     representations. Furthermore an English Lexicon based on CMU Dict
+     is also available.
+ - title: Pre-trained ASR Models
+   icon: group
+   text: >
+     Directly use pre-trained Kaldi or CMU Sphinx models for your own ASR
+     projects - available here for English and German.
+
+tech_cards_row2:
+ - title: Grapheme to Phoneme Models
+   icon: translate
+   text: >
+     Use our scripts and pronunciation lexica to train grapheme to
+     phoneme models or download and use a pre-trained model.
+ - title: Supported Speech Corpora
+   icon: group
+   text: >
+     The scripts form a processing pipeline that supports several
+     speech corpora out of the box: VoxForge (English and German),
+     German Speechdata Package V2, LibriSpeech, Forschergeist
+     (German), and Zamia (German).
+ - title: Grow Open Speech Corpora
+   icon: group
+   text: >
+     Prepare LibriVox data for training acoustic models. Help grow
+     open speech corpora by efficiently correcting existing
+     transcripts of spontaneous speech for example from podcasts.
+
+tech_cards_row3:
+ - title: Original Speech Corpora
+   icon: flash_on
+   text: >
+     This project encompasses two original German speech corpora:
+     Forschergeist and Zamia. The former contains spontaneous speech,
+     the latter audio recordings for interactions between humans and
+     smart speakers.
+ - title: Embedded Speech Recognition
+   icon: group
+   text: >
+     Use our pre-trained models for CMU Sphinx and Kaldi to do speech
+     recognition on resource constraint systems, e.g. Raspberry Pi.
+ - title: Remix Speech Corpora
+   icon: settings
+   text: >
+     Create noisy versions of training data or re-encode audio data to
+     simulate different environments, e.g. noisy background or
+     different telephone codecs.
+---
+
+#index-banner.section.no-pad-bot
+	.container
+		br
+		br
+		h1.header.center.orange-text Zamia Speech
+		.row.center
+			h5.header.col.s12.light {{page.tag_line}}
+		br
+		br
+
+.container
+	.section
+		.row
+			.col.s12.m5.offset-m1
+				.icon-block
+					a#download-button.btn-large.waves-effect.waves-light.orange(href='mailto:{{site.contact_email}}') {{page.contact_us}}
+			.col.s12.m5.offset-m1
+				.icon-block
+					a#download-button.btn-large.waves-effect.waves-light.blue(href='https://github.com/gooofy/zamia-speech#get-started-with-our-pre-trained-models') Get Started!
+		//
+		// Section "Benefits"
+		//
+		.row
+			p {{page.intro_text}}
+			p {{page.intro_text2}}
+		.row
+			h5
+				i.material-icons.light-blue-text lock
+				| Keep Ownership of your Data
+			p {{page.benefit_ownership_of_data}}
+		.row
+			h5
+				i.material-icons.light-blue-text cloud_off
+				| No Cloud
+			p {{page.benefit_no_cloud}}
+		.row
+			h5
+				i.material-icons.light-blue-text settings
+				| Domain Specific Models
+			p {{page.benefit_domain_specific_models}}
+		.row
+			h5
+				i.material-icons.light-blue-text copyright
+				| Stay in Control of your Model
+			p {{page.benefit_stay_in_control_of_your_model}}
+		.row
+			h5
+				i.material-icons.light-blue-text crop
+				| Fine-tuned models for your environment
+			p {{page.benefit_fine_tuned_models_for_env}}
+		.row
+			h5
+				i.material-icons.light-blue-text attach_money
+				| Cheaper than Cloud Services
+			p {{page.benefit_cheaper_than_cloud}}
+	style.
+		#red_header {
+			text-align: center;
+			box-sizing: border-box;
+			padding: 20px;
+		}
+	//
+	// Section "Use Cases"
+	//
+	p#use_cases
+	h2.white-text.light-blue.lighten-1.z-depth-2#red_header Use Cases
+	p {{page.use_cases_intro}}
+	h4.center Command & Control
+	.row
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons directions_car
+				h5.center Automotive
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons apps
+				h5.center IVR
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons face
+				h5.center Assistive Tech for Elderlies or Persons with Disabilities
+	h4.center Large Vocabulary Transcription
+	.row
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons theaters
+				h5.center Generation of Subtitles
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons description
+				h5.center Transcription of Audio Archives
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons school
+				h5.center Education
+	.row
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons call
+				h5.center Transcription of Telephone Calls
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons local_hospital
+				h5.center Medical Documentation
+		.col.s12.m4
+			.icon-block
+				h2.center.light-blue-text
+					i.material-icons group
+				h5.center Transcription of Meetings
+	p#features
+	h2.white-text.light-blue.lighten-1.z-depth-2#red_header What we have to offer
+	//
+	// Section "What we have to offer"
+	//
+	.section
+		.row
+			| {% for card in page.tech_cards_row1 %}
+			.col.s12.m4
+				.icon-block
+					h2.center.light-blue-text
+						i.material-icons {{card.icon}}
+					h5.center {{card.title}}
+					p.light {{card.text}}
+			| {% endfor %}
+		.row
+			| {% for card in page.tech_cards_row2 %}
+			.col.s12.m4
+				.icon-block
+					h2.center.light-blue-text
+						i.material-icons {{card.icon}}
+					h5.center {{card.title}}
+					p.light {{card.text}}
+			| {% endfor %}
+		.row
+			| {% for card in page.tech_cards_row3 %}
+			.col.s12.m4
+				.icon-block
+					h2.center.light-blue-text
+						i.material-icons {{card.icon}}
+					h5.center {{card.title}}
+					p.light {{card.text}}
+			| {% endfor %}
