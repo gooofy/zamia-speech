@@ -42,7 +42,8 @@ Table of Contents
   * [Manual Editing](#manual-editing)
   * [Wiktionary](#wiktionary)
 * [Kaldi Models (recommended)](#kaldi-models-recommended)
-  * [NNet3 Chain Models](#nnet3-chain-models)
+  * [English NNet3 Chain Models](#english-nnet3-chain-models)
+  * [German NNet3 Chain Models](#german-nnet3-chain-models)
 * [CMU Sphinx Models](#cmu-sphinx-models)
   * [Running pocketsphinx](#running-pocketsphinx)
 * [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
@@ -57,7 +58,7 @@ Table of Contents
   * [(3/4) Auto\-Segment using Kaldi](#34-auto-segment-using-kaldi)
   * [(4/4) Retrieve Segmentation Result](#44-retrieve-segmentation-result)
 * [License](#license)
-* [Author](#author)
+* [Authors](#authors)
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
@@ -459,10 +460,34 @@ this script produces two output files: `data/dst/speech/de/dict_wiktionary_gen.t
 Kaldi Models (recommended)
 ==========================
 
-NNet3 Chain Models
-------------------
+English NNet3 Chain Models
+--------------------------
 
-The following recipe trains a Kaldi model for German. 
+The following recipe trains Kaldi models for English. 
+
+Before running it, make sure all prerequisites are met (see above for instructions on these):
+
+- language model `generic_en_lang_model` built
+- some or all speech corpora of `voxforge_en`, `librispeech` and `zamia_en` are installed, converted and scanned.
+- optionally noise augmented corpora: `voxforge_en_noisy`, `voxforge_en_phone`, `librispeech_en_noisy`, `librispeech_en_phone`, `zamia_en_noisy` and `zamia_en_phone`
+
+```bash
+./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en
+cd data/dst/asr-models/kaldi/generic-en-small
+./run-lm.sh
+./run-chain.sh
+```
+
+complete export run with noise augmented corpora included:
+
+```bash
+./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en voxforge_en_noisy librispeech_noisy zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+```
+
+German NNet3 Chain Models
+-------------------------
+
+The following recipe trains Kaldi models for German. 
 
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
@@ -471,8 +496,8 @@ Before running it, make sure all prerequisites are met (see above for instructio
 - optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
-./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
-cd data/dst/asr-models/kaldi/generic-de
+./speech_kaldi_export.py generic-de-small dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+cd data/dst/asr-models/kaldi/generic-de-small
 ./run-lm.sh
 ./run-chain.sh
 ```
@@ -480,7 +505,7 @@ cd data/dst/asr-models/kaldi/generic-de
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
+./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
 ```
 
 CMU Sphinx Models
