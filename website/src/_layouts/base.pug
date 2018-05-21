@@ -1,0 +1,42 @@
+---
+---
+doctype html
+html(lang='en')
+	head
+		meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1.0')
+		title {{page.title}}
+		// CSS
+		link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+		link(href='/static/css/materialize.css', type='text/css', rel='stylesheet', media='screen,projection')
+		link(href='/static/css/style.css', type='text/css', rel='stylesheet', media='screen,projection')
+		link(href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.2/gh-fork-ribbon.min.css', rel='stylesheet')
+	body
+		a.github-fork-ribbon(href='https://github.com/gooofy/zamia-speech', data-ribbon='Fork me on GitHub', title='Fork me on GitHub') Fork me on GitHub
+		include nav
+		| {{content}}
+		br
+		br
+		footer.page-footer.orange
+			.container
+				.row
+					.col.l6.s12
+						h5.white-text About Us
+						p.grey-text.text-lighten-4
+							| We are a consulting duo passionate about Machine Learning specifically Automatic Speech Recognition and its applications.
+						a.grey-text.text-lighten-4(href='mailto:{{site.contact_email}}')
+							i.material-icons mail_outline
+			.footer-copyright
+				.container
+					| Jekyll-Pug plugin by
+					a.orange-text.text-lighten-3(href='https://dougie.io') Doug Beney
+					|  - CSS framework by
+					a.orange-text.text-lighten-3(href='http://materializecss.com') Materialize
+
+		a#view_source(href="mailto:{{site.contact_email}}").blue.waves-effect.waves-light.btn.btn-large.btn-floating
+			i.material-icons mail
+
+		// Scripts
+		script(src='https://code.jquery.com/jquery-2.1.1.min.js')
+		script(src='/static/js/materialize.js')
+		script(src='/static/js/init.js')
