@@ -21,14 +21,20 @@ Table of Contents
 =================
 
 * [Zamia Speech](#zamia-speech)
+* [Table of Contents](#table-of-contents)
 * [Links](#links)
-* [Get Started with our Pre-Trained Models](#get-started-with-our-pre-trained-models)
+* [Get Started with our Pre\-Trained Models](#get-started-with-our-pre-trained-models)
+  * [Raspbian on Raspberry Pi 3](#raspbian-on-raspberry-pi-3)
+    * [(1/3) setup apt\-source and install packages](#13-setup-apt-source-and-install-packages)
+    * [(2/3) determine the name of your pulseaudio mic source](#23-determine-the-name-of-your-pulseaudio-mic-source)
+    * [(3/3) download and run demo](#33-download-and-run-demo)
 * [Requirements](#requirements)
 * [Setup Notes](#setup-notes)
 * [Speech Corpora](#speech-corpora)
   * [Adding Artificial Noise or Other Effects](#adding-artificial-noise-or-other-effects)
 * [Text Corpora](#text-corpora)
 * [Language Model](#language-model)
+  * [English](#english)
   * [German](#german)
 * [Submission Review and Transcription](#submission-review-and-transcription)
 * [Lexica/Dictionaries](#lexicadictionaries)
@@ -54,7 +60,6 @@ Table of Contents
 * [Author](#author)
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
-
 
 Links
 =====
@@ -723,9 +728,9 @@ Some scripts and files are based on works of others, in those cases it is my
 intention to keep the original license intact. Please make sure to check the
 copyright headers inside for more information.
 
-Author
-======
+Authors
+=======
 
-Guenter Bartsch <guenter@zamia.org>
-Conda environment and many bugfixes contributed by mpuels (https://github.com/mpuels)
+* Guenter Bartsch <guenter@zamia.org>
+* Marc Puels <marc@zamia.org>
 
