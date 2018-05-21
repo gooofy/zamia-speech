@@ -312,6 +312,19 @@ Sentences can also be extracted from our speech corpora. To do that, run:
 Language Model
 ==============
 
+English
+-------
+
+Prerequisites: 
+- text corpora `europarl_en`, `cornell_movie_dialogs`, `web_questions`, and `yahoo_answers` are installed, sentences extracted (see instructions above).
+- sententences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`
+
+To train a german language model using SRILM for use in both sphinx and kaldi builds run:
+
+```bash
+./speech_build_lm.py generic_en_lang_model europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en
+```
+
 German
 ------
 
