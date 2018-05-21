@@ -41,7 +41,7 @@ from nltools.sequiturclient import sequitur_gen_ipa
 from speech_transcripts     import Transcripts
 from speech_lexicon         import Lexicon
 
-SEQUITUR_MODEL  = 'data/models/sequitur-dict-%s-latest'
+SEQUITUR_MODEL  = 'data/models/sequitur-%s-latest'
 
 #
 # init 
@@ -58,7 +58,7 @@ parser = OptionParser("usage: %prog [options] [filter] lex corpus")
 parser.add_option ("-g", "--generate", action="store_true", dest="generate", 
                    help="generate phoneme transcriptions using sequitur g2p")
 
-parser.add_option ("-m", "--lang", dest="lang", type = "str", default='de',
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
                    help="language (default: de)")
 
 parser.add_option ("-n", "--num-words", dest="num_words", type="int", default=50,
@@ -128,6 +128,7 @@ for cfn in transcripts:
             missing[word] += 1
         else:
             missing[word] = 1
+            logging.debug (u"%s: Missing word '%s' from '%s'" % (cfn, word, ts['prompt']))
             #print u"%5d/%5d missing word: %s" % (cnt, num, word)
 
         lacking = True
