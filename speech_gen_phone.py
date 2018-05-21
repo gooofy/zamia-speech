@@ -46,7 +46,6 @@ PROC_TITLE      = 'speech_gen_phone'
 DEBUG_LIMIT     = 0
 FRAMERATE       = 16000
 MIN_QUALITY     = 2
-SKIP            = 4 # only generate phone-variant of every 4th existing entry
 
 #
 # init
@@ -59,6 +58,9 @@ misc.init_app(PROC_TITLE)
 #
 
 parser = OptionParser("usage: %prog [options] corpus")
+
+parser.add_option ("-s", "--stride", dest="stride", type="int", default=4,
+                   help="only generate noisy variant for every nth entry, default: 4")
 
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
@@ -139,7 +141,7 @@ for ts in transcripts:
     if entry['quality']<MIN_QUALITY:
         continue
 
-    if cnt % SKIP == 0:
+    if cnt % options.stride == 0:
 
         infn     = '%s/%s/%s.wav' % (wav16_dir, corpus_in, cfn)
         pkgdirfn = '%s/%s' % (out_dir, entry['dirfn'])

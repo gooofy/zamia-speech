@@ -58,6 +58,9 @@ misc.init_app(PROC_TITLE)
 
 parser = OptionParser("usage: %prog [options] corpus")
 
+parser.add_option ("-s", "--stride", dest="stride", type="int", default=4,
+                   help="only generate noisy variant for every nth entry, default: 4")
+
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
 
@@ -184,86 +187,87 @@ for ts in transcripts:
     if entry['quality']<MIN_QUALITY:
         continue
 
-    infn     = '%s/%s/%s.wav' % (wav16_dir, corpus_in, cfn)
-    pkgdirfn = '%s/%s' % (out_dir, entry['dirfn'])
-    audiofn2 = entry['audiofn'] + '-noisy'
+    if cnt % options.stride == 0:
+        infn     = '%s/%s/%s.wav' % (wav16_dir, corpus_in, cfn)
+        pkgdirfn = '%s/%s' % (out_dir, entry['dirfn'])
+        audiofn2 = entry['audiofn'] + '-noisy'
 
-    if not os.path.exists(pkgdirfn):
-        misc.mkdirs('%s/etc' % pkgdirfn)
-        misc.mkdirs('%s/wav' % pkgdirfn)
+        if not os.path.exists(pkgdirfn):
+            misc.mkdirs('%s/etc' % pkgdirfn)
+            misc.mkdirs('%s/wav' % pkgdirfn)
 
-    outfn = '%s/wav/%s.wav' % (pkgdirfn, audiofn2)
+        outfn = '%s/wav/%s.wav' % (pkgdirfn, audiofn2)
 
-    wav = wave.open(infn, 'r')
+        wav = wave.open(infn, 'r')
 
-    fr = wav.getframerate()
-    if fr == FRAMERATE:
+        fr = wav.getframerate()
+        if fr == FRAMERATE:
 
-        in_len = float(wav.getnframes()) / float(FRAMERATE)
-        fg_level = random.uniform (-1.0, 0.0)
+            in_len = float(wav.getnframes()) / float(FRAMERATE)
+            fg_level = random.uniform (-1.0, 0.0)
 
-        logging.info ('%5d/%5d %6.2fs lvl=%2.3f %s' % (cnt, total_good, in_len, fg_level, cfn))
+            logging.info ('%5d/%5d %6.2fs lvl=%2.3f %s' % (cnt, total_good, in_len, fg_level, cfn))
 
-        logging.debug ('    entry: %s' % repr(entry))
+            logging.debug ('    entry: %s' % repr(entry))
 
-        #
-        # forground noises
-        #
+            #
+            # forground noises
+            #
 
-        fgfn_1 = random.choice(fg_lens.keys())
-        fgfn_2 = random.choice(fg_lens.keys())
+            fgfn_1 = random.choice(fg_lens.keys())
+            fgfn_2 = random.choice(fg_lens.keys())
 
-        fg_len = fg_lens[fgfn_1] + fg_lens[fgfn_2] + in_len
+            fg_len = fg_lens[fgfn_1] + fg_lens[fgfn_2] + in_len
 
-        logging.debug ('   fg: len=%6.2fs fn1=%s fn2=%s' % (fg_len, fgfn_1, fgfn_2))
+            logging.debug ('   fg: len=%6.2fs fn1=%s fn2=%s' % (fg_len, fgfn_1, fgfn_2))
 
-        ts2 = 'nspc ' + entry['ts'] + ' nspc'
-        logging.debug ('   ts2: %s' % ts2)
+            ts2 = 'nspc ' + entry['ts'] + ' nspc'
+            logging.debug ('   ts2: %s' % ts2)
 
-        #
-        # background noise
-        #
+            #
+            # background noise
+            #
 
-        bgfn = None
-        while not bgfn:
-            
-            bgfn2 = random.choice(bg_lens.keys())
-            bgl = bg_lens[bgfn2]
-            if bgl > fg_len:
-                bgfn = bgfn2
-                bg_off = random.uniform (0, bgl - fg_len)
+            bgfn = None
+            while not bgfn:
+                
+                bgfn2 = random.choice(bg_lens.keys())
+                bgl = bg_lens[bgfn2]
+                if bgl > fg_len:
+                    bgfn = bgfn2
+                    bg_off = random.uniform (0, bgl - fg_len)
 
-        bg_level = random.uniform (-15.0, -10.0)
+            bg_level = random.uniform (-15.0, -10.0)
 
-        logging.debug ('   bg: off=%6.2fs fn=%s' % (bg_off, bgfn))
+            logging.debug ('   bg: off=%6.2fs fn=%s' % (bg_off, bgfn))
 
-        # reverb [-w|--wet-only] [reverberance (50%) [HF-damping (50%)
-        #        [room-scale (100%) [stereo-depth (100%)
-        #        [pre-delay (0ms) [wet-gain (0dB)]]]]]]
+            # reverb [-w|--wet-only] [reverberance (50%) [HF-damping (50%)
+            #        [room-scale (100%) [stereo-depth (100%)
+            #        [pre-delay (0ms) [wet-gain (0dB)]]]]]]
 
-        reverb_level = random.uniform(0.0, 50.0)
+            reverb_level = random.uniform(0.0, 50.0)
 
-        # compand attack1,decay1{,attack2,decay2}
-        #        [soft-knee-dB:]in-dB1[,out-dB1]{,in-dB2,out-dB2}
-        #        [gain [initial-volume-dB [delay]]]
+            # compand attack1,decay1{,attack2,decay2}
+            #        [soft-knee-dB:]in-dB1[,out-dB1]{,in-dB2,out-dB2}
+            #        [gain [initial-volume-dB [delay]]]
 
 
-        cmd = 'sox -b 16 -r 16000 -m "|sox --norm=%f %s/%s %s %s/%s -p compand 0.01,0.2 -90,-10 -5 reverb %f" "|sox --norm=%f %s/%s -p trim %f %f" %s' % \
-              (fg_level, fg_dir, fgfn_1, infn, fg_dir, fgfn_2, reverb_level, bg_level, bg_dir, bgfn, bg_off, fg_len, outfn)
+            cmd = 'sox -b 16 -r 16000 -m "|sox --norm=%f %s/%s %s %s/%s -p compand 0.01,0.2 -90,-10 -5 reverb %f" "|sox --norm=%f %s/%s -p trim %f %f" %s' % \
+                  (fg_level, fg_dir, fgfn_1, infn, fg_dir, fgfn_2, reverb_level, bg_level, bg_dir, bgfn, bg_off, fg_len, outfn)
 
-        logging.debug('   cmd: %s' % cmd)
+            logging.debug('   cmd: %s' % cmd)
 
-        os.system(cmd)
+            os.system(cmd)
 
-        promptfn = '%s/etc/prompts-original' % pkgdirfn
+            promptfn = '%s/etc/prompts-original' % pkgdirfn
 
-        with codecs.open(promptfn, 'a', 'utf8') as promptf:
-            promptf.write('%s %s\n' % (audiofn2, ts2))
+            with codecs.open(promptfn, 'a', 'utf8') as promptf:
+                promptf.write('%s %s\n' % (audiofn2, ts2))
 
-    else:
-        logging.error ('%s: wrong framerate %d' % (infn, fr))
+        else:
+            logging.error ('%s: wrong framerate %d' % (infn, fr))
 
-    wav.close()
+        wav.close()
 
     cnt += 1
 
