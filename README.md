@@ -226,10 +226,6 @@ The following list contains speech corpora supported by this script collection.
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_en` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_en`
 
-- [Zamia (English)](http://goofy.zamia.org/voxforge/en/audio/zamia_en/):
-    + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_en`
-    + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_en`
-
 - [Zamia (German)](http://goofy.zamia.org/voxforge/de/audio/zamia_de/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_de`
