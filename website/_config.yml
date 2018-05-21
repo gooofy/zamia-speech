@@ -1,0 +1,5 @@
+---
+timezone: UTC
+source: src
+destination: dist
+contact_email: contact@zamia-speech.org
