@@ -301,6 +301,7 @@ Sentences can also be extracted from our speech corpora. To do that, run:
 - English Speech Corpora
     + `./speech_sentences.py voxforge_en`
     + `./speech_sentences.py librispeech`
+    + `./speech_sentences.py zamia_en`
 
 - German Speech Corpora
     + `./speech_sentences.py forschergeist`
