@@ -23,6 +23,12 @@ data/src/speech/voxforge_de_noisy
 data/src/speech/voxforge_de_phone
 data/src/speech/zamia_de_noisy
 data/src/speech/zamia_de_phone
+data/src/speech/librispeech_noisy/
+data/src/speech/librispeech_phone/
+data/src/speech/voxforge_en_noisy/
+data/src/speech/voxforge_en_phone/
+data/src/speech/zamia_en_noisy/
+data/src/speech/zamia_en_phone/
 wav2goofy.py
 abook/librivox-download.sh
 logo
