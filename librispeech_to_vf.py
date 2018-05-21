@@ -71,7 +71,7 @@ speech_corpora = config.get("speech", "speech_corpora")
 srcdir  = '%s/LibriSpeech' % speech_arc
 destdir = '%s/librispeech' % speech_corpora
 
-misc.mkdirs(dstdir)
+misc.mkdirs(destdir)
 
 #
 # speakers
