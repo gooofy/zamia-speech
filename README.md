@@ -199,11 +199,11 @@ Speech Corpora
 
 The following list contains speech corpora supported by this script collection.
 
-- [Forschergeist (German)](http://goofy.zamia.org/voxforge/de/audio/forschergeist/):
+- [Forschergeist (German, 2 hours)](http://goofy.zamia.org/voxforge/de/audio/forschergeist/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/forschergeist` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/forschergeist`
 
-- [German Speechdata Package Version 2](http://www.repository.voxforge1.org/downloads/de/german-speechdata-package-v2.tar.gz):
+- [German Speechdata Package Version 2 (German, 148 hours)](http://www.repository.voxforge1.org/downloads/de/german-speechdata-package-v2.tar.gz):
     + Unpack the archive such that the directories `dev`, `test`, and `train` are
       direct subdirectories of `<~/.speechrc:speech_arc>/gspv2`. 
     + Then run run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
@@ -213,26 +213,26 @@ The following list contains speech corpora supported by this script collection.
     + Download the tarball 
     + unpack it into the directory `<~/.speechrc:speech_corpora>/` (it will generate a `noise` subdirectory there)
 
-- [LibriSpeech ASR (English)](http://www.openslr.org/12/):
+- [LibriSpeech ASR (English, 475 hours)](http://www.openslr.org/12/):
     + Download the set of 360 hours "clean" speech tarball
     + Unpack the archive such that the directory `LibriSpeech` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
     + Then run run the script `./librispeech_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/librispeech`. 
 
-- [VoxForge (English)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
+- [VoxForge (English, 75 hours)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_en` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_en`
 
-- [VoxForge (German)](http://www.repository.voxforge1.org/downloads/de/Trunk/Audio/Main/16kHz_16bit/):
+- [VoxForge (German, 56 hours)](http://www.repository.voxforge1.org/downloads/de/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_de`
 
-- [Zamia (English)](http://goofy.zamia.org/voxforge/en/audio/zamia_en/):
+- [Zamia (English, 5 minutes)](http://goofy.zamia.org/voxforge/en/audio/zamia_en/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_en` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_en`
 
-- [Zamia (German)](http://goofy.zamia.org/voxforge/de/audio/zamia_de/):
+- [Zamia (German, 18 hours)](http://goofy.zamia.org/voxforge/de/audio/zamia_de/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_de`
 
