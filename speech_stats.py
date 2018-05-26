@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,7 @@
 #
 
 #
-# print stats about audio, dictionary and models
+# print stats about an audio corpus
 #
 
 import sys
@@ -48,17 +48,20 @@ misc.init_app (PROC_TITLE)
 # command line
 #
 
-parser = OptionParser("usage: %prog [options])")
+parser = OptionParser("usage: %prog [options] corpus")
 
 parser.add_option ("-c", "--csv", dest="csvfn", type = "str",
                    help="CSV output file")
-parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
-                   help="language (default: de)")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
 
-
 (options, args) = parser.parse_args()
+
+if len(args) != 1:
+    parser.print_usage()
+    sys.exit(1)
+
+corpus_name = args[0]
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
@@ -72,33 +75,19 @@ else:
 
 config = misc.load_config('.speechrc')
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
+wav16_dir   = config.get("speech", "wav16")
 
 #
 # load transcripts
 #
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(corpus_name=options.lang)
+transcripts = Transcripts(corpus_name=corpus_name)
 logging.info("loading transcripts...done.")
 
 logging.info("splitting transcripts...")
 ts_all, ts_train, ts_test = transcripts.split()
 logging.info("splitting transcripts done, %d train, %d test." % (len(ts_train), len(ts_test)))
-
-#
-# load lexicon
-#
-
-logging.info("loading lexicon...")
-lex = Lexicon(file_name=options.lang)
-logging.info("loading lexicon...done.")
-
-#
-# lexicon stats
-#
-
-logging.info("%d lexicon entries." % len(lex))
 
 #
 # audio stats
@@ -120,7 +109,7 @@ def ts_stats(ts_data, ts_name):
 
     for cfn in ts_data:
 
-        wavfn = '%s/%s.wav' % (wav16_dir, cfn)
+        wavfn = '%s/%s/%s.wav' % (wav16_dir, corpus_name, cfn)
 
         wavef = wave.open(wavfn, 'rb')
 
@@ -161,40 +150,15 @@ def ts_stats(ts_data, ts_name):
                 csvf.write( "%s,%f,%d\n" % (spk, duration_per_spk[spk], subs_per_spk[spk]))
         logging.info('%s written.' % options.csvfn)
 
-ts_stats(ts_test, 'test')
-ts_stats(ts_train, 'train')
+    return total_duration
 
-#
-# sphinx model stats
-#
+duration_test  = ts_stats(ts_test, 'test')
+duration_train = ts_stats(ts_train, 'train')
+duration_total = duration_test + duration_train
 
-with codecs.open('data/dst/speech/%s/cmusphinx_cont/logs/sphinxtrain_run.log' % options.lang, 'r', 'utf8') as logf:
-    for line in logf:
-        if 'WORD ERROR RATE' in line:
-            logging.info( "cmusphinx cont model: %s" % line.strip())
+logging.info( "test : duration of %6d submissions: %s" % (len(ts_test), format_duration(duration_test)))
+logging.info( "train: duration of %6d submissions: %s" % (len(ts_train), format_duration(duration_train)))
+logging.info( "total: duration of %6d submissions: %s" % (len(ts_test) + len(ts_train), format_duration(duration_total)))
 
-with codecs.open('data/dst/speech/%s/cmusphinx_ptm/logs/sphinxtrain_run.log' % options.lang, 'r', 'utf8') as logf:
-    for line in logf:
-        if 'WORD ERROR RATE' in line:
-            logging.info( "cmusphinx ptm model: %s" % line.strip())
 
-#
-# kaldi model stats
-#
-
-logging.info( "kaldi models: ")
-with codecs.open('data/dst/speech/%s/kaldi/RESULTS.txt' % options.lang, 'r', 'utf8') as logf:
-    for line in logf:
-        logging.info( line.strip())
-
-#
-# sequitur model stats
-#
-
-logging.info( "sequitur g2p model:")
-with codecs.open('data/dst/speech/%s/sequitur/model-6.test' % options.lang, 'r', 'utf8', 'ignore') as logf:
-    for line in logf:
-        if not line.startswith('   '):
-            continue
-        logging.info( line.rstrip())
 
