@@ -92,9 +92,9 @@ logging.info("loading lexicon...done.")
 # dictionary export
 #
 
-misc.mkdirs('%s/data/local/dict.adapt' % dst_dir)
+misc.mkdirs('%s/data/local/dict' % dst_dir)
 
-dictfn2 = '%s/data/local/dict.adapt/lexicon.txt' % dst_dir
+dictfn2 = '%s/data/local/dict/lexicon.txt' % dst_dir
 
 logging.info ( "Exporting dictionary..." )
 
@@ -135,7 +135,7 @@ logging.info ( "Exporting dictionary ... done." )
 
 # logging.info ( "Phoneme set: %s" % repr(ps) )
 
-psfn = '%s/data/local/dict.adapt/nonsilence_phones.txt' % dst_dir
+psfn = '%s/data/local/dict/nonsilence_phones.txt' % dst_dir
 with open(psfn, 'w') as psf:
     for pws in sorted(ps):
         for p in sorted(list(ps[pws])):
@@ -145,17 +145,17 @@ with open(psfn, 'w') as psf:
 
 logging.info ( '%s written.' % psfn )
 
-psfn = '%s/data/local/dict.adapt/silence_phones.txt' % dst_dir
+psfn = '%s/data/local/dict/silence_phones.txt' % dst_dir
 with open(psfn, 'w') as psf:
     psf.write('SIL\nSPN\nNSN\n')
 logging.info ( '%s written.' % psfn )
 
-psfn = '%s/data/local/dict.adapt/optional_silence.txt' % dst_dir
+psfn = '%s/data/local/dict/optional_silence.txt' % dst_dir
 with open(psfn, 'w') as psf:
     psf.write('SIL\n')
 logging.info ( '%s written.' % psfn )
 
-psfn = '%s/data/local/dict.adapt/extra_questions.txt' % dst_dir
+psfn = '%s/data/local/dict/extra_questions.txt' % dst_dir
 with open(psfn, 'w') as psf:
     psf.write('SIL SPN NSN\n')
 
@@ -192,35 +192,43 @@ else:
 # create skeleton dst model
 #
 
-misc.mkdirs ('%s/exp/%s'  % (dst_dir, dst_model))
+misc.mkdirs ('%s/exp/adapt'  % dst_dir)
 
-misc.copy_file ('%s/model/final.mdl' % src_model, '%s/exp/%s/final.mdl' % (dst_dir, dst_model))
-misc.copy_file ('%s/model/cmvn_opts' % src_model, '%s/exp/%s/cmvn_opts' % (dst_dir, dst_model))
-misc.copy_file ('%s/model/tree'      % src_model, '%s/exp/%s/tree'      % (dst_dir, dst_model))
+misc.copy_file ('%s/model/final.mdl' % src_model, '%s/exp/adapt/final.mdl' % dst_dir)
+misc.copy_file ('%s/model/cmvn_opts' % src_model, '%s/exp/adapt/cmvn_opts' % dst_dir)
+misc.copy_file ('%s/model/tree'      % src_model, '%s/exp/adapt/tree'      % dst_dir)
 
 if os.path.exists('%s/extractor' % src_model):
 
-    misc.mkdirs ('%s/exp/%s/extractor' % (dst_dir, dst_model))
+    misc.mkdirs ('%s/exp/adapt/extractor' % dst_dir)
 
-    misc.copy_file ('%s/extractor/final.mat'         % src_model, '%s/exp/%s/extractor/final.mat'         % (dst_dir, dst_model))
-    misc.copy_file ('%s/extractor/global_cmvn.stats' % src_model, '%s/exp/%s/extractor/global_cmvn.stats' % (dst_dir, dst_model))
-    misc.copy_file ('%s/extractor/final.dubm'        % src_model, '%s/exp/%s/extractor/final.dubm'        % (dst_dir, dst_model))
-    misc.copy_file ('%s/extractor/final.ie'          % src_model, '%s/exp/%s/extractor/final.ie'          % (dst_dir, dst_model))
-    misc.copy_file ('%s/extractor/splice_opts'       % src_model, '%s/exp/%s/extractor/splice_opts'       % (dst_dir, dst_model))
+    misc.copy_file ('%s/extractor/final.mat'         % src_model, '%s/exp/adapt/extractor/final.mat'         % dst_dir)
+    misc.copy_file ('%s/extractor/global_cmvn.stats' % src_model, '%s/exp/adapt/extractor/global_cmvn.stats' % dst_dir)
+    misc.copy_file ('%s/extractor/final.dubm'        % src_model, '%s/exp/adapt/extractor/final.dubm'        % dst_dir)
+    misc.copy_file ('%s/extractor/final.ie'          % src_model, '%s/exp/adapt/extractor/final.ie'          % dst_dir)
+    misc.copy_file ('%s/extractor/splice_opts'       % src_model, '%s/exp/adapt/extractor/splice_opts'       % dst_dir)
 
-    misc.mkdirs ('%s/exp/%s/ivectors_test_hires/conf' % (dst_dir, dst_model))
+    misc.mkdirs ('%s/exp/adapt/ivectors_test_hires/conf' % dst_dir)
 
-    misc.copy_file ('%s/extractor/splice.conf'       % src_model, '%s/exp/%s/ivectors_test_hires/conf'    % (dst_dir, dst_model))
+    misc.copy_file ('%s/extractor/splice.conf'       % src_model, '%s/exp/adapt/ivectors_test_hires/conf'    % dst_dir)
+
+# misc.mkdirs ('%s/data/local/dict' % dst_dir)
+# misc.copy_file ('%s/model/extra_questions.txt'   % src_model, '%s/data/local/dict/extra_questions.txt'   % dst_dir)
+# misc.copy_file ('%s/model/lexiconp.txt'          % src_model, '%s/data/local/dict/lexiconp.txt'          % dst_dir)
+# misc.copy_file ('%s/model/lexicon.txt'           % src_model, '%s/data/local/dict/lexicon.txt'           % dst_dir)
+# misc.copy_file ('%s/model/nonsilence_phones.txt' % src_model, '%s/data/local/dict/nonsilence_phones.txt' % dst_dir)
+# misc.copy_file ('%s/model/optional_silence.txt'  % src_model, '%s/data/local/dict/optional_silence.txt'  % dst_dir)
+# misc.copy_file ('%s/model/silence_phones.txt'    % src_model, '%s/data/local/dict/silence_phones.txt'    % dst_dir)
 
 #
 # copy scripts and config files
 #
  
-misc.render_template('data/src/speech/kaldi-run-adaptation.sh.template', '%s/run-adaptation.sh' % dst_dir, dst_model=dst_model)
+misc.copy_file ('data/src/speech/kaldi-run-adaptation.sh', '%s/run-adaptation.sh' % dst_dir)
 misc.copy_file ('data/src/speech/kaldi-cmd.sh', '%s/cmd.sh' % dst_dir)
-misc.render_template('data/src/speech/kaldi-path.sh.template', '%s/path.sh' % dst_dir, kaldi_root=kaldi_root)
-misc.symlink('%s/egs/wsj/s5/steps' % kaldi_root, '%s/steps' % dst_dir)
-misc.symlink('%s/egs/wsj/s5/utils' % kaldi_root, '%s/utils' % dst_dir)
+misc.render_template ('data/src/speech/kaldi-path.sh.template', '%s/path.sh' % dst_dir, kaldi_root=kaldi_root)
+misc.symlink ('%s/egs/wsj/s5/steps' % kaldi_root, '%s/steps' % dst_dir)
+misc.symlink ('%s/egs/wsj/s5/utils' % kaldi_root, '%s/utils' % dst_dir)
 
 
 #

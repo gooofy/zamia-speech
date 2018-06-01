@@ -47,7 +47,7 @@ rm -rf data/lang.adapt
 rm -rf data/local/lang.adapt
 
 #Prepare phoneme data for Kaldi
-utils/prepare_lang.sh data/local/dict.adapt "nspc" data/local/lang.adapt data/lang.adapt
+utils/prepare_lang.sh data/local/dict "nspc" data/local/lang.adapt data/lang.adapt
 
 lmdir=data/local/lm.adapt
 lang=data/lang.adapt_test
@@ -90,7 +90,7 @@ fi
 # adapt our model
 #
 
-expdir=exp/{{dst_model}}
+expdir=exp/adapt
 
 utils/mkgraph.sh $lang $expdir $expdir/graph || exit 1;
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# != 2 ] ; then
-    echo "usage: $0 <model> [kaldi|sphinx_cont|sphinx_ptm|sequitur|srilm]"
+if [ $# -lt 2 ] ; then
+    echo "usage: $0 <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm]"
     exit 1
 fi
 
@@ -13,69 +13,66 @@ datum=`date +%Y%m%d`
 
 if [ $WHAT = "kaldi" ] ; then
 
-    #
-    # kaldi models 
-    #
+    if [ $# != 3 ] ; then
+        echo "usage: $0 <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm]"
+        exit 2
+    fi
 
-    function export_kaldi {
+    EXPNAME=$3
 
-        EXPNAME=$1
-        GRAPHNAME=$2
-        EXPDIR=$3
-        EXP=$4
+    if [ -e data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/${EXPNAME} ] ; then
+        EXPDIR="data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain"
+    else
+        EXPDIR="data/dst/asr-models/kaldi/${MODEL}/exp"
+    fi
 
-        AMNAME="kaldi-${MODEL}-${EXP}-r$datum"
+    AMNAME="kaldi-${MODEL}-${EXPNAME}-r$datum"
 
-        echo "$AMNAME ..."
+    echo "$AMNAME ..."
 
-        mkdir -p "$DISTDIR/$AMNAME/model"
+    mkdir -p "$DISTDIR/$AMNAME/model"
 
-        cp $EXPDIR/$EXPNAME/final.mdl                             $DISTDIR/$AMNAME/model/
-        cp $EXPDIR/$EXPNAME/cmvn_opts                             $DISTDIR/$AMNAME/model/ 2>/dev/null 
-        cp $EXPDIR/$EXPNAME/tree                                  $DISTDIR/$AMNAME/model/ 2>/dev/null 
+    cp $EXPDIR/$EXPNAME/final.mdl                             $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/cmvn_opts                             $DISTDIR/$AMNAME/model/ 2>/dev/null 
+    cp $EXPDIR/$EXPNAME/tree                                  $DISTDIR/$AMNAME/model/ 2>/dev/null 
 
-        cp $EXPDIR/$GRAPHNAME/HCLG.fst                            $DISTDIR/$AMNAME/model/
-        cp $EXPDIR/$GRAPHNAME/words.txt                           $DISTDIR/$AMNAME/model/
-        cp $EXPDIR/$GRAPHNAME/num_pdfs                            $DISTDIR/$AMNAME/model/
-        cp $EXPDIR/$GRAPHNAME/phones/*                            $DISTDIR/$AMNAME/model/
-        cp $EXPDIR/$GRAPHNAME/phones.txt                          $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/graph/HCLG.fst                        $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/graph/words.txt                       $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/graph/num_pdfs                        $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/graph/phones/*                        $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/graph/phones.txt                      $DISTDIR/$AMNAME/model/
 
-        cp data/dst/asr-models/kaldi/${MODEL}/data/local/dict/*   $DISTDIR/$AMNAME/model/
+    cp data/dst/asr-models/kaldi/${MODEL}/data/local/dict/*   $DISTDIR/$AMNAME/model/
 
-        if [ -e $EXPDIR/extractor/final.mat ] ; then
+    if [ -e $EXPDIR/extractor/final.mat ] ; then
 
-            mkdir -p "$DISTDIR/$AMNAME/extractor"
+        mkdir -p "$DISTDIR/$AMNAME/extractor"
 
-            cp $EXPDIR/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
-            cp $EXPDIR/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
-            cp $EXPDIR/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
-            cp $EXPDIR/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
-            cp $EXPDIR/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
-            cp $EXPDIR/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
+        cp $EXPDIR/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
+        cp $EXPDIR/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
+        cp $EXPDIR/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
+        cp $EXPDIR/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
+        cp $EXPDIR/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
+        cp $EXPDIR/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
 
-        fi
+    fi
 
-        cp data/dst/asr-models/kaldi/${MODEL}/RESULTS.txt $DISTDIR/$AMNAME/
-        cp README.md "$DISTDIR/$AMNAME"
-        cp LICENSE   "$DISTDIR/$AMNAME"
-        cp AUTHORS   "$DISTDIR/$AMNAME"
+    cp data/dst/asr-models/kaldi/${MODEL}/RESULTS.txt $DISTDIR/$AMNAME/
+    cp README.md "$DISTDIR/$AMNAME"
+    cp LICENSE   "$DISTDIR/$AMNAME"
+    cp AUTHORS   "$DISTDIR/$AMNAME"
 
-        mkdir -p "$DISTDIR/$AMNAME/conf"
-        cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
-        cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
-        cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
+    mkdir -p "$DISTDIR/$AMNAME/conf"
+    cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
+    cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
+    cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
 
-        pushd $DISTDIR
-        tar cfv "$AMNAME.tar" $AMNAME
-        xz -v -8 -T 12 "$AMNAME.tar"
-        popd
+    pushd $DISTDIR
+    tar cfv "$AMNAME.tar" $AMNAME
+    xz -v -8 -T 12 "$AMNAME.tar"
+    popd
 
-        rm -r "$DISTDIR/$AMNAME"
-    }
-
-    export_kaldi tdnn_sp tdnn_sp/graph data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain chain-tdnn
-    export_kaldi tdnn_250 tdnn_250/graph data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain chain-tdnn250
-    export_kaldi tri2b_chain tri2b_chain/graph data/dst/asr-models/kaldi/${MODEL}/exp tri2b
+    rm -r "$DISTDIR/$AMNAME"
 
 fi
 
