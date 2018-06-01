@@ -12,7 +12,7 @@ Models that can be built include:
 However, if you are a developer interested in natural language processing you may find some of them useful.
 Contributions, patches and pull requests are very welcome.
 
-At the time of this writing, the scripts here are focused on building the english and german VoxForge models. 
+At the time of this writing, the scripts here are focused on building the English and German VoxForge models. 
 However, there is no reason why they couldn't be used to build other language models as well, feel free to 
 contribute support for those.
 
@@ -177,7 +177,7 @@ kaldi_root            = /apps/kaldi-cuda
 srilm_root            = /apps/kaldi-cuda/tools/srilm
 
 wav16                 = /home/bofh/projects/ai/data/speech/16kHz
-noise_dir             = /home/bofh/projects/ai/data/speech/noise
+noise_dir             = /home/bofh/projects/ai/data/speech/corpora/noise
 
 europarl_de           = /home/bofh/projects/ai/data/corpora/de/europarl-v7.de-en.de
 parole_de             = /home/bofh/projects/ai/data/corpora/de/German Parole Corpus/DE_Parole/
@@ -245,7 +245,7 @@ training of our ASR models.
 Once you have downloaded and, if necessary, converted a corpus you need to run
 
 ```bash
-./speech_audio_scan <corpus name>
+./speech_audio_scan.py <corpus name>
 ```
 
 on it. This will add missing prompts to the CSV databases and convert audio files to 16kHz mono WAVE format.
@@ -323,9 +323,9 @@ English
 
 Prerequisites: 
 - text corpora `europarl_en`, `cornell_movie_dialogs`, `web_questions`, and `yahoo_answers` are installed, sentences extracted (see instructions above).
-- sententences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`
+- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`
 
-To train a german language model using SRILM for use in both sphinx and kaldi builds run:
+To train an English language model using SRILM for use in both sphinx and kaldi builds run:
 
 ```bash
 ./speech_build_lm.py generic_en_lang_model europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en
@@ -336,9 +336,9 @@ German
 
 Prerequisites: 
 - text corpora `europarl_de` and `parole_de` are installed, sentences extracted (see instructions above).
-- sententences are extracted from speech corpora `forschergeist`, `gspv2`, `voxforge_de`, `zamia_de`
+- sentences are extracted from speech corpora `forschergeist`, `gspv2`, `voxforge_de`, `zamia_de`
 
-To train a german language model using SRILM for use in both sphinx and kaldi builds run:
+To train a German language model using SRILM for use in both sphinx and kaldi builds run:
 
 ```bash
 ./speech_build_lm.py generic_de_lang_model europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de
@@ -359,16 +359,16 @@ Lexica/Dictionaries
 
 *NOTE*: We use the terms lexicon and dictionary interchangably in this documentation and our scripts.
 
-Currently, we have two lexica, one for english and one for german (in `data/src/dicts`):
+Currently, we have two lexica, one for English and one for German (in `data/src/dicts`):
 
 - dict-en.ipa
-    + english
+    + English
     + originally based on The CMU Pronouncing Dictionary (http://www.speech.cs.cmu.edu/cgi-bin/cmudict)
     + additional manual and Sequitur G2P based entries
 
 - dict-de.ipa
     + started manually from scratch
-    + once enough entries existed to train a reasonable Sequitur G2P model, many entries where converted from german wiktionary (see below)
+    + once enough entries existed to train a reasonable Sequitur G2P model, many entries where converted from German wiktionary (see below)
 
 The native format of our lexica is in (UTF8) IPA with semicolons as separator. This format is then converted to
 whatever format is used by the target ASR engine by the corresponding export scripts.
@@ -376,9 +376,9 @@ whatever format is used by the target ASR engine by the corresponding export scr
 Sequitur G2P
 ------------
 
-Many lexicon-related tools rely on Sequitur G2P to compute pronounciations for words missing from the dictionary. The
+Many lexicon-related tools rely on Sequitur G2P to compute pronunciations for words missing from the dictionary. The
 necessary models can be downloaded from our file server: [english](http://goofy.zamia.org/voxforge/en/) and 
-[german](http://goofy.zamia.org/voxforge/de/). Fpr installation download and unpack them and then put links to them
+[german](http://goofy.zamia.org/voxforge/de/). For installation, download and unpack them and then put links to them
 under `data/models` like so:
 
 ```bash
@@ -432,7 +432,7 @@ Also, I sometimes use this command to add missing words from transcripts in batc
 Wiktionary
 ----------
 
-For the german lexicon, entries can be extracted from the german wiktionary using a set of scripts.
+For the German lexicon, entries can be extracted from the German wiktionary using a set of scripts.
 To do that, the first step is to extract a set of candidate entries from an wiktionary XML dump:
 
 ```bash
@@ -511,7 +511,7 @@ complete export run with noise augmented corpora included:
 CMU Sphinx Models
 =================
 
-The following recipe trains a continous CMU Sphinx model for German. 
+The following recipe trains a continuous CMU Sphinx model for German. 
 
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
@@ -531,7 +531,7 @@ complete export run with noise augmented corpora included:
 ./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
 ```
 
-for resource constrained applications PTM models can be trained:
+For resource constrained applications, PTM models can be trained:
 
 ```bash
 ./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
