@@ -81,6 +81,11 @@ if [ -f G.src.fst ] ; then
     # fstdraw --isymbols="${MODEL}/words.txt" --osymbols="${MODEL}/words.txt" -portrait G.fst | dot -Tjpg >G.jpg
 fi
 
+if [ -f G.jsgf ] ; then
+    sphinx_jsgf2fsg -jsgf G.jsgf -fsm G.fsm
+    fstcompile --acceptor --isymbols=$lang/words.txt --osymbols=$lang/words.txt --keep_isymbols=false --keep_osymbols=false G.fsm | fstrmepsilon > $lang/G.fst
+fi
+
 #
 # adapt our model
 #

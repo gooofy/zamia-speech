@@ -182,6 +182,8 @@ logging.info ( '%s written.' % psfn )
 
 if lm_name.endswith('arpa'):
     misc.copy_file (lm_name, '%s/lm.arpa' % dst_dir)
+elif lm_name.endswith('jsgf'):
+    misc.copy_file (lm_name, '%s/G.jsgf' % dst_dir)
 else:
     misc.copy_file (lm_name, '%s/G.src.fst' % dst_dir)
 
