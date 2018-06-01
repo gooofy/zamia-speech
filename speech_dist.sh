@@ -14,64 +14,68 @@ datum=`date +%Y%m%d`
 if [ $WHAT = "kaldi" ] ; then
 
     #
-    # kaldi chain models 
+    # kaldi models 
     #
 
-    AMNAME="kaldi-chain-${MODEL}-r$datum"
-
-    echo "$AMNAME ..."
-
-    mkdir -p "$DISTDIR/$AMNAME"
-
-    function export_kaldi_chain {
+    function export_kaldi {
 
         EXPNAME=$1
         GRAPHNAME=$2
+        EXPDIR=$3
+        EXP=$4
 
-        mkdir -p "$DISTDIR/$AMNAME/$EXPNAME"
+        AMNAME="kaldi-${MODEL}-${EXP}-r$datum"
 
-        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$EXPNAME/final.mdl                  $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$EXPNAME/cmvn_opts                  $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
-        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$EXPNAME/tree                       $DISTDIR/$AMNAME/$EXPNAME/ 2>/dev/null 
+        echo "$AMNAME ..."
 
-        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/HCLG.fst                 $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/words.txt                $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/num_pdfs                 $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/phones/*                 $DISTDIR/$AMNAME/$EXPNAME/
-        cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/$GRAPHNAME/phones.txt               $DISTDIR/$AMNAME/$EXPNAME/
+        mkdir -p "$DISTDIR/$AMNAME/model"
 
-        cp data/dst/asr-models/kaldi/${MODEL}/data/local/dict/*                                   $DISTDIR/$AMNAME/$EXPNAME/
+        cp $EXPDIR/$EXPNAME/final.mdl                             $DISTDIR/$AMNAME/model/
+        cp $EXPDIR/$EXPNAME/cmvn_opts                             $DISTDIR/$AMNAME/model/ 2>/dev/null 
+        cp $EXPDIR/$EXPNAME/tree                                  $DISTDIR/$AMNAME/model/ 2>/dev/null 
 
+        cp $EXPDIR/$GRAPHNAME/HCLG.fst                            $DISTDIR/$AMNAME/model/
+        cp $EXPDIR/$GRAPHNAME/words.txt                           $DISTDIR/$AMNAME/model/
+        cp $EXPDIR/$GRAPHNAME/num_pdfs                            $DISTDIR/$AMNAME/model/
+        cp $EXPDIR/$GRAPHNAME/phones/*                            $DISTDIR/$AMNAME/model/
+        cp $EXPDIR/$GRAPHNAME/phones.txt                          $DISTDIR/$AMNAME/model/
+
+        cp data/dst/asr-models/kaldi/${MODEL}/data/local/dict/*   $DISTDIR/$AMNAME/model/
+
+        if [ -e $EXPDIR/extractor/final.mat ] ; then
+
+            mkdir -p "$DISTDIR/$AMNAME/extractor"
+
+            cp $EXPDIR/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
+            cp $EXPDIR/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
+            cp $EXPDIR/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
+            cp $EXPDIR/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
+            cp $EXPDIR/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
+            cp $EXPDIR/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
+
+        fi
+
+        cp data/dst/asr-models/kaldi/${MODEL}/RESULTS.txt $DISTDIR/$AMNAME/
+        cp README.md "$DISTDIR/$AMNAME"
+        cp LICENSE   "$DISTDIR/$AMNAME"
+        cp AUTHORS   "$DISTDIR/$AMNAME"
+
+        mkdir -p "$DISTDIR/$AMNAME/conf"
+        cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
+        cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
+        cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
+
+        pushd $DISTDIR
+        tar cfv "$AMNAME.tar" $AMNAME
+        xz -v -8 -T 12 "$AMNAME.tar"
+        popd
+
+        rm -r "$DISTDIR/$AMNAME"
     }
 
-    export_kaldi_chain tdnn_sp tdnn_sp/graph
-    export_kaldi_chain tdnn_250 tdnn_250/graph
-
-    mkdir -p "$DISTDIR/$AMNAME/extractor"
-
-    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
-    cp data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
-
-    cp data/dst/asr-models/kaldi/${MODEL}/RESULTS.txt $DISTDIR/$AMNAME/
-    cp README.md "$DISTDIR/$AMNAME"
-    cp LICENSE   "$DISTDIR/$AMNAME"
-    cp AUTHORS   "$DISTDIR/$AMNAME"
-
-    mkdir -p "$DISTDIR/$AMNAME/conf"
-    cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
-    cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
-    cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
-
-    pushd $DISTDIR
-    tar cfv "$AMNAME.tar" $AMNAME
-    xz -v -8 -T 12 "$AMNAME.tar"
-    popd
-
-    rm -r "$DISTDIR/$AMNAME"
+    export_kaldi tdnn_sp tdnn_sp/graph data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain chain-tdnn
+    export_kaldi tdnn_250 tdnn_250/graph data/dst/asr-models/kaldi/${MODEL}/exp/nnet3_chain chain-tdnn250
+    export_kaldi tri2b_chain tri2b_chain/graph data/dst/asr-models/kaldi/${MODEL}/exp tri2b
 
 fi
 
