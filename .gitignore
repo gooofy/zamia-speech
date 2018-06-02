@@ -8,6 +8,7 @@ old
 data/dst
 data/dist
 data/models
+data/arc
 *.log
 TODO
 NOTES
