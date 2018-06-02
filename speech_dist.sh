@@ -173,5 +173,5 @@ cp AUTHORS   "$DISTDIR"
 # upload
 #
 
-echo rsync -avPz --delete --bwlimit=256 data/dist/ goofy:/var/www/html/voxforge/
+echo rsync -avPz --delete --bwlimit=256 data/dist/ goofy:/var/www/html/zamia-speech/
 

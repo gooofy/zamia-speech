@@ -66,7 +66,7 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 Links
 =====
 
-* [Data / Models](http://goofy.zamia.org/voxforge/ "models")
+* [Data / Models](http://goofy.zamia.org/zamia-speech/ "models")
 
 * [Code](https://github.com/gooofy/zamia-speech "github")
 
@@ -200,7 +200,7 @@ Speech Corpora
 
 The following list contains speech corpora supported by this script collection.
 
-- [Forschergeist (German, 2 hours)](http://goofy.zamia.org/voxforge/corpora/forschergeist/):
+- [Forschergeist (German, 2 hours)](http://goofy.zamia.org/zamia-speech/corpora/forschergeist/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/forschergeist` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/forschergeist`
 
@@ -210,7 +210,7 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/gspv2`. 
 
-- [Noise](http://goofy.zamia.org/voxforge/corpora/noise.tar.xz):
+- [Noise](http://goofy.zamia.org/zamia-speech/corpora/noise.tar.xz):
     + Download the tarball 
     + unpack it into the directory `<~/.speechrc:speech_corpora>/` (it will generate a `noise` subdirectory there)
 
@@ -229,11 +229,11 @@ The following list contains speech corpora supported by this script collection.
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_de`
 
-- [Zamia (English, 5 minutes)](http://goofy.zamia.org/voxforge/corpora/zamia_en/):
+- [Zamia (English, 5 minutes)](http://goofy.zamia.org/zamia-speech/corpora/zamia_en/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_en` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_en`
 
-- [Zamia (German, 18 hours)](http://goofy.zamia.org/voxforge/corpora/zamia_de/):
+- [Zamia (German, 18 hours)](http://goofy.zamia.org/zamia-speech/corpora/zamia_de/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_de`
 
@@ -378,7 +378,7 @@ Sequitur G2P
 ------------
 
 Many lexicon-related tools rely on Sequitur G2P to compute pronunciations for words missing from the dictionary. The
-necessary models can be downloaded from our file server: http://goofy.zamia.org/voxforge/g2p/ . 
+necessary models can be downloaded from our file server: http://goofy.zamia.org/zamia-speech/g2p/ . 
 For installation, download and unpack them and then put links to them under `data/models` like so:
 
 ```bash
