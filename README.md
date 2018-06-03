@@ -105,16 +105,16 @@ Source #0
 pi@raspberrypi:~ $ wget 'https://raw.githubusercontent.com/gooofy/py-kaldi-asr/master/examples/chain_live.py'
 
 pi@raspberrypi:~ $ python chain_live.py -s 'CM108'
-Kaldi live demo V0.1
-Loading model from /opt/kaldi/model/kaldi-chain-voxforge-de ...
+Kaldi live demo V0.2
+Loading model from /opt/kaldi/model/kaldi-generic-en-tdnn_250 ...
 Please speak.
-hallo computer
-schalte bitte das radio ein
-mach bitte das licht an
-wie wird das wetter in stuttgart
-wie geht es dir
-vielen dank
-auf wiedersehen
+hallo computer                      
+switch on the radio please                      
+please switch on the light                      
+what about the weather in stuttgart                     
+how are you                      
+thank you                      
+good bye 
 ```
 
 
