@@ -102,8 +102,7 @@ Source #0
 ### (3/3) download and run demo
 
 ```bash
-pi@raspberrypi:~ $ wget
-'https://raw.githubusercontent.com/gooofy/py-kaldi-asr/master/examples/chain_live.py'
+pi@raspberrypi:~ $ wget 'https://raw.githubusercontent.com/gooofy/py-kaldi-asr/master/examples/chain_live.py'
 
 pi@raspberrypi:~ $ python chain_live.py -s 'CM108'
 Kaldi live demo V0.1
