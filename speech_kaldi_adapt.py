@@ -200,17 +200,17 @@ misc.copy_file ('%s/model/tree'      % src_model, '%s/exp/adapt/tree'      % dst
 
 if os.path.exists('%s/extractor' % src_model):
 
-    misc.mkdirs ('%s/exp/adapt/extractor' % dst_dir)
+    misc.mkdirs ('%s/exp/extractor' % dst_dir)
 
-    misc.copy_file ('%s/extractor/final.mat'         % src_model, '%s/exp/adapt/extractor/final.mat'         % dst_dir)
-    misc.copy_file ('%s/extractor/global_cmvn.stats' % src_model, '%s/exp/adapt/extractor/global_cmvn.stats' % dst_dir)
-    misc.copy_file ('%s/extractor/final.dubm'        % src_model, '%s/exp/adapt/extractor/final.dubm'        % dst_dir)
-    misc.copy_file ('%s/extractor/final.ie'          % src_model, '%s/exp/adapt/extractor/final.ie'          % dst_dir)
-    misc.copy_file ('%s/extractor/splice_opts'       % src_model, '%s/exp/adapt/extractor/splice_opts'       % dst_dir)
+    misc.copy_file ('%s/extractor/final.mat'         % src_model, '%s/exp/extractor/final.mat'         % dst_dir)
+    misc.copy_file ('%s/extractor/global_cmvn.stats' % src_model, '%s/exp/extractor/global_cmvn.stats' % dst_dir)
+    misc.copy_file ('%s/extractor/final.dubm'        % src_model, '%s/exp/extractor/final.dubm'        % dst_dir)
+    misc.copy_file ('%s/extractor/final.ie'          % src_model, '%s/exp/extractor/final.ie'          % dst_dir)
+    misc.copy_file ('%s/extractor/splice_opts'       % src_model, '%s/exp/extractor/splice_opts'       % dst_dir)
 
-    misc.mkdirs ('%s/exp/adapt/ivectors_test_hires/conf' % dst_dir)
+    misc.mkdirs ('%s/exp/ivectors_test_hires/conf' % dst_dir)
 
-    misc.copy_file ('%s/extractor/splice.conf'       % src_model, '%s/exp/adapt/ivectors_test_hires/conf'    % dst_dir)
+    misc.copy_file ('%s/extractor/splice.conf'       % src_model, '%s/exp/ivectors_test_hires/conf'    % dst_dir)
 
 # misc.mkdirs ('%s/data/local/dict' % dst_dir)
 # misc.copy_file ('%s/model/extra_questions.txt'   % src_model, '%s/data/local/dict/extra_questions.txt'   % dst_dir)
