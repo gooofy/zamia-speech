@@ -81,14 +81,10 @@ Raspbian on Raspberry Pi 3
 ```bash
 pi@raspberrypi:~ $ sudo -i
 
-root@raspberrypi:~# echo "deb http://goofy.zamia.org/raspbian-ai/ ./"
->/etc/apt/sources.list.d/zamia-ai.list
-root@raspberrypi:~# wget -qO -
-http://goofy.zamia.org/raspbian-ai/bofh.asc | sudo apt-key add -
+root@raspberrypi:~# echo "deb http://goofy.zamia.org/raspbian-ai/ ./" >/etc/apt/sources.list.d/zamia-ai.list
+root@raspberrypi:~# wget -qO - http://goofy.zamia.org/raspbian-ai/bofh.asc | sudo apt-key add -
 root@raspberrypi:~# apt-get update
-root@raspberrypi:~# apt-get install kaldi-chain-voxforge-de
-kaldi-chain-voxforge-en python-kaldiasr python-nltools
-pulseaudio-utils pulseaudio
+root@raspberrypi:~# apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
 root@raspberrypi:~# exit
 ```
 
