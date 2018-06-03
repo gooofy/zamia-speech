@@ -13,3 +13,5 @@
 ./auto_review.py -m kaldi-chain-generic-de-latest -s 12 -o 10 -R tmp/res10.csv gspv2 &
 ./auto_review.py -m kaldi-chain-generic-de-latest -s 12 -o 11 -R tmp/res11.csv gspv2 &
 
+wait
+
