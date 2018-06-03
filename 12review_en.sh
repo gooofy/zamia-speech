@@ -15,3 +15,7 @@
 
 wait
 
+echo "to apply the review result, run:"
+echo "./apply_review.py -l en voxforge_en tmp/*.csv"
+
+
