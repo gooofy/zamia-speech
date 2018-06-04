@@ -130,51 +130,13 @@ logging.info ( "%s written." % dictfn2 )
 logging.info ( "Exporting dictionary ... done." )
 
 #
-# phoneme sets
+# copy phoneme sets from original model
 #
 
-# logging.info ( "Phoneme set: %s" % repr(ps) )
-
-psfn = '%s/data/local/dict/nonsilence_phones.txt' % dst_dir
-with open(psfn, 'w') as psf:
-    for pws in sorted(ps):
-        for p in sorted(list(ps[pws])):
-            psf.write((u'%s ' % p).encode('utf8'))
-
-        psf.write('\n')
-
-logging.info ( '%s written.' % psfn )
-
-psfn = '%s/data/local/dict/silence_phones.txt' % dst_dir
-with open(psfn, 'w') as psf:
-    psf.write('SIL\nSPN\nNSN\n')
-logging.info ( '%s written.' % psfn )
-
-psfn = '%s/data/local/dict/optional_silence.txt' % dst_dir
-with open(psfn, 'w') as psf:
-    psf.write('SIL\n')
-logging.info ( '%s written.' % psfn )
-
-psfn = '%s/data/local/dict/extra_questions.txt' % dst_dir
-with open(psfn, 'w') as psf:
-    psf.write('SIL SPN NSN\n')
-
-    for pws in ps:
-        for p in ps[pws]:
-            if '\'' in p:
-                continue
-            psf.write((u'%s ' % p).encode('utf8'))
-    psf.write('\n')
-
-    for pws in ps:
-        for p in ps[pws]:
-            if not '\'' in p:
-                continue
-            psf.write((u'%s ' % p).encode('utf8'))
-
-    psf.write('\n')
-
-logging.info ( '%s written.' % psfn )
+misc.copy_file ('%s/model/nonsilence_phones.txt' % src_model, '%s/data/local/dict/nonsilence_phones.txt' % dst_dir)
+misc.copy_file ('%s/model/silence_phones.txt' % src_model,    '%s/data/local/dict/silence_phones.txt' % dst_dir)
+misc.copy_file ('%s/model/optional_silence.txt' % src_model,  '%s/data/local/dict/optional_silence.txt' % dst_dir)
+misc.copy_file ('%s/model/extra_questions.txt' % src_model,   '%s/data/local/dict/extra_questions.txt' % dst_dir)
 
 #
 # language model / grammar
