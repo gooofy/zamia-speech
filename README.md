@@ -44,6 +44,7 @@ Table of Contents
 * [Kaldi Models (recommended)](#kaldi-models-recommended)
   * [English NNet3 Chain Models](#english-nnet3-chain-models)
   * [German NNet3 Chain Models](#german-nnet3-chain-models)
+  * [Model Adaptation](#model-adaptation)
 * [CMU Sphinx Models](#cmu-sphinx-models)
   * [Running pocketsphinx](#running-pocketsphinx)
 * [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
@@ -502,6 +503,65 @@ complete export run with noise augmented corpora included:
 ```bash
 ./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
 ```
+
+Model Adaptation
+----------------
+
+Existing kaldi models (such as the ones we provide for download but also those you may train from scratch using our scripts)
+can be adapted to (typically domain specific) language models, JSGF grammars and grammar FSTs.
+
+Here is an example how to adapt our English model to a simple command and control JSGF grammar. Please note that this is just
+a toy example - for real world usage you will probably want to add garbage phoneme loops to the grammar or produce a language
+model that has some noise resistance built in right away. 
+
+Here is the grammar we will use: 
+
+```jsgf
+#JSGF V1.0;
+
+grammar org.zamia.control;
+
+public <control> = <wake> | <politeCommand> ;
+
+<wake> = ( good morning | hello | ok | activate ) computer;
+
+<politeCommand> = [ please | kindly | could you ] <command> [ please | thanks | thank you ];
+
+<command> = <onOffCommand> | <muteCommand> | <volumeCommand> | <weatherCommand>;
+
+<onOffCommand> = [ turn | switch ] [the] ( light | fan | music | radio ) (on | off) ;
+
+<volumeCommand> = turn ( up | down ) the ( volume | music | radio ) ;
+
+<muteCommand> = mute the ( music | radio ) ;
+
+<weatherCommand> = (what's | what) is the ( temperature | weather ) ;
+```
+
+the next step is to set up a kaldi model adaptation experiment using this script:
+
+```bash
+./speech_kaldi_adapt.py data/models/kaldi-generic-en-tdnn_250-latest dict-en.ipa control.jsgf control-en
+```
+
+here, `data/models/kaldi-generic-en-tdnn_250-latest` is the model to be adapted, `dict-en.ipa` is the dictionary which
+will be used by the new model, `control.jsgf` is the JSGF grammar we want the model to be adapted to (you could specify an
+FST source file or a language model instead here) and `control-en` is the name of the new model that will be created.
+
+To run the actual adaptation, change into the model directory and run the adaptation script there:
+
+```bash
+cd data/dst/asr-models/kaldi/control-en
+./run-adaptation.sh 
+```
+
+finally, you can create a tarball from the newly created model:
+
+```bash
+cd ../../../../..
+./speech_dist.sh control-en kaldi adapt
+```
+
 
 CMU Sphinx Models
 =================
