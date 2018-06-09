@@ -90,7 +90,7 @@ if [ $WHAT = "sphinx_cont" ] ; then
     mkdir -p "$DISTDIR/$AMNAME"
     mkdir -p "$DISTDIR/$AMNAME/model_parameters"
 
-    cp -r data/dst/asr-models/cmusphinx_cont/${MODEL}/model_parameters/voxforge.cd_cont_6000 "$DISTDIR/$AMNAME/model_parameters"
+    cp -r data/dst/asr-models/cmusphinx_cont/${MODEL}/model_parameters/voxforge.cd_cont_* "$DISTDIR/$AMNAME/model_parameters"
     cp -r data/dst/asr-models/cmusphinx_cont/${MODEL}/etc "$DISTDIR/$AMNAME"
     cp    data/dst/asr-models/cmusphinx_cont/${MODEL}/voxforge.html "$DISTDIR/$AMNAME"
     cp README.md "$DISTDIR/$AMNAME"
