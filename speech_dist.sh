@@ -65,12 +65,11 @@ if [ $WHAT = "kaldi" ] ; then
     mkdir -p "$DISTDIR/$AMNAME/data/local/dict"
     cp data/dst/asr-models/kaldi/${MODEL}/data/local/dict/*     $DISTDIR/$AMNAME/data/local/dict/
 
-    mkdir -p "$DISTDIR/$AMNAME/data/lang"
-    cp data/dst/asr-models/kaldi/${MODEL}/data/lang/*           $DISTDIR/$AMNAME/data/lang/
+    cp -rp data/dst/asr-models/kaldi/${MODEL}/data/lang         $DISTDIR/$AMNAME/data/
 
     mkdir -p "$DISTDIR/$AMNAME/conf"
     cp data/dst/asr-models/kaldi/${MODEL}/conf/mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
-    cp data/dst/asr-models/kaldi/${MODEL}/conf/mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
+    cp data/dst/asr-models/kaldi/${MODEL}/conf/mfcc_hires.conf  $DISTDIR/$AMNAME/conf/mfcc_hires.conf  
     cp data/dst/asr-models/kaldi/${MODEL}/conf/online_cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
 
     cp data/dst/asr-models/kaldi/${MODEL}/RESULTS.txt $DISTDIR/$AMNAME/
