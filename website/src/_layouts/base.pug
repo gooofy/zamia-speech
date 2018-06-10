@@ -11,6 +11,8 @@ html(lang='en')
 		link(href='/static/css/materialize.css', type='text/css', rel='stylesheet', media='screen,projection')
 		link(href='/static/css/style.css', type='text/css', rel='stylesheet', media='screen,projection')
 		link(href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.2/gh-fork-ribbon.min.css', rel='stylesheet')
+		// Favicon
+		link(rel='shortcut icon', href='/favicon.ico?r=31246')
 	body
 		a.github-fork-ribbon(href='https://github.com/gooofy/zamia-speech', data-ribbon='Fork me on GitHub', title='Fork me on GitHub') Fork me on GitHub
 		include nav
@@ -26,6 +28,18 @@ html(lang='en')
 							| We are a consulting duo passionate about Machine Learning specifically Automatic Speech Recognition and its applications.
 						a.grey-text.text-lighten-4(href='mailto:{{site.contact_email}}')
 							i.material-icons mail_outline
+					.col.l6.s12
+						h5.white-text Impressum
+						p.grey-text.text-lighten-4
+							| Dipl.-Inf. Günter Bartsch <br>
+							| Salzburger Str. 25 <br>
+							| 70469 Stuttgart <br>
+						p.grey-text.text-lighten-4
+							| Telefon: +49 711 8178844 <br>
+							| E-Mail: guenter.bartsch at googlemail.com <br>
+							| Internet: www.zamia.org
+						p.grey-text.text-lighten-4
+							| Haftungshinweis: Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.
 			.footer-copyright
 				.container
 					| Jekyll-Pug plugin by
