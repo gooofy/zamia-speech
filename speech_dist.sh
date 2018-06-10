@@ -32,40 +32,51 @@ if [ $WHAT = "kaldi" ] ; then
 
     mkdir -p "$DISTDIR/$AMNAME/model"
 
-    cp $EXPDIR/$EXPNAME/final.mdl                             $DISTDIR/$AMNAME/model/
-    cp $EXPDIR/$EXPNAME/cmvn_opts                             $DISTDIR/$AMNAME/model/ 2>/dev/null 
-    cp $EXPDIR/$EXPNAME/tree                                  $DISTDIR/$AMNAME/model/ 2>/dev/null 
+    cp $EXPDIR/$EXPNAME/final.mdl                               $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/cmvn_opts                               $DISTDIR/$AMNAME/model/ 2>/dev/null 
+    cp $EXPDIR/$EXPNAME/tree                                    $DISTDIR/$AMNAME/model/ 2>/dev/null 
 
-    cp $EXPDIR/$EXPNAME/graph/HCLG.fst                        $DISTDIR/$AMNAME/model/
-    cp $EXPDIR/$EXPNAME/graph/words.txt                       $DISTDIR/$AMNAME/model/
-    cp $EXPDIR/$EXPNAME/graph/num_pdfs                        $DISTDIR/$AMNAME/model/
-    cp $EXPDIR/$EXPNAME/graph/phones/*                        $DISTDIR/$AMNAME/model/
-    cp $EXPDIR/$EXPNAME/graph/phones.txt                      $DISTDIR/$AMNAME/model/
+    mkdir -p "$DISTDIR/$AMNAME/model/graph"
 
-    cp data/dst/asr-models/kaldi/${MODEL}/data/local/dict/*   $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/graph/HCLG.fst                          $DISTDIR/$AMNAME/model/graph/
+    cp $EXPDIR/$EXPNAME/graph/words.txt                         $DISTDIR/$AMNAME/model/graph/
+    cp $EXPDIR/$EXPNAME/graph/num_pdfs                          $DISTDIR/$AMNAME/model/graph/
+    cp $EXPDIR/$EXPNAME/graph/phones.txt                        $DISTDIR/$AMNAME/model/graph/
+
+    mkdir -p "$DISTDIR/$AMNAME/model/graph/phones"
+    cp $EXPDIR/$EXPNAME/graph/phones/*                          $DISTDIR/$AMNAME/model/graph/phones/
 
     if [ -e $EXPDIR/extractor/final.mat ] ; then
 
-        mkdir -p "$DISTDIR/$AMNAME/extractor"
+        mkdir -p "$DISTDIR/$AMNAME/model/extractor"
 
-        cp $EXPDIR/extractor/final.mat                  "$DISTDIR/$AMNAME/extractor/"
-        cp $EXPDIR/extractor/global_cmvn.stats          "$DISTDIR/$AMNAME/extractor/"
-        cp $EXPDIR/extractor/final.dubm                 "$DISTDIR/$AMNAME/extractor/"
-        cp $EXPDIR/extractor/final.ie                   "$DISTDIR/$AMNAME/extractor/"
-        cp $EXPDIR/extractor/splice_opts                "$DISTDIR/$AMNAME/extractor/"
-        cp $EXPDIR/ivectors_test_hires/conf/splice.conf "$DISTDIR/$AMNAME/extractor/"
+        cp $EXPDIR/extractor/final.mat                          $DISTDIR/$AMNAME/model/extractor/
+        cp $EXPDIR/extractor/global_cmvn.stats                  $DISTDIR/$AMNAME/model/extractor/
+        cp $EXPDIR/extractor/final.dubm                         $DISTDIR/$AMNAME/model/extractor/
+        cp $EXPDIR/extractor/final.ie                           $DISTDIR/$AMNAME/model/extractor/
+        cp $EXPDIR/extractor/splice_opts                        $DISTDIR/$AMNAME/model/extractor/
+
+        mkdir -p "$DISTDIR/$AMNAME/model/ivectors_test_hires/conf"
+
+        cp $EXPDIR/ivectors_test_hires/conf/splice.conf         $DISTDIR/$AMNAME/model/ivectors_test_hires/conf/
 
     fi
+
+    mkdir -p "$DISTDIR/$AMNAME/data/local/dict"
+    cp data/dst/asr-models/kaldi/${MODEL}/data/local/dict/*     $DISTDIR/$AMNAME/data/local/dict/
+
+    mkdir -p "$DISTDIR/$AMNAME/data/lang"
+    cp data/dst/asr-models/kaldi/${MODEL}/data/lang/*           $DISTDIR/$AMNAME/data/lang/
+
+    mkdir -p "$DISTDIR/$AMNAME/conf"
+    cp data/dst/asr-models/kaldi/${MODEL}/conf/mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
+    cp data/dst/asr-models/kaldi/${MODEL}/conf/mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
+    cp data/dst/asr-models/kaldi/${MODEL}/conf/online_cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
 
     cp data/dst/asr-models/kaldi/${MODEL}/RESULTS.txt $DISTDIR/$AMNAME/
     cp README.md "$DISTDIR/$AMNAME"
     cp LICENSE   "$DISTDIR/$AMNAME"
     cp AUTHORS   "$DISTDIR/$AMNAME"
-
-    mkdir -p "$DISTDIR/$AMNAME/conf"
-    cp data/src/speech/kaldi-mfcc.conf        $DISTDIR/$AMNAME/conf/mfcc.conf 
-    cp data/src/speech/kaldi-mfcc-hires.conf  $DISTDIR/$AMNAME/conf/mfcc-hires.conf  
-    cp data/src/speech/kaldi-online-cmvn.conf $DISTDIR/$AMNAME/conf/online_cmvn.conf
 
     pushd $DISTDIR
     tar cfv "$AMNAME.tar" $AMNAME
