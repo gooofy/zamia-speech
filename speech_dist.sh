@@ -48,17 +48,17 @@ if [ $WHAT = "kaldi" ] ; then
 
     if [ -e $EXPDIR/extractor/final.mat ] ; then
 
-        mkdir -p "$DISTDIR/$AMNAME/model/extractor"
+        mkdir -p "$DISTDIR/$AMNAME/extractor"
 
-        cp $EXPDIR/extractor/final.mat                          $DISTDIR/$AMNAME/model/extractor/
-        cp $EXPDIR/extractor/global_cmvn.stats                  $DISTDIR/$AMNAME/model/extractor/
-        cp $EXPDIR/extractor/final.dubm                         $DISTDIR/$AMNAME/model/extractor/
-        cp $EXPDIR/extractor/final.ie                           $DISTDIR/$AMNAME/model/extractor/
-        cp $EXPDIR/extractor/splice_opts                        $DISTDIR/$AMNAME/model/extractor/
+        cp $EXPDIR/extractor/final.mat                          $DISTDIR/$AMNAME/extractor/
+        cp $EXPDIR/extractor/global_cmvn.stats                  $DISTDIR/$AMNAME/extractor/
+        cp $EXPDIR/extractor/final.dubm                         $DISTDIR/$AMNAME/extractor/
+        cp $EXPDIR/extractor/final.ie                           $DISTDIR/$AMNAME/extractor/
+        cp $EXPDIR/extractor/splice_opts                        $DISTDIR/$AMNAME/extractor/
 
-        mkdir -p "$DISTDIR/$AMNAME/model/ivectors_test_hires/conf"
+        mkdir -p "$DISTDIR/$AMNAME/ivectors_test_hires/conf"
 
-        cp $EXPDIR/ivectors_test_hires/conf/splice.conf         $DISTDIR/$AMNAME/model/ivectors_test_hires/conf/
+        cp $EXPDIR/ivectors_test_hires/conf/splice.conf         $DISTDIR/$AMNAME/ivectors_test_hires/conf/
 
     fi
 
