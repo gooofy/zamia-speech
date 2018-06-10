@@ -133,10 +133,10 @@ logging.info ( "Exporting dictionary ... done." )
 # copy phoneme sets from original model
 #
 
-misc.copy_file ('%s/model/nonsilence_phones.txt' % src_model, '%s/data/local/dict/nonsilence_phones.txt' % dst_dir)
-misc.copy_file ('%s/model/silence_phones.txt' % src_model,    '%s/data/local/dict/silence_phones.txt' % dst_dir)
-misc.copy_file ('%s/model/optional_silence.txt' % src_model,  '%s/data/local/dict/optional_silence.txt' % dst_dir)
-misc.copy_file ('%s/model/extra_questions.txt' % src_model,   '%s/data/local/dict/extra_questions.txt' % dst_dir)
+misc.copy_file ('%s/data/local/dict/nonsilence_phones.txt' % src_model, '%s/data/local/dict/nonsilence_phones.txt' % dst_dir)
+misc.copy_file ('%s/data/local/dict/silence_phones.txt' % src_model,    '%s/data/local/dict/silence_phones.txt' % dst_dir)
+misc.copy_file ('%s/data/local/dict/optional_silence.txt' % src_model,  '%s/data/local/dict/optional_silence.txt' % dst_dir)
+misc.copy_file ('%s/data/local/dict/extra_questions.txt' % src_model,   '%s/data/local/dict/extra_questions.txt' % dst_dir)
 
 #
 # language model / grammar
@@ -160,7 +160,7 @@ misc.copy_file ('%s/model/final.mdl' % src_model, '%s/exp/adapt/final.mdl' % dst
 misc.copy_file ('%s/model/cmvn_opts' % src_model, '%s/exp/adapt/cmvn_opts' % dst_dir)
 misc.copy_file ('%s/model/tree'      % src_model, '%s/exp/adapt/tree'      % dst_dir)
 
-if os.path.exists('%s/extractor' % src_model):
+if os.path.exists('%s/model/extractor' % src_model):
 
     misc.mkdirs ('%s/exp/extractor' % dst_dir)
 
@@ -172,15 +172,12 @@ if os.path.exists('%s/extractor' % src_model):
 
     misc.mkdirs ('%s/exp/ivectors_test_hires/conf' % dst_dir)
 
-    misc.copy_file ('%s/extractor/splice.conf'       % src_model, '%s/exp/ivectors_test_hires/conf'    % dst_dir)
+    misc.copy_file ('%s/ivectors_test_hires/conf/splice.conf'       % src_model, '%s/exp/ivectors_test_hires/conf'    % dst_dir)
 
-# misc.mkdirs ('%s/data/local/dict' % dst_dir)
-# misc.copy_file ('%s/model/extra_questions.txt'   % src_model, '%s/data/local/dict/extra_questions.txt'   % dst_dir)
-# misc.copy_file ('%s/model/lexiconp.txt'          % src_model, '%s/data/local/dict/lexiconp.txt'          % dst_dir)
-# misc.copy_file ('%s/model/lexicon.txt'           % src_model, '%s/data/local/dict/lexicon.txt'           % dst_dir)
-# misc.copy_file ('%s/model/nonsilence_phones.txt' % src_model, '%s/data/local/dict/nonsilence_phones.txt' % dst_dir)
-# misc.copy_file ('%s/model/optional_silence.txt'  % src_model, '%s/data/local/dict/optional_silence.txt'  % dst_dir)
-# misc.copy_file ('%s/model/silence_phones.txt'    % src_model, '%s/data/local/dict/silence_phones.txt'    % dst_dir)
+misc.mkdirs ('%s/conf'  % dst_dir)
+misc.copy_file ('%s/conf/mfcc.conf' % src_model,        '%s/conf/mfcc.conf' % dst_dir)
+misc.copy_file ('%s/conf/mfcc_hires.conf' % src_model,  '%s/conf/mfcc_hires.conf' % dst_dir)
+misc.copy_file ('%s/conf/online_cmvn.conf' % src_model, '%s/conf/online_cmvn.conf' % dst_dir)
 
 #
 # copy scripts and config files
