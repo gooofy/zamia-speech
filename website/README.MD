@@ -19,7 +19,7 @@ in a terminal and point your browser to http://localhost:4000
 
 Type
 
-    bundle exec jekyll
+    bundle exec jekyll build
 
 in a terminal. Then copy the files in `dist` into your local copy of
 the repo https://github.com/mpuels/zamia-speech-homepage/ and commit
