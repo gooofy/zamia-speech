@@ -1,14 +1,31 @@
 #!/bin/bash
 
 if [ $# -lt 2 ] ; then
-    echo "usage: $0 <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm]"
+    echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm]"
     exit 1
 fi
 
-MODEL=$1
-WHAT=$2
+# parse command line options
 
 datum=`date +%Y%m%d`
+
+REVISION="r$datum"
+
+while [ -n "$1" ] ;do
+ 
+    case "$1" in
+        -c) REVISION='current';;
+
+        *) break;; 
+ 
+    esac
+
+    shift
+ 
+done
+
+MODEL=$1
+WHAT=$2
 
 if [ $WHAT = "kaldi" ] ; then
 
@@ -26,13 +43,17 @@ if [ $WHAT = "kaldi" ] ; then
         EXPDIR="data/dst/asr-models/kaldi/${MODEL}/exp"
     fi
 
-    AMNAME="kaldi-${MODEL}-${EXPNAME}-r$datum"
+    AMNAME="kaldi-${MODEL}-${EXPNAME}-${REVISION}"
+
 
     echo "$AMNAME ..."
 
+    rm -rf "$DISTDIR/$AMNAME"
     mkdir -p "$DISTDIR/$AMNAME/model"
 
     cp $EXPDIR/$EXPNAME/final.mdl                               $DISTDIR/$AMNAME/model/
+    cp $EXPDIR/$EXPNAME/final.mat                               $DISTDIR/$AMNAME/model/ 2>/dev/null
+    cp $EXPDIR/$EXPNAME/splice_opts                             $DISTDIR/$AMNAME/model/ 2>/dev/null
     cp $EXPDIR/$EXPNAME/cmvn_opts                               $DISTDIR/$AMNAME/model/ 2>/dev/null 
     cp $EXPDIR/$EXPNAME/tree                                    $DISTDIR/$AMNAME/model/ 2>/dev/null 
 
@@ -58,7 +79,9 @@ if [ $WHAT = "kaldi" ] ; then
 
         mkdir -p "$DISTDIR/$AMNAME/ivectors_test_hires/conf"
 
-        cp $EXPDIR/ivectors_test_hires/conf/splice.conf         $DISTDIR/$AMNAME/ivectors_test_hires/conf/
+        cp $EXPDIR/ivectors_test_hires/conf/ivector_extractor.conf  $DISTDIR/$AMNAME/ivectors_test_hires/conf/
+        cp $EXPDIR/ivectors_test_hires/conf/online_cmvn.conf        $DISTDIR/$AMNAME/ivectors_test_hires/conf/
+        cp $EXPDIR/ivectors_test_hires/conf/splice.conf             $DISTDIR/$AMNAME/ivectors_test_hires/conf/
 
     fi
 
@@ -78,6 +101,7 @@ if [ $WHAT = "kaldi" ] ; then
     cp AUTHORS   "$DISTDIR/$AMNAME"
 
     pushd $DISTDIR
+    rm -f "$AMNAME.tar" "$AMNAME.tar.xz"
     tar cfv "$AMNAME.tar" $AMNAME
     xz -v -8 -T 12 "$AMNAME.tar"
     popd
@@ -94,7 +118,7 @@ if [ $WHAT = "sphinx_cont" ] ; then
 
     DISTDIR=data/dist/asr-models
 
-    AMNAME="cmusphinx-cont-${MODEL}-r$datum"
+    AMNAME="cmusphinx-cont-${MODEL}-${REVISION}"
     echo "$AMNAME ..."
 
     mkdir -p "$DISTDIR/$AMNAME"
@@ -123,7 +147,7 @@ if [ $WHAT = "sphinx_ptm" ] ; then
 
     DISTDIR=data/dist/asr-models
 
-    AMNAME="cmusphinx-ptm-${MODEL}-r$datum"
+    AMNAME="cmusphinx-ptm-${MODEL}-${REVISION}"
     echo "$AMNAME ..."
 
     mkdir -p "$DISTDIR/$AMNAME"
@@ -151,7 +175,7 @@ if [ $WHAT = "srilm" ] ; then
 
     DISTDIR=data/dist/lm
 
-    LMNAME="srilm-${MODEL}-r$datum.arpa"
+    LMNAME="srilm-${MODEL}-{$REVISION}.arpa"
     echo "$LMNAME ..."
     # data/dst/lm/generic_de_lang_model/
     cp data/dst/lm/${MODEL}/lm.arpa ${DISTDIR}/$LMNAME
@@ -165,7 +189,7 @@ if [ $WHAT = "sequitur" ] ; then
 
     DISTDIR=data/dist/g2p
 
-    MODELNAME="sequitur-${MODEL}-r$datum"
+    MODELNAME="sequitur-${MODEL}-${REVISION}"
     echo "$MODELNAME ..."
     cp data/dst/dict-models/${MODEL}/sequitur/model-6 $DISTDIR/$MODELNAME
     gzip $DISTDIR/$MODELNAME
