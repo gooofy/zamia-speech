@@ -53,6 +53,8 @@ if [ $WHAT = "kaldi" ] ; then
 
     cp $EXPDIR/$EXPNAME/final.mdl                               $DISTDIR/$AMNAME/model/
     cp $EXPDIR/$EXPNAME/final.mat                               $DISTDIR/$AMNAME/model/ 2>/dev/null
+    cp $EXPDIR/$EXPNAME/final.occs                              $DISTDIR/$AMNAME/model/ 2>/dev/null
+    cp $EXPDIR/$EXPNAME/full.mat                                $DISTDIR/$AMNAME/model/ 2>/dev/null
     cp $EXPDIR/$EXPNAME/splice_opts                             $DISTDIR/$AMNAME/model/ 2>/dev/null
     cp $EXPDIR/$EXPNAME/cmvn_opts                               $DISTDIR/$AMNAME/model/ 2>/dev/null 
     cp $EXPDIR/$EXPNAME/tree                                    $DISTDIR/$AMNAME/model/ 2>/dev/null 
