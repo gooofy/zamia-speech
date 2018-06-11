@@ -12,70 +12,16 @@
 mfccdir=mfcc_segmentation
 
 segment_stage=-9
-cleanup_stage=-1
 cleanup_affix=cleaned_b
 affix=_a
 
-lmdir=data/local/lm
-
 stage=0
-
-# export nJobs=1
-# export nDecodeJobs=8
-
-#
-# adapt model to latest dict
-#
-
-if [ $stage -le 1 ]; then
-
-    rm -rf data/lang.adapt
-    
-    # Prepare phoneme data for Kaldi
-    utils/prepare_lang.sh data/local/dict.adapt "nspc" data/local/lang data/lang.adapt
-    
-    rm -rf data/lang_test.adapt
-    cp -r data/lang.adapt data/lang_test.adapt
-
-fi
-
-if [ $stage -le 2 ]; then
-
-    echo
-    echo "creating G.fst..."
-
-    cat ../srilm/lm.arpa | utils/find_arpa_oovs.pl data/lang_test.adapt/words.txt  > $lmdir/oovs_lm_adapt.txt
-
-    echo "creating G.fst...2"
-
-    cat ../srilm/lm.arpa | \
-        grep -v '<s> <s>' | \
-        grep -v '</s> <s>' | \
-        grep -v '</s> </s>' | \
-        arpa2fst - | fstprint | \
-        utils/remove_oovs.pl $lmdir/oovs_lm_adapt.txt | \
-        utils/eps2disambig.pl | utils/s2eps.pl | fstcompile --isymbols=data/lang_test.adapt/words.txt \
-          --osymbols=data/lang_test.adapt/words.txt  --keep_isymbols=false --keep_osymbols=false | \
-         fstrmepsilon > data/lang_test.adapt/G.fst
-fi
-
-if [ $stage -le 3 ]; then
-
-    echo "tri2b_adapt... "
-    rm -rf exp/tri2b_adapt
-    cp -r exp/tri2b_chain exp/tri2b_adapt
-    rm -rf exp/tri2b_adapt/graph
-
-    utils/mkgraph.sh data/lang_test.adapt exp/tri2b_adapt exp/tri2b_adapt/graph || exit 1;
-
-fi
-
 
 #
 # make mfcc
 #
 
-if [ $stage -le 4 ]; then
+if [ $stage -le 0 ]; then
 
     echo "make mfcc... "
 
@@ -99,40 +45,77 @@ fi
 # use our a model from our nnet3 chain run (tri2b_adapt)
 ###############################################################################
 
-steps/cleanup/segment_long_utterances.sh --cmd "$train_cmd" \
-  --stage $segment_stage --nj 4 \
-  --max-bad-proportion 0.5 \
-  exp/tri2b_adapt data/lang data/segmentation data/segmentation_result${affix} \
-  exp/segment_long_utts${affix}_train
+if [ $stage -le 1 ]; then
 
-steps/compute_cmvn_stats.sh data/segmentation_result${affix} \
-  exp/make_mfcc/segmentation_result${affix} mfcc
-utils/fix_data_dir.sh data/segmentation_result${affix}
+    # FIXME: kaldi bug? - phones.txt is not copied but required so
+    #        we copy it here beforehand
+    mkdir -p exp/segment_long_utts_a_train
+    cp data/lang/phones.txt exp/segment_long_utts_a_train/
+
+    # FIXME: expose segmentation opts
+    #
+    # # Uniform segmentation options
+    # max_segment_duration=30
+    # overlap_duration=5
+    # seconds_per_spk_max=30a
+    #
+    # # First-pass segmentation opts
+    # # These options are passed to the script
+    # # steps/cleanup/internal/segment_ctm_edits_mild.py
+    # segmentation_extra_opts=
+    # min_split_point_duration=0.1
+    # max_deleted_words_kept_when_merging=1
+    # max_wer=50
+    # max_segment_length_for_merging=60
+    # max_bad_proportion=0.75
+    # max_intersegment_incorrect_words_length=1
+    # max_segment_length_for_splitting=10
+    # hard_max_segment_length=15
+    # min_silence_length_to_split_at=0.3
+    # min_non_scored_length_to_split_at=0.3
+
+    steps/cleanup/segment_long_utterances.sh --cmd "$train_cmd" \
+      --stage $segment_stage --nj 4 \
+      --max-bad-proportion 0.5 \
+      exp/tri2b_adapt data/lang data/segmentation data/segmentation_result${affix} \
+      exp/segment_long_utts${affix}_train
+
+    steps/compute_cmvn_stats.sh data/segmentation_result${affix} \
+      exp/make_mfcc/segmentation_result${affix} mfcc
+    utils/fix_data_dir.sh data/segmentation_result${affix}
+
+fi
 
 ###############################################################################
 # Train new model on segmented data directory starting from the same model
 # used for segmentation. (tri2b_adapt_reseg)
 ###############################################################################
 
-# Align tri2b_adapt system with reseg${affix} data
-steps/align_si.sh  --nj 12 --cmd "$train_cmd" \
-  data/segmentation_result${affix} \
-  data/lang exp/tri2b_adapt exp/tri2b_adapt_ali_reseg${affix}  || exit 1;
+if [ $stage -le 2 ]; then
 
+    # Align tri2b_adapt system with reseg${affix} data
+    steps/align_si.sh  --nj 12 --cmd "$train_cmd" \
+      data/segmentation_result${affix} \
+      data/lang exp/tri2b_adapt exp/tri2b_adapt_ali_reseg${affix}  || exit 1;
 
-# Train LDA+MLLT system on reseg${affix} data
-steps/train_lda_mllt.sh --cmd "$train_cmd" \
-  4000 50000 data/segmentation_result${affix} data/lang \
-  exp/tri2b_adapt_ali_reseg${affix} exp/tri2b_adapt_reseg${affix}
+    # Train LDA+MLLT system on reseg${affix} data
+    steps/train_lda_mllt.sh --cmd "$train_cmd" \
+      4000 50000 data/segmentation_result${affix} data/lang \
+      exp/tri2b_adapt_ali_reseg${affix} exp/tri2b_adapt_reseg${affix}
+
+fi
 
 ###############################################################################
 # Train SAT model on segmented data directory
 ###############################################################################
 
-# Train SAT system on reseg${affix} data
-steps/train_sat.sh --cmd "$train_cmd" 5000 100000 \
-  data/segmentation_result${affix} data/lang \
-  exp/tri2b_adapt_reseg${affix} exp/tri3_reseg${affix}
+if [ $stage -le 3 ]; then
+
+    # Train SAT system on reseg${affix} data
+    steps/train_sat.sh --cmd "$train_cmd" 5000 100000 \
+      data/segmentation_result${affix} data/lang \
+      exp/tri2b_adapt_reseg${affix} exp/tri3_reseg${affix}
+fi
 
 ###############################################################################
 # Clean and segment data
@@ -144,11 +127,15 @@ segmentation_opts=(
 )
 opts="${segmentation_opts[@]}"
 
-steps/cleanup/clean_and_segment_data.sh --nj 12 --cmd "$train_cmd" \
-  --segmentation-opts "$opts" \
-  data/segmentation_result${affix} data/lang exp/tri3_reseg${affix} \
-  exp/tri3_reseg${affix}_${cleanup_affix}_work \
-  data/segmentation_result${affix}_${cleanup_affix}
+if [ $stage -le 4 ]; then
+
+    steps/cleanup/clean_and_segment_data.sh --nj 12 --cmd "$train_cmd" \
+      --segmentation-opts "$opts" \
+      data/segmentation_result${affix} data/lang exp/tri3_reseg${affix} \
+      exp/tri3_reseg${affix}_${cleanup_affix}_work \
+      data/segmentation_result${affix}_${cleanup_affix}
+
+fi
 
 wait
 exit 0

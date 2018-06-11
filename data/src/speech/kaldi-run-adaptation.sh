@@ -43,11 +43,11 @@ fi
 export LC_ALL=C
 
 # remove old lang dir if it exists
-rm -rf data/lang.adapt
-rm -rf data/local/lang.adapt
+rm -rf data/lang
+rm -rf data/local/lang
 
 #Prepare phoneme data for Kaldi
-utils/prepare_lang.sh data/local/dict "nspc" data/local/lang.adapt data/lang.adapt
+utils/prepare_lang.sh data/local/dict "nspc" data/local/lang data/lang
 
 lmdir=data/local/lm.adapt
 lang=data/lang.adapt_test
@@ -55,7 +55,7 @@ lang=data/lang.adapt_test
 rm -rf $lmdir
 mkdir $lmdir
 rm -rf $lang
-cp -r data/lang.adapt $lang
+cp -r data/lang $lang
 
 echo
 echo "creating G.fst..."

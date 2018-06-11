@@ -734,56 +734,81 @@ Audiobook Segmentation and Transcription (kaldi)
 Some notes on how to segment and transcribe semi-automatically audiobooks or other audio sources (e.g. from librivox) using
 kaldi:
 
-(0/4) Convert Audio to WAVE Format
-----------------------------------
+Directory Layout
+----------------
 
-MP3
-~~~
-```bash
-ffmpeg -i foo.mp3 foo.wav
-```
+Our scripts rely on a fixed directory layout. As segmentation of librivox recordings is one of the main
+applications of these scripts, their terminology of books and sections is used here. For each section of 
+a book two source files are needed: a wave file containing the audio and a text file containing the transcript.
 
-MKV
-~~~
-```bash
-mkvextract tracks foo.mkv 0:foo.ogg
-opusdec foo.ogg foo.wav
-```
+A fixed naming scheme is used for those which is illustrated by this example:
 
-(1/4) Convert Audio to 16kHz mono
----------------------------------
+<pre>
+abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-1.txt
+abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-1.wav
+abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-2.txt
+abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-2.wav
+...
+</pre>
 
-```bash
-sox foo.wav -r 16000 -c 1 foo\_16m.wav
-```
+The `abook-librivox.py` script is provided to help with retrieval of librivox recordings and setting up the
+directory structure. Please note that for now, the tool will not retrieve transcripts automatically but
+will create empty .txt files (according to the naming scheme) which you will have to fill in manually.
 
-(2/4) Preprocess the Transcript
+The tool will convert the retrieved audio to 16kHz mono wav format as required by the segmentation scripts, however.
+If you intend to segment material from other sources, make sure to convert it to that format. For suggestions on
+what tools to use for this step, please refer to the manual segmentation instructions in the previous section.
+
+*NOTE*: As the kaldi process is parallelized for mass-segmentation, at least 4
+audio and prompt files are needed for the process to work.
+
+(1/4) Preprocess the Transcript
 -------------------------------
 
 This tool will tokenize the transcript and detect OOV tokens. Those can then be either
 replaced or added to the dictionary:
 
 ```bash
-./abook-preprocess-transcript.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/dirkweber-sammlung-kurzer-deutscher-prosa-022-03.txt
-mv prompts.txt abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/dirkweber-sammlung-kurzer-deutscher-prosa-022-03.prompt
+./abook-preprocess-transcript.py abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-1.txt
 ```
 
-make sure to put all wav and prompt files into the same directory. As the kaldi process is parallelized for mass-segmentation, 
-at least 4 audio and prompt files are needed for the process to work.
+(2/4) Model adaptation
+----------------------
+
+For the automatic segmentation to work, we need a GMM model that is adapted to the current dictionary (which likely had
+to be expanded during transcript preprocessing) plus uses a language model that covers the prompts.
+
+First, we create a language model tuned for our purpose:
+
+```bash
+./abook-sentences.py abook/in/librivox/11442-toten-Seelen/*.prompt
+./speech_build_lm.py abook_lang_model abook abook abook parole_de
+```
+
+Now we can create an adapted model using this language model and our current dict:
+
+```bash
+./speech_kaldi_adapt.py data/models/kaldi-generic-de-tri2b_chain-latest dict-de.ipa data/dst/lm/abook_lang_model/lm.arpa abook-de
+pushd data/dst/asr-models/kaldi/abook-de
+./run-adaptation.sh
+popd
+./speech_dist.sh -c abook-de kaldi adapt
+tar xfvJ data/dist/asr-models/kaldi-abook-de-adapt-current.tar.xz -C data/models/
+```
 
 (3/4) Auto-Segment using Kaldi
 ------------------------------
 
-Next, we need to create the kaldi directory structure and files for processing:
+Next, we need to create the kaldi directory structure and files for auto-segmentation:
 
 ```bash
-./abook-kaldi-segment.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/
+./abook-kaldi-segment.py data/models/kaldi-abook-de-adapt-current abook/in/librivox/11442-toten-Seelen
 ```
 
 now we can run the segmentation:
 
 ```bash
-pushd data/dst/speech/de/kaldi/
+pushd data/dst/speech/asr-models/kaldi/segmentation
 ./run-segmentation.sh 
 popd
 ```
@@ -794,7 +819,7 @@ popd
 Finally, we can retrieve the segmentation result in voxforge format:
 
 ```bash
-./abook-kaldi-retrieve.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/
+./abook-kaldi-retrieve.py abook/in/librivox/11442-toten-Seelen/
 ```
 
 Model Distribution

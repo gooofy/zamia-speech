@@ -160,6 +160,10 @@ misc.copy_file ('%s/model/final.mdl' % src_model, '%s/exp/adapt/final.mdl' % dst
 misc.copy_file ('%s/model/cmvn_opts' % src_model, '%s/exp/adapt/cmvn_opts' % dst_dir)
 misc.copy_file ('%s/model/tree'      % src_model, '%s/exp/adapt/tree'      % dst_dir)
 
+for optional_file in [ 'final.mat', 'splice_opts' ] :
+    if os.path.exists('%s/model/%s' % (src_model, optional_file)):
+        misc.copy_file ('%s/model/%s' % (src_model, optional_file), '%s/exp/adapt/%s' % (dst_dir, optional_file))
+
 if os.path.exists('%s/model/extractor' % src_model):
 
     misc.mkdirs ('%s/exp/extractor' % dst_dir)
