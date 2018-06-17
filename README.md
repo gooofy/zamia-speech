@@ -679,7 +679,7 @@ opusdec foo.ogg foo.wav
 ---------------------------------
 
 ```bash
-sox foo.wav -r 16000 -c 1 foo\_16m.wav
+sox foo.wav -r 16000 -c 1 -b 16 foo_16m.wav
 ```
 
 
@@ -691,7 +691,7 @@ its settings to achieve a good balance of short-segments but few words split in 
 
 
 ```bash
-./abook-segment.py foo\_16m.wav
+./abook-segment.py foo_16m.wav
 ```
 
 settings:
