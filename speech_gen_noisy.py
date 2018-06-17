@@ -131,9 +131,9 @@ for fgfn in os.listdir(fg_dir):
 # read bg file lengths
 #
 
-bg_lens = {}
-
-cnt = 0
+bg_lens     = {}
+max_bg_len  = 0
+cnt         = 0
 
 for bgfn in os.listdir(bg_dir):
 
@@ -147,6 +147,10 @@ for bgfn in os.listdir(bg_dir):
     fr = wav.getframerate()
     if fr == FRAMERATE:
         bg_lens[bgfn] = float(wav.getnframes()) / float(FRAMERATE)
+
+        if bg_lens[bgfn] > max_bg_len:
+            max_bg_len = bg_lens[bgfn]
+
     else:
         logging.error('%s: wrong framerate %d' % (bgfn, fr))
 
@@ -221,48 +225,53 @@ for ts in transcripts:
 
             logging.debug ('   fg: len=%6.2fs fn1=%s fn2=%s' % (fg_len, fgfn_1, fgfn_2))
 
-            ts2 = 'nspc ' + entry['ts'] + ' nspc'
-            logging.debug ('   ts2: %s' % ts2)
+            if fg_len < max_bg_len:
 
-            #
-            # background noise
-            #
+                ts2 = 'nspc ' + entry['ts'] + ' nspc'
+                logging.debug ('   ts2: %s' % ts2)
 
-            bgfn = None
-            while not bgfn:
-                
-                bgfn2 = random.choice(bg_lens.keys())
-                bgl = bg_lens[bgfn2]
-                if bgl > fg_len:
-                    bgfn = bgfn2
-                    bg_off = random.uniform (0, bgl - fg_len)
+                #
+                # background noise
+                #
 
-            bg_level = random.uniform (-15.0, -10.0)
+                bgfn = None
+                while not bgfn:
+                    
+                    bgfn2 = random.choice(bg_lens.keys())
+                    bgl = bg_lens[bgfn2]
+                    if bgl > fg_len:
+                        bgfn = bgfn2
+                        bg_off = random.uniform (0, bgl - fg_len)
 
-            logging.debug ('   bg: off=%6.2fs fn=%s' % (bg_off, bgfn))
+                bg_level = random.uniform (-15.0, -10.0)
 
-            # reverb [-w|--wet-only] [reverberance (50%) [HF-damping (50%)
-            #        [room-scale (100%) [stereo-depth (100%)
-            #        [pre-delay (0ms) [wet-gain (0dB)]]]]]]
+                logging.debug ('   bg: off=%6.2fs fn=%s' % (bg_off, bgfn))
 
-            reverb_level = random.uniform(0.0, 50.0)
+                # reverb [-w|--wet-only] [reverberance (50%) [HF-damping (50%)
+                #        [room-scale (100%) [stereo-depth (100%)
+                #        [pre-delay (0ms) [wet-gain (0dB)]]]]]]
 
-            # compand attack1,decay1{,attack2,decay2}
-            #        [soft-knee-dB:]in-dB1[,out-dB1]{,in-dB2,out-dB2}
-            #        [gain [initial-volume-dB [delay]]]
+                reverb_level = random.uniform(0.0, 50.0)
+
+                # compand attack1,decay1{,attack2,decay2}
+                #        [soft-knee-dB:]in-dB1[,out-dB1]{,in-dB2,out-dB2}
+                #        [gain [initial-volume-dB [delay]]]
 
 
-            cmd = 'sox -b 16 -r 16000 -m "|sox --norm=%f %s/%s %s %s/%s -p compand 0.01,0.2 -90,-10 -5 reverb %f" "|sox --norm=%f %s/%s -p trim %f %f" %s' % \
-                  (fg_level, fg_dir, fgfn_1, infn, fg_dir, fgfn_2, reverb_level, bg_level, bg_dir, bgfn, bg_off, fg_len, outfn)
+                cmd = 'sox -b 16 -r 16000 -m "|sox --norm=%f %s/%s %s %s/%s -p compand 0.01,0.2 -90,-10 -5 reverb %f" "|sox --norm=%f %s/%s -p trim %f %f" %s' % \
+                      (fg_level, fg_dir, fgfn_1, infn, fg_dir, fgfn_2, reverb_level, bg_level, bg_dir, bgfn, bg_off, fg_len, outfn)
 
-            logging.debug('   cmd: %s' % cmd)
+                logging.debug('   cmd: %s' % cmd)
 
-            os.system(cmd)
+                os.system(cmd)
 
-            promptfn = '%s/etc/prompts-original' % pkgdirfn
+                promptfn = '%s/etc/prompts-original' % pkgdirfn
 
-            with codecs.open(promptfn, 'a', 'utf8') as promptf:
-                promptf.write('%s %s\n' % (audiofn2, ts2))
+                with codecs.open(promptfn, 'a', 'utf8') as promptf:
+                    promptf.write('%s %s\n' % (audiofn2, ts2))
+
+            else:
+                logging.error ('%s: too long %f' % (infn, fg_len))
 
         else:
             logging.error ('%s: wrong framerate %d' % (infn, fr))
