@@ -611,7 +611,7 @@ pocketsphinx_continuous -lw 10 -fwdflatlw 10 -bestpathlw 10 -beam 1e-80 \
                         -wip 0.2 -agc none -varnorm no -cmn current \
                         -lowerf 130 -upperf 6800 -nfilt  25 \
                         -transform dct -lifter 22 -ncep   13 \
-                        -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_6000 \
+                        -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_8000 \
                         -dict ${MODELDIR}/etc/voxforge.dic \
                         -lm ${MODELDIR}/etc/voxforge.lm.bin \
                         -infile $WAVFILE 
@@ -621,7 +621,7 @@ sphinx_fe -c fileids -di wav -do mfcc \
           -part 1 -npart 1 -ei wav -eo mfc -nist no -raw no -mswav yes \
           -samprate 16000 -lowerf 130 -upperf 6800 -nfilt 25 -transform dct -lifter 22
 
-pocketsphinx_batch -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_6000 \
+pocketsphinx_batch -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_8000 \
                    -feat 1s_c_d_dd \
                    -ceplen 13 \
                    -ncep 13 \
