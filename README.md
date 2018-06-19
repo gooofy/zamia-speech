@@ -575,7 +575,7 @@ Before running it, make sure all prerequisites are met (see above for instructio
 - optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
 cd data/dst/asr-models/cmusphinx_cont/generic-de
 ./sphinx-run.sh
 ```
@@ -583,7 +583,13 @@ cd data/dst/asr-models/cmusphinx_cont/generic-de
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
+./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
+```
+
+complete export run with noise augmented corpora included for an English model:
+
+```bash
+./speech_sphinx_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en voxforge_en_noisy voxforge_en_phone librispeech librispeech_noisy librispeech_phone zamia_en zamia_en_noisy zamia_en_phone
 ```
 
 For resource constrained applications, PTM models can be trained:
