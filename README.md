@@ -64,12 +64,96 @@ Table of Contents
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
-Links
-=====
+Download
+========
 
-* [Data / Models](http://goofy.zamia.org/zamia-speech/ "models")
+We have various models plus source code and binaries for the tools used to build these models
+available for download. Everything is free and open source,
 
-* [Code](https://github.com/gooofy/zamia-speech "github")
+All our model and data downloads can be found here: [Downloads](http://goofy.zamia.org/zamia-speech/)
+
+ASR Models 
+----------
+
+Our pre-built ASR models can be downloaded here: [ASR Models](http://goofy.zamia.org/zamia-speech/asr-models/)
+
++ Kaldi ASR, English:
+    + `kaldi-generic-en-tdnn_sp`
+      Large nnet3-chain model, trained on ~800 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings.
+    + `kaldi-generic-en-tdnn_250`
+      Same as the large model but less resource intensive, suitable for use in embedded applications (e.g. a RaspberryPi 3).
+    + `kaldi-generic-en-tri2b\_chain`
+      GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
++ Kaldi ASR, German:
+    + `kaldi-generic-de-tdnn_sp`
+      Large nnet3-chain model, trained on ~260 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings.
+    + `kaldi-generic-de-tdnn_250`
+      Same as the large model but less resource intensive, suitable for use in embedded applications (e.g. a RaspberryPi 3).
+    + `kaldi-generic-de-tri2b_chain`
+      GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
++ CMU Sphinx, English:
+    + `cmusphinx-cont-generic-en`
+      Large model, trained on ~800 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings.
+    + `cmusphinx-ptm-generic-en`
+      Same as the large model but less resource intensive, suitable for use in embedded applications.
++ CMU Sphinx, German:
+    + `cmusphinx-ptm-generic-de`
+      Large model, trained on ~260 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings.
+    + `cmusphinx-cont-generic-de`
+      Same as the large model but less resource intensive, suitable for use in embedded applications.
+
+*NOTE*: It is important to realize that these models can and should be adapted to your application domain. See 
+        [Model Adaptation](#model-adaptation) for details.
+
+IPA Dictionaries (Lexicons)
+---------------------------
+
+Our dictionaries can be downloaded here: [Dictionaries](https://github.com/gooofy/zamia-speech/tree/master/data/src/dicts)
+
++ IPA UTF-8, English:
+    + `dict-en.ipa`
+      Based on CMUDict with many additional entries generated via Sequitur G2P.
++ IPA UTF-8, German:
+    + dict-de.ipa
+      Created manually from scratch with many additional auto-reviewed entries extracted from Wiktionary.
+
+G2P Models 
+----------
+
+Our pre-built G2P models can be downloaded here: [G2P Models](http://goofy.zamia.org/zamia-speech/g2p/)
+
++ Sequitur, English:
+    + ` sequitur-dict-en.ipa`
+      Sequitur G2P model trained on our English IPA dictionary (UTF8).
++ Sequitur, German:
+    + ` sequitur-dict-de.ipa`
+      Sequitur G2P model trained on our German IPA dictionary (UTF8).
+
+Language Models
+---------------
+
+Our pre-built ARPA language models can be downloaded here: [Language Models](http://goofy.zamia.org/zamia-speech/lm/)
+
++ SRILM, English, ARPA:
+    + `srilm-generic_en_lang_model`
++ SRILM, German, ARPA:
+    + `srilm-generic_de_lang_model`
+
+Code
+----
+
+* [Zamia-Speech](https://github.com/gooofy/zamia-speech) 
+    where we host all our scripts and other sources used to build our models. 
+* [py-kaldi-asr](https://github.com/gooofy/py-kaldi-asr) 
+    Python wrapper around Kaldi's nnet3-chain decoder complete with example
+    scripts on how to use our models in your application.
+* [Raspbian AI APT Repo](http://goofy.zamia.org/raspbian-ai/)
+    Binary packages in Debian format for Raspbian (Raspberry Pi 3)
+
 
 Get Started with our Pre-Trained Models 
 =======================================
