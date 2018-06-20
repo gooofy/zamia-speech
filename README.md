@@ -165,56 +165,28 @@ Code
 Get Started with our Pre-Trained Models 
 =======================================
 
-Raspbian 9 (stretch) on a Raspberry Pi 2/3
-------------------------------------------
+Installation
+------------
 
-### (1/3) setup apt-source and install packages
+Raspbian 9 (stretch) on a Raspberry Pi 2/3
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Setup apt-source and install packages:
 
 ```bash
 $ sudo -i
 
-# echo "deb http://goofy.zamia.org/repo-ai/raspbian/stretch/amd64/ ./" >/etc/apt/sources.list.d/zamia-ai.list
-# wget -qO - http://goofy.zamia.org/repo-ai/raspbian/stretch/amd64/bofh.asc | sudo apt-key add -
-# echo "deb http://goofy.zamia.org/raspbian-ai/ ./" >/etc/apt/sources.list.d/zamia-ai.list
-# wget -qO - http://goofy.zamia.org/raspbian-ai/bofh.asc | sudo apt-key add -
+# echo "deb http://goofy.zamia.org/repo-ai/raspbian/stretch/armhf/ ./" >/etc/apt/sources.list.d/zamia-ai.list
+# wget -qO - http://goofy.zamia.org/repo-ai/raspbian/stretch/armhf/bofh.asc | sudo apt-key add -
 # apt-get update
 # apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
 # exit
 ```
 
-### (2/3) determine the name of your pulseaudio mic source
-
-```bash
-pi@raspberrypi:~ $ pactl list sources
-Source #0
-    State: SUSPENDED
-    Name: alsa_input.usb-C-Media_Electronics_Inc._USB_PnP_Sound_Device-00.analog-mono
-    Description: CM108 Audio Controller Analog Mono
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-```
-
-### (3/3) download and run demo
-
-```bash
-pi@raspberrypi:~ $ wget 'https://raw.githubusercontent.com/gooofy/py-kaldi-asr/master/examples/chain_live.py'
-
-pi@raspberrypi:~ $ python chain_live.py -s 'CM108'
-Kaldi live demo V0.2
-Loading model from /opt/kaldi/model/kaldi-generic-en-tdnn_250 ...
-Please speak.
-hallo computer                      
-switch on the radio please                      
-please switch on the light                      
-what about the weather in stuttgart                     
-how are you                      
-thank you                      
-good bye 
-```
-
 Debian 9 (stretch, amd64)
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### (1/3) setup apt-source and install packages
+Setup apt-source and install packages:
 
 ```bash
 $ sudo -i
@@ -226,10 +198,16 @@ $ sudo -i
 # exit
 ```
 
-### (2/3) determine the name of your pulseaudio mic source
+Run Example Applications
+------------------------
+
+Live Mic Demo
+~~~~~~~~~~~~~
+
+Determine the name of your pulseaudio mic source:
 
 ```bash
-pi@raspberrypi:~ $ pactl list sources
+$ pactl list sources
 Source #0
     State: SUSPENDED
     Name: alsa_input.usb-C-Media_Electronics_Inc._USB_PnP_Sound_Device-00.analog-mono
@@ -237,12 +215,12 @@ Source #0
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
 
-### (3/3) download and run demo
+download and run demo:
 
 ```bash
-pi@raspberrypi:~ $ wget 'https://raw.githubusercontent.com/gooofy/py-kaldi-asr/master/examples/chain_live.py'
+$ wget 'http://goofy.zamia.org/zamia-speech/misc/chain_live.py'
 
-pi@raspberrypi:~ $ python chain_live.py -s 'CM108'
+$ python chain_live.py -s 'CM108'
 Kaldi live demo V0.2
 Loading model from /opt/kaldi/model/kaldi-generic-en-tdnn_250 ...
 Please speak.
@@ -254,7 +232,6 @@ how are you
 thank you                      
 good bye 
 ```
-
 
 Requirements
 ============
