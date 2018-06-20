@@ -73,7 +73,7 @@ Download
 ========
 
 We have various models plus source code and binaries for the tools used to build these models
-available for download. Everything is free and open source,
+available for download. Everything is free and open source.
 
 All our model and data downloads can be found here: [Downloads](http://goofy.zamia.org/zamia-speech/)
 
@@ -123,7 +123,7 @@ Our dictionaries can be downloaded here: [Dictionaries](https://github.com/gooof
     + `dict-en.ipa`
       Based on CMUDict with many additional entries generated via Sequitur G2P.
 + IPA UTF-8, German:
-    + dict-de.ipa
+    + `dict-de.ipa`
       Created manually from scratch with many additional auto-reviewed entries extracted from Wiktionary.
 
 G2P Models 
