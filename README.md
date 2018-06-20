@@ -33,6 +33,7 @@ Table of Contents
     * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
     * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
   * [Run Example Applications](#run-example-applications)
+    * [Transcribe (decode) a WAV file](#transcribe-decode-a-wav-file)
     * [Live Mic Demo](#live-mic-demo)
 * [Requirements](#requirements)
 * [Setup Notes](#setup-notes)
@@ -197,6 +198,28 @@ apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-k
 
 Run Example Applications
 ------------------------
+
+### Transcribe (decode) a WAV file
+
+download and run the demo:
+
+```bash
+$ wget 'http://goofy.zamia.org/zamia-speech/misc/chain_wavfile.py'
+$ wget 'http://goofy.zamia.org/zamia-speech/misc/dw961.wav'
+$ python chain_wavfile.py
+/opt/kaldi/model/kaldi-generic-en-tdnn_250 loading model...
+/opt/kaldi/model/kaldi-generic-en-tdnn_250 loading model... done, took 8.983656s.
+/opt/kaldi/model/kaldi-generic-en-tdnn_250 creating decoder...
+/opt/kaldi/model/kaldi-generic-en-tdnn_250 creating decoder... done, took 1.236268s.
+
+*****************************************************************
+** dw961.wav
+** i cannot follow you she said 
+** /opt/kaldi/model/kaldi-generic-en-tdnn_250 likelihood: 1.86257362366
+*****************************************************************
+
+/opt/kaldi/model/kaldi-generic-en-tdnn_250 decoding took     3.22s
+```
 
 ### Live Mic Demo
 
