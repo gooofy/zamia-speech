@@ -29,10 +29,11 @@ Table of Contents
   * [Language Models](#language-models)
   * [Code](#code)
 * [Get Started with our Pre\-Trained Models](#get-started-with-our-pre-trained-models)
-  * [Raspbian on Raspberry Pi 3](#raspbian-on-raspberry-pi-3)
-    * [(1/3) setup apt\-source and install packages](#13-setup-apt-source-and-install-packages)
-    * [(2/3) determine the name of your pulseaudio mic source](#23-determine-the-name-of-your-pulseaudio-mic-source)
-    * [(3/3) download and run demo](#33-download-and-run-demo)
+  * [Installation](#installation)
+    * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
+    * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
+  * [Run Example Applications](#run-example-applications)
+    * [Live Mic Demo](#live-mic-demo)
 * [Requirements](#requirements)
 * [Setup Notes](#setup-notes)
 * [Speech Corpora](#speech-corpora)
@@ -168,8 +169,7 @@ Get Started with our Pre-Trained Models
 Installation
 ------------
 
-Raspbian 9 (stretch) on a Raspberry Pi 2/3
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Raspbian 9 (stretch) on a Raspberry Pi 2/3
 
 Setup apt-source and install packages:
 
@@ -183,8 +183,7 @@ $ sudo -i
 # exit
 ```
 
-Debian 9 (stretch, amd64)
-~~~~~~~~~~~~~~~~~~~~~~~~~
+### Debian 9 (stretch, amd64)
 
 Setup apt-source and install packages:
 
@@ -201,8 +200,7 @@ $ sudo -i
 Run Example Applications
 ------------------------
 
-Live Mic Demo
-~~~~~~~~~~~~~
+### Live Mic Demo
 
 Determine the name of your pulseaudio mic source:
 
