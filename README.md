@@ -35,6 +35,7 @@ Table of Contents
   * [Run Example Applications](#run-example-applications)
     * [Transcribe (decode) a WAV file](#transcribe-decode-a-wav-file)
     * [Live Mic Demo](#live-mic-demo)
+* [Get Started with a Demo STT Service Packaged in Docker](#get-started-with-a-demo-stt-service-packaged-in-docker)
 * [Requirements](#requirements)
 * [Setup Notes](#setup-notes)
 * [Speech Corpora](#speech-corpora)
@@ -251,6 +252,48 @@ how are you
 thank you                      
 good bye 
 ```
+
+Get Started with a Demo STT Service Packaged in Docker
+======================================================
+
+To start the STT service on your local machine, execute:
+
+```bash
+$ docker pull quay.io/mpuels/docker-py-kaldi-asr-and-model:kaldi-generic-en-tdnn_sp-r20180611
+$ docker run --rm -p 127.0.0.1:8080:80/tcp quay.io/mpuels/docker-py-kaldi-asr-and-model:kaldi-generic-en-tdnn_sp-r20180611
+```
+
+To transfer an audio file for transcription to the service, in a second
+terminal, execute:
+
+```bash
+$ git pull git@github.com:mpuels/docker-py-kaldi-asr-and-model.git
+$ conda env create -f environment.yml
+$ source activate py-kaldi-asr-client
+$ ./asr_client.py asr.wav
+INFO:root: 0.005s:  4000 frames ( 0.250s) decoded, status=200.
+...
+INFO:root:19.146s: 152000 frames ( 9.500s) decoded, status=200.
+INFO:root:27.136s: 153003 frames ( 9.563s) decoded, status=200.
+INFO:root:*****************************************************************
+INFO:root:** wavfn         : asr.wav
+INFO:root:** hstr          : speech recognition system requires training where individuals to exercise political system
+INFO:root:** confidence    : -0.578844
+INFO:root:** decoding time :    27.14s
+INFO:root:*****************************************************************
+```
+
+The Docker image in the example above is the result of stacking 4 images on top
+of each other:
+
+- docker-py-kaldi-asr-and-model: [Source](https://github.com/mpuels/docker-py-kaldi-asr-and-model), [Image](https://quay.io/repository/mpuels/docker-py-kaldi-asr-and-model)
+
+- docker-py-kaldi-asr: [Source](https://github.com/mpuels/docker-py-kaldi-asr), [Image](https://quay.io/repository/mpuels/docker-py-kaldi-asr)
+
+- docker-kaldi-asr: [Source](https://github.com/mpuels/docker-kaldi-asr), [Image](https://quay.io/repository/mpuels/docker-py-kaldi-asr)
+
+- ubuntu:8: https://hub.docker.com/_/debian/
+
 
 Requirements
 ============
