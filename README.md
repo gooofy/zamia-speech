@@ -290,9 +290,9 @@ of each other:
 
 - docker-py-kaldi-asr: [Source](https://github.com/mpuels/docker-py-kaldi-asr), [Image](https://quay.io/repository/mpuels/docker-py-kaldi-asr)
 
-- docker-kaldi-asr: [Source](https://github.com/mpuels/docker-kaldi-asr), [Image](https://quay.io/repository/mpuels/docker-py-kaldi-asr)
+- docker-kaldi-asr: [Source](https://github.com/mpuels/docker-kaldi-asr), [Image](https://quay.io/repository/mpuels/docker-kaldi-asr)
 
-- ubuntu:8: https://hub.docker.com/_/debian/
+- debian:8: https://hub.docker.com/_/debian/
 
 
 Requirements
