@@ -292,7 +292,7 @@ of each other:
 
 - docker-kaldi-asr: [Source](https://github.com/mpuels/docker-kaldi-asr), [Image](https://quay.io/repository/mpuels/docker-py-kaldi-asr)
 
-- ubuntu:8: https://hub.docker.com/_/debian/
+- debian:8: https://hub.docker.com/_/debian/
 
 
 Requirements
