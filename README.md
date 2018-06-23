@@ -238,9 +238,9 @@ Source #0
 download and run demo:
 
 ```bash
-$ wget 'http://goofy.zamia.org/zamia-speech/misc/chain_live.py'
+$ wget 'http://goofy.zamia.org/zamia-speech/misc/kaldi_decode_live.py'
 
-$ python chain_live.py -s 'CM108'
+$ python kaldi_decode_live.py -s 'CM108'
 Kaldi live demo V0.2
 Loading model from /opt/kaldi/model/kaldi-generic-en-tdnn_250 ...
 Please speak.
