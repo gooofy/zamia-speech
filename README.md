@@ -33,7 +33,7 @@ Table of Contents
     * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
     * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
   * [Run Example Applications](#run-example-applications)
-    * [Transcribe (decode) a WAV file](#transcribe-decode-a-wav-file)
+    * [Wave File Decoding Demo](#wave-file-decoding-demo)
     * [Live Mic Demo](#live-mic-demo)
 * [Get Started with a Demo STT Service Packaged in Docker](#get-started-with-a-demo-stt-service-packaged-in-docker)
 * [Requirements](#requirements)
