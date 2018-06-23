@@ -222,6 +222,69 @@ $ python chain_wavfile.py
 /opt/kaldi/model/kaldi-generic-en-tdnn_250 decoding took     3.22s
 ```
 
+### Wave File Decoding Demo
+
+Download a few sample wave files
+
+```bash
+$ wget http://goofy.zamia.org/zamia-speech/misc/demo_wavs.tgz
+--2018-06-23 16:46:28--  http://goofy.zamia.org/zamia-speech/misc/demo_wavs.tgz
+Resolving goofy.zamia.org (goofy.zamia.org)... 78.47.65.20
+Connecting to goofy.zamia.org (goofy.zamia.org)|78.47.65.20|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 619852 (605K) [application/x-gzip]
+Saving to: ‘demo_wavs.tgz’
+
+demo_wavs.tgz                     100%[==========================================================>] 605.32K  2.01MB/s    in 0.3s    
+
+2018-06-23 16:46:28 (2.01 MB/s) - ‘demo_wavs.tgz’ saved [619852/619852]
+```
+
+unpack them:
+
+```bash
+$ tar xfvz demo_wavs.tgz
+demo1.wav
+demo2.wav
+demo3.wav
+demo4.wav
+```
+
+download the demo program 
+
+
+```bash
+$ wget http://goofy.zamia.org/zamia-speech/misc/kaldi_decode_wav.py
+--2018-06-23 16:47:53--  http://goofy.zamia.org/zamia-speech/misc/kaldi_decode_wav.py
+Resolving goofy.zamia.org (goofy.zamia.org)... 78.47.65.20
+Connecting to goofy.zamia.org (goofy.zamia.org)|78.47.65.20|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2469 (2.4K) [text/plain]
+Saving to: ‘kaldi_decode_wav.py’
+
+kaldi_decode_wav.py               100%[==========================================================>]   2.41K  --.-KB/s    in 0s      
+
+2018-06-23 16:47:53 (311 MB/s) - ‘kaldi_decode_wav.py’ saved [2469/2469]
+```
+
+now run kaldi automatic speech recognition on the demo wav files:
+
+```bash
+$ python kaldi_decode_wav.py -v demo?.wav
+DEBUG:root:/opt/kaldi/model/kaldi-generic-en-tdnn_sp loading model...
+DEBUG:root:/opt/kaldi/model/kaldi-generic-en-tdnn_sp loading model... done, took 1.473226s.
+DEBUG:root:/opt/kaldi/model/kaldi-generic-en-tdnn_sp creating decoder...
+DEBUG:root:/opt/kaldi/model/kaldi-generic-en-tdnn_sp creating decoder... done, took 0.143928s.
+DEBUG:root:demo1.wav decoding took     0.37s, likelyhood: 1.863645
+i cannot follow you she said 
+DEBUG:root:demo2.wav decoding took     0.54s, likelyhood: 1.572326
+i should like to engage just for one whole life in that 
+DEBUG:root:demo3.wav decoding took     0.42s, likelyhood: 1.709773
+philip knew that she was not an indian 
+DEBUG:root:demo4.wav decoding took     1.06s, likelyhood: 1.715135
+he also contented that better confidence was established by carrying no weapons 
+```
+
 ### Live Mic Demo
 
 Determine the name of your pulseaudio mic source:
