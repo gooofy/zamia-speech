@@ -197,6 +197,18 @@ apt-get update
 apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
 ```
 
+### CentOS 7 (amd64)
+
+Setup yum repo and install packages:
+
+```bash
+# execute with root permissions (sudo -i):
+
+cd /etc/yum.repos.d
+wget http://goofy.zamia.org/zamia-speech/misc/zamia-ai-centos.repo
+yum install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
+```
+
 Run Example Applications
 ------------------------
 
