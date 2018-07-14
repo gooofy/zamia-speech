@@ -32,6 +32,7 @@ Table of Contents
   * [Installation](#installation)
     * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
     * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
+    * [CentOS 7 (amd64)](#centos-7-amd64)
   * [Run Example Applications](#run-example-applications)
     * [Wave File Decoding Demo](#wave-file-decoding-demo)
     * [Live Mic Demo](#live-mic-demo)
