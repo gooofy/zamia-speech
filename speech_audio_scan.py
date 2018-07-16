@@ -46,6 +46,7 @@ SPEECH_CORPORA = [
     "forschergeist",
     "gspv2",
     "librivox",
+    "cv_corpus_v1",
     "voxforge_de",
     "voxforge_en",
     "zamia_de",
