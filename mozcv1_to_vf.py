@@ -31,6 +31,7 @@ from optparse               import OptionParser
 from nltools                import misc
 
 PROC_TITLE        = 'moz_cv1_to_vf'
+DEFAULT_NUM_CPUS  = 12
 
 #
 # init terminal
@@ -44,8 +45,11 @@ misc.init_app (PROC_TITLE)
 
 parser = OptionParser("usage: %prog [options]")
 
-parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
-                  help="enable debug output")
+parser.add_option ("-n", "--num-cpus", dest="num_cpus", type="int", default=DEFAULT_NUM_CPUS,
+                   help="number of cpus to use in parallel, default: %d" % DEFAULT_NUM_CPUS)
+
+parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
+                   help="enable debug output")
 
 (options, args) = parser.parse_args()
 
@@ -63,40 +67,43 @@ speech_arc     = config.get("speech", "speech_arc")
 speech_corpora = config.get("speech", "speech_corpora")
 
 #
-# convert mp3 to 16khz mono wav, create one dir per utt
+# convert mp3 to wav, create one dir per utt
 # (since we have no speaker information)
 #
 
-for csvfn in ['cv-valid-test.csv', 'cv-valid-train.csv', 'cv-valid-dev.csv']:
+cnt = 0
+with open('tmp/run_parallel.sh', 'w') as scriptf:
+    for csvfn in ['cv-valid-test.csv', 'cv-valid-train.csv', 'cv-valid-dev.csv']:
+        with codecs.open('%s/cv_corpus_v1/%s' % (speech_arc, csvfn), 'r', 'utf8') as csvfile:
+            r = csv.reader(csvfile, delimiter=',', quotechar='|')
+            first = True
+            for row in r:
+                if first:
+                    first = False
+                    continue
+                print ', '.join(row)
+             
+                uttid = wavfn = row[0].replace('/', '_').replace('.mp3', '').replace('-', '_')
+                spk = uttid
 
-    with codecs.open('%s/cv_corpus_v1/%s' % (speech_arc, csvfn), 'r', 'utf8') as csvfile:
-        r = csv.reader(csvfile, delimiter=',', quotechar='|')
-        first = True
-        for row in r:
-            if first:
-                first = False
-                continue
-            print ', '.join(row)
-         
-            uttid = wavfn = row[0].replace('/', '-').replace('.mp3', '')
-            spk = uttid
+                misc.mkdirs('%s/cv_corpus_v1/%s-v1/etc' % (speech_corpora, spk))
+                misc.mkdirs('%s/cv_corpus_v1/%s-v1/wav' % (speech_corpora, spk))
 
-            misc.mkdirs('%s/cv_corpus_v1/%s-v1/etc' % (speech_corpora, spk))
-            misc.mkdirs('%s/cv_corpus_v1/%s-v1/wav' % (speech_corpora, spk))
+                with codecs.open ('%s/cv_corpus_v1/%s-v1/etc/prompts-original' % (speech_corpora, spk), 'a', 'utf8') as promptsf:
+                    promptsf.write('%s %s\n' % (uttid, row[1]))
 
-            with codecs.open ('%s/cv_corpus_v1/%s-v1/etc/prompts-original' % (speech_corpora, spk), 'a', 'utf8') as promptsf:
-                promptsf.write('%s %s\n' % (uttid, row[1]))
+                wavfn = '%s/cv_corpus_v1/%s-v1/wav/%s.wav' % (speech_corpora, spk, uttid)
+                cmd = 'ffmpeg -i %s/cv_corpus_v1/%s %s' % (speech_arc, row[0], wavfn)
+                print cnt, wavfn
+                scriptf.write('echo %6d %s &\n' % (cnt, wavfn))
+                scriptf.write('%s &\n' % cmd)
 
-            cmd = 'rm -f tmp/foo.wav'
-            os.system(cmd)
- 
-            cmd = 'ffmpeg -i %s/cv_corpus_v1/%s tmp/foo.wav' % (speech_arc, row[0])
-            print cmd
-            os.system(cmd)
+                cnt += 1
+                if (cnt % options.num_cpus) == 0:
+                    scriptf.write('wait\n')
 
-            wavfn = '%s/cv_corpus_v1/%s-v1/wav/%s.wav' % (speech_corpora, spk, uttid)
+cmd = "bash tmp/run_parallel.sh"
+print cmd
+# os.system(cmd)
 
-            cmd = 'sox tmp/foo.wav -r 16000 -c 1 -b 16 %s' % wavfn
-            print cmd
-            os.system(cmd)
 
