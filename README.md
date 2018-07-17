@@ -447,7 +447,7 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./librispeech_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/librispeech`. 
 
-- [Mozilla Common Voice V1 (English, ? hours)](https://voice.mozilla.org/en/data):
+- [Mozilla Common Voice V1 (English, 252 hours)](https://voice.mozilla.org/en/data):
     + Download `cv_corpus_v1.tar.gz`
     + Unpack the archive such that the directory `cv_corpus_v1` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
