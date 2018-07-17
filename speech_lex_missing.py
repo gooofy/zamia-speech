@@ -64,6 +64,9 @@ parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
 parser.add_option ("-n", "--num-words", dest="num_words", type="int", default=50,
                    help="max number of missing words to report, default: 50")
 
+parser.add_option ("-i", "--ignore-rating", action="store_true", dest="ignore_rating", 
+                   help="check all submissions (ignore rating)")
+
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
                    help="enable debug output")
 
@@ -114,8 +117,9 @@ for cfn in transcripts:
 
     cnt += 1
 
-    if ts['quality']>0:
-        continue
+    if not options.ignore_rating:
+        if ts['quality']>0:
+            continue
 
     lacking = False
 
