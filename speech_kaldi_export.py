@@ -200,10 +200,10 @@ def export_kaldi_data (wav16_dir, audio_corpora, destdirfn, tsdict):
 
             utt2spkf.write('%s %s\n' % (utt_id, ts['spk']))
 
-    concat_sort_write(
-        ['data/src/speech/%s/spk2gender' % audio_corpus
-         for audio_corpus in audio_corpora],
-        '%s/spk2gender' % destdirfn)
+    # concat_sort_write(
+    #     ['data/src/speech/%s/spk2gender' % audio_corpus
+    #      for audio_corpus in audio_corpora],
+    #     '%s/spk2gender' % destdirfn)
 
 
 def concat_sort_write(src_paths, dst_path):
