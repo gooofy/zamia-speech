@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright 2016, 2017 Guenter Bartsch
+# Copyright 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -57,142 +57,171 @@ where "nvcc" is installed.
 EOF
 fi
 
+. utils/parse_options.sh
+
 echo "Runtime configuration is: nJobs $nJobs, nDecodeJobs $nDecodeJobs. If this is not what you want, edit cmd.sh"
 
 # now start preprocessing with KALDI scripts
 
-# remove old lang dir if it exists
-rm -rf data/lang
+if [ $stage -le 0 ]; then
 
-# Prepare phoneme data for Kaldi
-# utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
-utils/prepare_lang.sh data/local/dict "nspc" data/local/lang data/lang
+    # remove old lang dir if it exists
+    rm -rf data/lang
 
-#
-# make mfcc
-#
-
-for datadir in train test; do
-    utils/fix_data_dir.sh data/$datadir 
-    steps/make_mfcc.sh --cmd "$train_cmd" --nj $nJobs data/$datadir exp/make_mfcc_chain/$datadir $mfccdir || exit 1;
-    utils/fix_data_dir.sh data/${datadir} # some files fail to get mfcc for many reasons
-    steps/compute_cmvn_stats.sh data/${datadir} exp/make_mfcc_chain/$datadir $mfccdir || exit 1;
-    utils/fix_data_dir.sh data/${datadir} # some files fail to get mfcc for many reasons
-done
-
-echo
-echo mono0a_chain
-echo
-
-steps/train_mono.sh --nj $nJobs --cmd "$train_cmd" \
-  data/train data/lang exp/mono0a_chain || exit 1;
-
-echo
-echo tri1_chain
-echo
-
-steps/align_si.sh --nj $nJobs --cmd "$train_cmd" \
-  data/train data/lang exp/mono0a_chain exp/mono0a_ali_chain || exit 1;
-
-steps/train_deltas.sh --cmd "$train_cmd" 2000 10000 \
-  data/train data/lang exp/mono0a_ali_chain exp/tri1_chain || exit 1;
-
-echo
-echo tri2b_chain
-echo
-
-steps/align_si.sh --nj $nJobs --cmd "$train_cmd" \
-  data/train data/lang exp/tri1_chain exp/tri1_ali_chain || exit 1;
-
-steps/train_lda_mllt.sh --cmd "$train_cmd" \
-  --splice-opts "--left-context=3 --right-context=3" 2500 15000 \
-  data/train data/lang exp/tri1_ali_chain exp/tri2b_chain || exit 1;
-
-utils/mkgraph.sh data/lang_test \
-  exp/tri2b_chain exp/tri2b_chain/graph || exit 1;
-
-echo
-echo run_ivector_common.sh
-echo
-
-local/nnet3/run_ivector_common.sh --stage $stage \
-                                  --nj $nJobs \
-                                  --min-seg-len $min_seg_len \
-                                  --train-set $train_set \
-                                  --gmm $gmm \
-                                  --num-threads-ubm $num_threads_ubm \
-                                  --nnet3-affix "$nnet3_affix"
-
-
-gmm_dir=exp/$gmm
-ali_dir=exp/${gmm}_ali_${train_set}_sp_comb
-tree_dir=exp/nnet3${nnet3_affix}/tree_sp
-lang=data/lang_chain
-lat_dir=exp/nnet3${nnet3_affix}/${gmm}_${train_set}_sp_comb_lats
-dir=exp/nnet3${nnet3_affix}/tdnn_sp
-train_data_dir=data/${train_set}_sp_hires_comb
-lores_train_data_dir=data/${train_set}_sp_comb
-train_ivector_dir=exp/nnet3${nnet3_affix}/ivectors_${train_set}_sp_hires_comb
-
-for f in $gmm_dir/final.mdl $train_data_dir/feats.scp $train_ivector_dir/ivector_online.scp \
-    $lores_train_data_dir/feats.scp $ali_dir/ali.1.gz; do
-  [ ! -f $f ] && echo "$0: expected file $f to exist" && exit 1
-done
-
-echo
-echo creating lang directory with one state per phone.
-echo
-
-if [ -d data/lang_chain ]; then
-  if [ data/lang_chain/L.fst -nt data/lang/L.fst ]; then
-    echo "$0: data/lang_chain already exists, not overwriting it; continuing"
-  else
-    echo "$0: data/lang_chain already exists and seems to be older than data/lang..."
-    echo " ... not sure what to do.  Exiting."
-    exit 1;
-  fi
-else
-  cp -r data/lang data/lang_chain
-  silphonelist=$(cat data/lang_chain/phones/silence.csl) || exit 1;
-  nonsilphonelist=$(cat data/lang_chain/phones/nonsilence.csl) || exit 1;
-  # Use our special topology... note that later on may have to tune this
-  # topology.
-  steps/nnet3/chain/gen_topo.py $nonsilphonelist $silphonelist >data/lang_chain/topo
 fi
 
-echo
-echo 'Get the alignments as lattices (gives the chain training more freedom).'
-echo
 
-steps/align_fmllr_lats.sh --nj $nJobs --cmd "$train_cmd" ${lores_train_data_dir} \
-    data/lang $gmm_dir $lat_dir
-rm $lat_dir/fsts.*.gz # save space
+if [ $stage -le 1 ]; then
 
-echo
-echo 'Build a tree using our new topology.  We know we have alignments for the'
-echo 'speed-perturbed data (local/nnet3/run_ivector_common.sh made them), so use'
-echo 'those.'
-echo
+    echo
+    echo Prepare phoneme data for Kaldi
+    echo
 
-if [ -f $tree_dir/final.mdl ]; then
-  echo "$0: $tree_dir/final.mdl already exists, refusing to overwrite it."
-  exit 1;
+    # utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
+    utils/prepare_lang.sh data/local/dict "nspc" data/local/lang data/lang
+
 fi
-steps/nnet3/chain/build_tree.sh --frame-subsampling-factor 3 \
-    --context-opts "--context-width=2 --central-position=1" \
-    --cmd "$train_cmd" 4000 ${lores_train_data_dir} data/lang_chain $ali_dir $tree_dir
 
-mkdir -p $dir
+if [ $stage -le 2 ]; then
+    echo
+    echo make mfcc
+    echo
 
-echo
-echo "$0: creating neural net configs using the xconfig parser";
-echo
+    for datadir in train test; do
+        utils/fix_data_dir.sh data/$datadir 
+        steps/make_mfcc.sh --cmd "$train_cmd" --nj $nJobs data/$datadir exp/make_mfcc_chain/$datadir $mfccdir || exit 1;
+        utils/fix_data_dir.sh data/${datadir} # some files fail to get mfcc for many reasons
+        steps/compute_cmvn_stats.sh data/${datadir} exp/make_mfcc_chain/$datadir $mfccdir || exit 1;
+        utils/fix_data_dir.sh data/${datadir} # some files fail to get mfcc for many reasons
+    done
+fi
 
-num_targets=$(tree-info $tree_dir/tree |grep num-pdfs|awk '{print $2}')
-learning_rate_factor=$(echo "print 0.5/$xent_regularize" | python)
+if [ $stage -le 3 ]; then
+    echo
+    echo mono0a_chain
+    echo
 
-mkdir -p $dir/configs
-cat <<EOF > $dir/configs/network.xconfig
+    steps/train_mono.sh --nj $nJobs --cmd "$train_cmd" \
+      data/train data/lang exp/mono0a_chain || exit 1;
+fi
+
+if [ $stage -le 4 ]; then
+    echo
+    echo tri1_chain
+    echo
+
+    steps/align_si.sh --nj $nJobs --cmd "$train_cmd" \
+      data/train data/lang exp/mono0a_chain exp/mono0a_ali_chain || exit 1;
+
+    steps/train_deltas.sh --cmd "$train_cmd" 2000 10000 \
+      data/train data/lang exp/mono0a_ali_chain exp/tri1_chain || exit 1;
+fi
+
+if [ $stage -le 5 ]; then
+    echo
+    echo tri2b_chain
+    echo
+
+    steps/align_si.sh --nj $nJobs --cmd "$train_cmd" \
+      data/train data/lang exp/tri1_chain exp/tri1_ali_chain || exit 1;
+
+    steps/train_lda_mllt.sh --cmd "$train_cmd" \
+      --splice-opts "--left-context=3 --right-context=3" 2500 15000 \
+      data/train data/lang exp/tri1_ali_chain exp/tri2b_chain || exit 1;
+
+    utils/mkgraph.sh data/lang_test \
+      exp/tri2b_chain exp/tri2b_chain/graph || exit 1;
+fi
+
+if [ $stage -le 6 ]; then
+    echo
+    echo run_ivector_common.sh
+    echo
+
+    local/nnet3/run_ivector_common.sh --stage $stage \
+                                      --nj $nJobs \
+                                      --min-seg-len $min_seg_len \
+                                      --train-set $train_set \
+                                      --gmm $gmm \
+                                      --num-threads-ubm $num_threads_ubm \
+                                      --nnet3-affix "$nnet3_affix"
+
+
+    gmm_dir=exp/$gmm
+    ali_dir=exp/${gmm}_ali_${train_set}_sp_comb
+    tree_dir=exp/nnet3${nnet3_affix}/tree_sp
+    lang=data/lang_chain
+    lat_dir=exp/nnet3${nnet3_affix}/${gmm}_${train_set}_sp_comb_lats
+    dir=exp/nnet3${nnet3_affix}/tdnn_sp
+    train_data_dir=data/${train_set}_sp_hires_comb
+    lores_train_data_dir=data/${train_set}_sp_comb
+    train_ivector_dir=exp/nnet3${nnet3_affix}/ivectors_${train_set}_sp_hires_comb
+
+    for f in $gmm_dir/final.mdl $train_data_dir/feats.scp $train_ivector_dir/ivector_online.scp \
+        $lores_train_data_dir/feats.scp $ali_dir/ali.1.gz; do
+      [ ! -f $f ] && echo "$0: expected file $f to exist" && exit 1
+    done
+fi
+
+if [ $stage -le 7 ]; then
+    echo
+    echo creating lang directory with one state per phone.
+    echo
+
+    if [ -d data/lang_chain ]; then
+      if [ data/lang_chain/L.fst -nt data/lang/L.fst ]; then
+        echo "$0: data/lang_chain already exists, not overwriting it; continuing"
+      else
+        echo "$0: data/lang_chain already exists and seems to be older than data/lang..."
+        echo " ... not sure what to do.  Exiting."
+        exit 1;
+      fi
+    else
+      cp -r data/lang data/lang_chain
+      silphonelist=$(cat data/lang_chain/phones/silence.csl) || exit 1;
+      nonsilphonelist=$(cat data/lang_chain/phones/nonsilence.csl) || exit 1;
+      # Use our special topology... note that later on may have to tune this
+      # topology.
+      steps/nnet3/chain/gen_topo.py $nonsilphonelist $silphonelist >data/lang_chain/topo
+    fi
+fi
+
+if [ $stage -le 8 ]; then
+    echo
+    echo 'Get the alignments as lattices (gives the chain training more freedom).'
+    echo
+
+    steps/align_fmllr_lats.sh --nj $nJobs --cmd "$train_cmd" ${lores_train_data_dir} \
+        data/lang $gmm_dir $lat_dir
+    rm $lat_dir/fsts.*.gz # save space
+fi
+
+if [ $stage -le 9 ]; then
+    echo
+    echo 'Build a tree using our new topology.  We know we have alignments for the'
+    echo 'speed-perturbed data (local/nnet3/run_ivector_common.sh made them), so use'
+    echo 'those.'
+    echo
+
+    if [ -f $tree_dir/final.mdl ]; then
+      echo "$0: $tree_dir/final.mdl already exists, refusing to overwrite it."
+      exit 1;
+    fi
+    steps/nnet3/chain/build_tree.sh --frame-subsampling-factor 3 \
+        --context-opts "--context-width=2 --central-position=1" \
+        --cmd "$train_cmd" 4000 ${lores_train_data_dir} data/lang_chain $ali_dir $tree_dir
+
+    mkdir -p $dir
+
+    echo
+    echo "$0: creating neural net configs using the xconfig parser";
+    echo
+
+    num_targets=$(tree-info $tree_dir/tree |grep num-pdfs|awk '{print $2}')
+    learning_rate_factor=$(echo "print 0.5/$xent_regularize" | python)
+
+    mkdir -p $dir/configs
+    cat <<EOF > $dir/configs/network.xconfig
 input dim=100 name=ivector
 input dim=40 name=input
 
@@ -226,75 +255,85 @@ relu-batchnorm-layer name=prefinal-xent input=tdnn6 dim=450 target-rms=0.5
 output-layer name=output-xent dim=$num_targets learning-rate-factor=$learning_rate_factor max-change=1.5
 
 EOF
-steps/nnet3/xconfig_to_configs.py --xconfig-file $dir/configs/network.xconfig --config-dir $dir/configs/
+    steps/nnet3/xconfig_to_configs.py --xconfig-file $dir/configs/network.xconfig --config-dir $dir/configs/
 
+fi
 
-echo
-echo train.py 
-echo
+if [ $stage -le 10 ]; then
 
-steps/nnet3/chain/train.py --stage $train_stage \
-  --cmd "$decode_cmd" \
-  --feat.online-ivector-dir $train_ivector_dir \
-  --feat.cmvn-opts "--norm-means=false --norm-vars=false" \
-  --chain.xent-regularize 0.1 \
-  --chain.leaky-hmm-coefficient 0.1 \
-  --chain.l2-regularize 0.00005 \
-  --chain.apply-deriv-weights false \
-  --chain.lm-opts="--num-extra-lm-states=2000" \
-  --egs.dir "$common_egs_dir" \
-  --egs.opts "--frames-overlap-per-eg 0" \
-  --egs.chunk-width 150 \
-  --trainer.num-chunk-per-minibatch 128 \
-  --trainer.frames-per-iter 1500000 \
-  --trainer.num-epochs 4 \
-  --trainer.optimization.proportional-shrink 20 \
-  --trainer.optimization.num-jobs-initial 1 \
-  --trainer.optimization.num-jobs-final 1 \
-  --trainer.optimization.initial-effective-lrate 0.001 \
-  --trainer.optimization.final-effective-lrate 0.0001 \
-  --trainer.max-param-change 2.0 \
-  --cleanup.remove-egs true \
-  --feat-dir $train_data_dir \
-  --tree-dir $tree_dir \
-  --lat-dir $lat_dir \
-  --dir $dir
+    echo
+    echo train.py 
+    echo
 
-echo
-echo mkgraph
-echo
+    steps/nnet3/chain/train.py --stage $train_stage \
+      --cmd "$decode_cmd" \
+      --feat.online-ivector-dir $train_ivector_dir \
+      --feat.cmvn-opts "--norm-means=false --norm-vars=false" \
+      --chain.xent-regularize 0.1 \
+      --chain.leaky-hmm-coefficient 0.1 \
+      --chain.l2-regularize 0.00005 \
+      --chain.apply-deriv-weights false \
+      --chain.lm-opts="--num-extra-lm-states=2000" \
+      --egs.dir "$common_egs_dir" \
+      --egs.opts "--frames-overlap-per-eg 0" \
+      --egs.chunk-width 150 \
+      --trainer.num-chunk-per-minibatch 128 \
+      --trainer.frames-per-iter 1500000 \
+      --trainer.num-epochs 4 \
+      --trainer.optimization.proportional-shrink 20 \
+      --trainer.optimization.num-jobs-initial 1 \
+      --trainer.optimization.num-jobs-final 1 \
+      --trainer.optimization.initial-effective-lrate 0.001 \
+      --trainer.optimization.final-effective-lrate 0.0001 \
+      --trainer.max-param-change 2.0 \
+      --cleanup.remove-egs true \
+      --feat-dir $train_data_dir \
+      --tree-dir $tree_dir \
+      --lat-dir $lat_dir \
+      --dir $dir
+fi
 
-utils/mkgraph.sh --self-loop-scale 1.0 data/lang_test $dir $dir/graph
+if [ $stage -le 11 ]; then
+    echo
+    echo mkgraph
+    echo
 
-echo
-echo decode
-echo
+    utils/mkgraph.sh --self-loop-scale 1.0 data/lang_test $dir $dir/graph
+fi
 
-steps/nnet3/decode.sh --num-threads 1 --nj $nDecodeJobs --cmd "$decode_cmd" \
-                      --acwt 1.0 --post-decode-acwt 10.0 \
-                      --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_test_hires \
-                      --scoring-opts "--min-lmwt 5 " \
-                      $dir/graph data/test_hires $dir/decode_test || exit 1;
+if [ $stage -le 0 ]; then
+    echo
+    echo decode
+    echo
 
-grep WER $dir/decode_test/scoring_kaldi/best_wer >>RESULTS.txt
+    steps/nnet3/decode.sh --num-threads 1 --nj $nDecodeJobs --cmd "$decode_cmd" \
+                          --acwt 1.0 --post-decode-acwt 10.0 \
+                          --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_test_hires \
+                          --scoring-opts "--min-lmwt 5 " \
+                          $dir/graph data/test_hires $dir/decode_test || exit 1;
+
+    grep WER $dir/decode_test/scoring_kaldi/best_wer >>RESULTS.txt
+fi
 
 #
 # smaller model for embedded use
 #
 
-dir=exp/nnet3${nnet3_affix}/tdnn_250
+if [ $stage -le 12 ]; then
 
-mkdir -p $dir
+    dir=exp/nnet3${nnet3_affix}/tdnn_250
 
-echo
-echo "$0: creating neural net configs using the xconfig parser";
-echo
+    mkdir -p $dir
 
-num_targets=$(tree-info $tree_dir/tree |grep num-pdfs|awk '{print $2}')
-learning_rate_factor=$(echo "print 0.5/$xent_regularize" | python)
+    echo
+    echo "$0: creating neural net configs using the xconfig parser";
+    echo
 
-mkdir -p $dir/configs
-cat <<EOF > $dir/configs/network.xconfig
+    num_targets=$(tree-info $tree_dir/tree |grep num-pdfs|awk '{print $2}')
+    learning_rate_factor=$(echo "print 0.5/$xent_regularize" | python)
+
+    mkdir -p $dir/configs
+    cat <<EOF > $dir/configs/network.xconfig
 input dim=100 name=ivector
 input dim=40 name=input
 
@@ -328,54 +367,56 @@ relu-batchnorm-layer name=prefinal-xent input=tdnn6 dim=250 target-rms=0.5
 output-layer name=output-xent dim=$num_targets learning-rate-factor=$learning_rate_factor max-change=1.5
 
 EOF
-steps/nnet3/xconfig_to_configs.py --xconfig-file $dir/configs/network.xconfig --config-dir $dir/configs/
+    steps/nnet3/xconfig_to_configs.py --xconfig-file $dir/configs/network.xconfig --config-dir $dir/configs/
 
-echo
-echo train.py 
-echo
+    echo
+    echo train.py 
+    echo
 
-steps/nnet3/chain/train.py --stage $train_stage \
-  --cmd "$decode_cmd" \
-  --feat.online-ivector-dir $train_ivector_dir \
-  --feat.cmvn-opts "--norm-means=false --norm-vars=false" \
-  --chain.xent-regularize 0.1 \
-  --chain.leaky-hmm-coefficient 0.1 \
-  --chain.l2-regularize 0.00005 \
-  --chain.apply-deriv-weights false \
-  --chain.lm-opts="--num-extra-lm-states=2000" \
-  --egs.dir "$common_egs_dir" \
-  --egs.opts "--frames-overlap-per-eg 0" \
-  --egs.chunk-width 150 \
-  --trainer.num-chunk-per-minibatch 256 \
-  --trainer.frames-per-iter 1500000 \
-  --trainer.num-epochs 4 \
-  --trainer.optimization.proportional-shrink 20 \
-  --trainer.optimization.num-jobs-initial 1 \
-  --trainer.optimization.num-jobs-final 1 \
-  --trainer.optimization.initial-effective-lrate 0.001 \
-  --trainer.optimization.final-effective-lrate 0.0001 \
-  --trainer.max-param-change 2.0 \
-  --cleanup.remove-egs true \
-  --feat-dir $train_data_dir \
-  --tree-dir $tree_dir \
-  --lat-dir $lat_dir \
-  --dir $dir
+    steps/nnet3/chain/train.py --stage $train_stage \
+      --cmd "$decode_cmd" \
+      --feat.online-ivector-dir $train_ivector_dir \
+      --feat.cmvn-opts "--norm-means=false --norm-vars=false" \
+      --chain.xent-regularize 0.1 \
+      --chain.leaky-hmm-coefficient 0.1 \
+      --chain.l2-regularize 0.00005 \
+      --chain.apply-deriv-weights false \
+      --chain.lm-opts="--num-extra-lm-states=2000" \
+      --egs.dir "$common_egs_dir" \
+      --egs.opts "--frames-overlap-per-eg 0" \
+      --egs.chunk-width 150 \
+      --trainer.num-chunk-per-minibatch 256 \
+      --trainer.frames-per-iter 1500000 \
+      --trainer.num-epochs 4 \
+      --trainer.optimization.proportional-shrink 20 \
+      --trainer.optimization.num-jobs-initial 1 \
+      --trainer.optimization.num-jobs-final 1 \
+      --trainer.optimization.initial-effective-lrate 0.001 \
+      --trainer.optimization.final-effective-lrate 0.0001 \
+      --trainer.max-param-change 2.0 \
+      --cleanup.remove-egs true \
+      --feat-dir $train_data_dir \
+      --tree-dir $tree_dir \
+      --lat-dir $lat_dir \
+      --dir $dir
 
-echo
-echo mkgraph
-echo
+    echo
+    echo mkgraph
+    echo
 
-utils/mkgraph.sh --self-loop-scale 1.0 data/lang_test $dir $dir/graph
+    utils/mkgraph.sh --self-loop-scale 1.0 data/lang_test $dir $dir/graph
 
-echo
-echo decode
-echo
+    echo
+    echo decode
+    echo
 
-steps/nnet3/decode.sh --num-threads 1 --nj $nDecodeJobs --cmd "$decode_cmd" \
-                      --acwt 1.0 --post-decode-acwt 10.0 \
-                      --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_test_hires \
-                      --scoring-opts "--min-lmwt 5 " \
-                      $dir/graph data/test_hires $dir/decode_test || exit 1;
+    steps/nnet3/decode.sh --num-threads 1 --nj $nDecodeJobs --cmd "$decode_cmd" \
+                          --acwt 1.0 --post-decode-acwt 10.0 \
+                          --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_test_hires \
+                          --scoring-opts "--min-lmwt 5 " \
+                          $dir/graph data/test_hires $dir/decode_test || exit 1;
 
-grep WER $dir/decode_test/scoring_kaldi/best_wer >>RESULTS.txt
+    grep WER $dir/decode_test/scoring_kaldi/best_wer >>RESULTS.txt
+
+fi
 
