@@ -212,7 +212,7 @@ yum install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldi
 
 alternatively you can download RPMs manually here:
 * [x86\_64](http://goofy.zamia.org/repo-ai/centos/7/x86_64/)
-* [SRPMs](http://goofy.zamia.org/repo-ai/centos/7/x86_64/)
+* [SRPMS](http://goofy.zamia.org/repo-ai/centos/7/SRPMS/)
 
 Run Example Applications
 ------------------------
