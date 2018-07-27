@@ -748,6 +748,11 @@ complete export run with noise augmented corpora included:
 Model Adaptation
 ----------------
 
+For a standalone kaldi model adaptation tool that does not require a complete zamia-speech setup, see
+
+[kaldi-adapt-lm](https://github.com/gooofy/kaldi-adapt-lm)
+
+
 Existing kaldi models (such as the ones we provide for download but also those you may train from scratch using our scripts)
 can be adapted to (typically domain specific) language models, JSGF grammars and grammar FSTs.
 
