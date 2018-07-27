@@ -133,6 +133,16 @@ if [ $stage -le 5 ]; then
       exp/tri2b_chain exp/tri2b_chain/graph || exit 1;
 fi
 
+gmm_dir=exp/$gmm
+ali_dir=exp/${gmm}_ali_${train_set}_sp_comb
+tree_dir=exp/nnet3${nnet3_affix}/tree_sp
+lang=data/lang_chain
+lat_dir=exp/nnet3${nnet3_affix}/${gmm}_${train_set}_sp_comb_lats
+dir=exp/nnet3${nnet3_affix}/tdnn_sp
+train_data_dir=data/${train_set}_sp_hires_comb
+lores_train_data_dir=data/${train_set}_sp_comb
+train_ivector_dir=exp/nnet3${nnet3_affix}/ivectors_${train_set}_sp_hires_comb
+
 if [ $stage -le 6 ]; then
     echo
     echo run_ivector_common.sh
@@ -146,16 +156,6 @@ if [ $stage -le 6 ]; then
                                       --num-threads-ubm $num_threads_ubm \
                                       --nnet3-affix "$nnet3_affix"
 
-
-    gmm_dir=exp/$gmm
-    ali_dir=exp/${gmm}_ali_${train_set}_sp_comb
-    tree_dir=exp/nnet3${nnet3_affix}/tree_sp
-    lang=data/lang_chain
-    lat_dir=exp/nnet3${nnet3_affix}/${gmm}_${train_set}_sp_comb_lats
-    dir=exp/nnet3${nnet3_affix}/tdnn_sp
-    train_data_dir=data/${train_set}_sp_hires_comb
-    lores_train_data_dir=data/${train_set}_sp_comb
-    train_ivector_dir=exp/nnet3${nnet3_affix}/ivectors_${train_set}_sp_hires_comb
 
     for f in $gmm_dir/final.mdl $train_data_dir/feats.scp $train_ivector_dir/ivector_online.scp \
         $lores_train_data_dir/feats.scp $ali_dir/ali.1.gz; do
