@@ -165,6 +165,11 @@ Code
         Binary packages in Debian format for Raspbian 9 (stretch, armhf, Raspberry Pi 2/3)
     + [Debian APT Repo](http://goofy.zamia.org/repo-ai/debian/stretch/amd64)
         Binary packages in Debian format for Debian 9 (stretch, amd64)
+    + [CentOS YUM Repo](http://goofy.zamia.org/repo-ai/centos/7/x86_64/)
+        Binary packages in RPM format for CentOS 7 (x86_64)
+* [Source AI Packages](http://goofy.zamia.org/repo-ai/)
+    + [CentOS 7](http://goofy.zamia.org/repo-ai/centos/7/SRPMS/)
+        Source packages in SRPM format for CentOS 7
 
 Get Started with our Pre-Trained Models 
 =======================================
