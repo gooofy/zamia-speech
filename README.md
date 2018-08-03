@@ -330,7 +330,7 @@ To transfer an audio file for transcription to the service, in a second
 terminal, execute:
 
 ```bash
-$ git pull git@github.com:mpuels/docker-py-kaldi-asr-and-model.git
+$ git clone https://github.com/mpuels/docker-py-kaldi-asr-and-model.git
 $ conda env create -f environment.yml
 $ source activate py-kaldi-asr-client
 $ ./asr_client.py asr.wav
