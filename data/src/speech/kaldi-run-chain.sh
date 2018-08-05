@@ -60,6 +60,7 @@ fi
 . utils/parse_options.sh
 
 echo "Runtime configuration is: nJobs $nJobs, nDecodeJobs $nDecodeJobs. If this is not what you want, edit cmd.sh"
+echo "Starting at stage $stage"
 
 # now start preprocessing with KALDI scripts
 
@@ -155,7 +156,6 @@ if [ $stage -le 6 ]; then
                                       --gmm $gmm \
                                       --num-threads-ubm $num_threads_ubm \
                                       --nnet3-affix "$nnet3_affix"
-
 
     for f in $gmm_dir/final.mdl $train_data_dir/feats.scp $train_ivector_dir/ivector_online.scp \
         $lores_train_data_dir/feats.scp $ali_dir/ali.1.gz; do
@@ -277,7 +277,7 @@ if [ $stage -le 10 ]; then
       --egs.dir "$common_egs_dir" \
       --egs.opts "--frames-overlap-per-eg 0" \
       --egs.chunk-width 150 \
-      --trainer.num-chunk-per-minibatch 128 \
+      --trainer.num-chunk-per-minibatch 256 \
       --trainer.frames-per-iter 1500000 \
       --trainer.num-epochs 4 \
       --trainer.optimization.proportional-shrink 20 \
@@ -301,7 +301,7 @@ if [ $stage -le 11 ]; then
     utils/mkgraph.sh --self-loop-scale 1.0 data/lang_test $dir $dir/graph
 fi
 
-if [ $stage -le 0 ]; then
+if [ $stage -le 12 ]; then
     echo
     echo decode
     echo
@@ -319,7 +319,7 @@ fi
 # smaller model for embedded use
 #
 
-if [ $stage -le 12 ]; then
+if [ $stage -le 13 ]; then
 
     dir=exp/nnet3${nnet3_affix}/tdnn_250
 
@@ -385,7 +385,7 @@ EOF
       --egs.dir "$common_egs_dir" \
       --egs.opts "--frames-overlap-per-eg 0" \
       --egs.chunk-width 150 \
-      --trainer.num-chunk-per-minibatch 256 \
+      --trainer.num-chunk-per-minibatch 512 \
       --trainer.frames-per-iter 1500000 \
       --trainer.num-epochs 4 \
       --trainer.optimization.proportional-shrink 20 \
