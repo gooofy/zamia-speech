@@ -87,12 +87,16 @@ ASR Models
 Our pre-built ASR models can be downloaded here: [ASR Models](http://goofy.zamia.org/zamia-speech/asr-models/)
 
 + Kaldi ASR, English:
+    + `kaldi-generic-en-tdnn_f`
+      Large nnet3-chain factorized TDNN model, trained on ~1200 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings. Should provide the best accuracy but is a bit more resource intensive than the
+      other models.
     + `kaldi-generic-en-tdnn_sp`
-      Large nnet3-chain model, trained on ~800 hours of audio. Has decent background noise resistance and can
-      also be used on phone recordings.
+      Large nnet3-chain model, trained on ~1200 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings. Less accurate but also slightly less resource intensive than the `tddn_f` model.
     + `kaldi-generic-en-tdnn_250`
-      Same as the large model but less resource intensive, suitable for use in embedded applications (e.g. a RaspberryPi 3).
-    + `kaldi-generic-en-tri2b\_chain`
+      Same as the larger models but less resource intensive, suitable for use in embedded applications (e.g. a RaspberryPi 3).
+    + `kaldi-generic-en-tri2b_chain`
       GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
 + Kaldi ASR, German:
     + `kaldi-generic-de-tdnn_sp`
