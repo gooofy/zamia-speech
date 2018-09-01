@@ -10,7 +10,7 @@ GEM
       http_parser.rb (~> 0.6.0)
     eventmachine (1.2.6)
     execjs (2.7.0)
-    ffi (1.9.23)
+    ffi (1.9.24)
     forwardable-extended (2.6.0)
     http_parser.rb (0.6.0)
     i18n (0.9.5)
