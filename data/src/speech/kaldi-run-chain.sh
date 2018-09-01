@@ -509,7 +509,7 @@ if [ $stage -le 15 ]; then
       --egs.stage $get_egs_stage \
       --egs.opts "--frames-overlap-per-eg 0 --constrained false" \
       --egs.chunk-width $frames_per_eg \
-      --trainer.num-chunk-per-minibatch 320 \
+      --trainer.num-chunk-per-minibatch 288 \
       --trainer.frames-per-iter 1500000 \
       --trainer.num-epochs 6 \
       --trainer.optimization.num-jobs-initial 1 \
@@ -517,6 +517,7 @@ if [ $stage -le 15 ]; then
       --trainer.optimization.initial-effective-lrate 0.00025 \
       --trainer.optimization.final-effective-lrate 0.000025 \
       --trainer.max-param-change 2.0 \
+      --use-gpu wait \
       --cleanup.remove-egs true \
       --feat-dir $train_data_dir \
       --tree-dir $tree_dir \
