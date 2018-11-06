@@ -39,9 +39,10 @@ from lex_edit           import LexEdit
 # tokenize transcript, check against lexicon for OOVs
 #
 
-PROC_TITLE = 'abook-preprocess-transcript'
-LANG       = 'de'
-DEFAULT_WRT = 'data/src/speech/de/wrt.csv'
+PROC_TITLE  = 'abook-preprocess-transcript'
+LANG        = 'de'
+DICT        = 'dict-de.ipa'
+DEFAULT_WRT = 'data/src/dicts/wrt.csv'
 
 #
 # init terminal
@@ -87,7 +88,7 @@ outputfn       = os.path.splitext(args[0])[0] + ".prompt"
 #
 
 logging.info("loading lexicon...")
-lex = Lexicon(lang=LANG)
+lex = Lexicon(DICT)
 logging.info("loading lexicon...done.")
 
 lex_edit = LexEdit(lex)

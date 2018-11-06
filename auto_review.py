@@ -45,7 +45,6 @@ from kaldiasr.nnet3     import KaldiNNet3OnlineModel, KaldiNNet3OnlineDecoder
 DEFAULT_ASR_MODEL = 'kaldi-chain-voxforge-de-latest'
 
 MODELDIR    = 'data/models/%s'
-MODEL       = 'tdnn_sp'
 SAVE_RATE   = 10
 FAILLOG     = 'tmp/decoding_fails.txt'
 
@@ -131,7 +130,7 @@ logging.info("loading transcripts...done.")
 
 if not options.do_all:
     logging.info("loading kaldi model...")
-    kaldi_model = KaldiNNet3OnlineModel (MODELDIR % options.asr_model, MODEL, acoustic_scale=1.0, beam=7.0, frame_subsampling_factor=3)
+    kaldi_model = KaldiNNet3OnlineModel (MODELDIR % options.asr_model, acoustic_scale=1.0, beam=7.0, frame_subsampling_factor=3)
     logging.info("loading kaldi model...done.")
 
 #
@@ -168,7 +167,7 @@ with open (options.outfn, 'w') as outf:
         prompt = ' '.join(tokenize(ts['prompt'], lang=options.lang))
 
         if not prompt:
-            logging.info("%7d, # rated: %5d %-20s not prompt." % (idx, num_rated, utt_id))
+            logging.info("%7d, # rated: %5d %-20s no prompt." % (idx, num_rated, utt_id))
             continue
 
         if options.do_all:

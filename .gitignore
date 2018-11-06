@@ -8,6 +8,7 @@ old
 data/dst
 data/dist
 data/models
+data/arc
 *.log
 TODO
 NOTES
@@ -29,6 +30,8 @@ data/src/speech/voxforge_en_noisy/
 data/src/speech/voxforge_en_phone/
 data/src/speech/zamia_en_noisy/
 data/src/speech/zamia_en_phone/
+data/src/speech/cv_corpus_v1_noisy/
+data/src/speech/cv_corpus_v1_phone/
 wav2goofy.py
 abook/librivox-download.sh
 logo

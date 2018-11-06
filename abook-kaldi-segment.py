@@ -42,8 +42,7 @@ from nltools.phonetics      import ipa2xsampa
 from speech_lexicon     import Lexicon
 # from speech_transcripts import Transcripts
 
-LANG             = 'de'
-WORKDIR          = 'data/dst/speech/de/kaldi'
+WORKDIR          = 'data/dst/asr-models/kaldi/segmentation'
 
 #
 # init 
@@ -57,7 +56,7 @@ config = misc.load_config ('.speechrc')
 # commandline parsing
 #
 
-parser = OptionParser("usage: %prog [options] srcdir")
+parser = OptionParser("usage: %prog [options] model srcdir")
 
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="enable verbose logging")
@@ -69,11 +68,12 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
 
-if len(args) != 1:
+if len(args) != 2:
     parser.print_usage()
     sys.exit(1)
 
-srcdirfn = args[0]
+modelfn  = args[0]
+srcdirfn = args[1]
 
 #
 # config
@@ -81,47 +81,47 @@ srcdirfn = args[0]
 
 kaldi_root  = config.get("speech", "kaldi_root")
 
-data_dir    = "%s/data" % WORKDIR
-
 #
 # clean up leftovers from previous runs
 #
 
-os.system('rm -rf %s/mfcc_segmentation' % WORKDIR)
-os.system('rm -rf %s/exp/segment_long_utts_a_train' % WORKDIR)
-os.system('rm -rf %s/exp/make_mfcc_segmentation' % WORKDIR)
-os.system('rm -rf %s/exp/tri2b_adapt_ali_reseg_a' % WORKDIR)
-os.system('rm -rf %s/exp/tri2b_adapt_reseg_a' % WORKDIR)
-os.system('rm -rf %s/exp/tri2b_adapt' % WORKDIR)
-os.system('rm -rf %s/exp/tri3_reseg_a' % WORKDIR)
-os.system('rm -rf %s/exp/tri3_reseg_a_cleaned_b_work' % WORKDIR)
-os.system('rm -rf %s/exp/tri3_reseg_a_ali_cleaned_b' % WORKDIR)
-os.system('rm -rf %s/exp/tri3_reseg_a_cleaned_b' % WORKDIR)
-os.system('rm -rf %s/data/segmentation' % WORKDIR)
-os.system('rm -rf %s/data/segmentation_result_a' % WORKDIR)
-os.system('rm -rf %s/data/segmentation_result_a_cleaned_b' % WORKDIR)
-os.system('rm -rf %s/data/local/dict.adapt' % WORKDIR)
-os.system('rm -rf %s/data/local/lm/oovs_lm_adapt.txt' % WORKDIR)
-os.system('rm -rf %s/data/lang.adapt' % WORKDIR)
-os.system('rm -rf %s/data/lang_test.adapt' % WORKDIR)
+cmd = 'rm -rf %s' % WORKDIR
+logging.info(cmd)
+os.system(cmd)
+misc.mkdirs(WORKDIR)
 
 #
-# copy scripts and config files
+# copy scripts
 #
 
 misc.copy_file ('data/src/speech/kaldi-run-segmentation.sh', '%s/run-segmentation.sh' % WORKDIR)
 
+misc.copy_file ('data/src/speech/kaldi-cmd.sh', '%s/cmd.sh' % WORKDIR)
+misc.render_template ('data/src/speech/kaldi-path.sh.template', '%s/path.sh' % WORKDIR, kaldi_root=kaldi_root)
+misc.symlink ('%s/egs/wsj/s5/steps' % kaldi_root, '%s/steps' % WORKDIR)
+misc.symlink ('%s/egs/wsj/s5/utils' % kaldi_root, '%s/utils' % WORKDIR)
+
 #
-# load lexicon
+# create skeleton dst model
 #
 
-logging.info ( "loading lexicon...")
-lex = Lexicon(lang=LANG)
-logging.info ( "loading lexicon...done.")
+misc.mkdirs ('%s/exp'  % WORKDIR)
+
+cmd = "cp -r '%s/model' '%s/exp/tri2b_adapt'" % (modelfn, WORKDIR)
+logging.info(cmd)
+os.system(cmd)
+cmd = "cp -r '%s/data'  '%s/data'" % (modelfn, WORKDIR)
+logging.info(cmd)
+os.system(cmd)
+cmd = "cp -r '%s/conf'  '%s/conf'" % (modelfn, WORKDIR)
+logging.info(cmd)
+os.system(cmd)
 
 #
 # kaldi data for segmentation
 #
+
+data_dir    = "%s/data" % WORKDIR
 
 destdirfn = '%s/segmentation/' % data_dir
 
@@ -172,6 +172,9 @@ with open(destdirfn+'wav.scp','w') as wavscpf,  \
 with open(destdirfn+'spk2gender','w') as spk2genderf:
     for speaker in sorted(list(speakers)):
         spk2genderf.write('%s m\n' % speaker)
+
+sys.exit(0)
+
 
 #
 # create adaptation case

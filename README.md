@@ -22,12 +22,21 @@ Table of Contents
 
 * [Zamia Speech](#zamia-speech)
 * [Table of Contents](#table-of-contents)
-* [Links](#links)
+* [Download](#download)
+  * [ASR Models](#asr-models)
+  * [IPA Dictionaries (Lexicons)](#ipa-dictionaries-lexicons)
+  * [G2P Models](#g2p-models)
+  * [Language Models](#language-models)
+  * [Code](#code)
 * [Get Started with our Pre\-Trained Models](#get-started-with-our-pre-trained-models)
-  * [Raspbian on Raspberry Pi 3](#raspbian-on-raspberry-pi-3)
-    * [(1/3) setup apt\-source and install packages](#13-setup-apt-source-and-install-packages)
-    * [(2/3) determine the name of your pulseaudio mic source](#23-determine-the-name-of-your-pulseaudio-mic-source)
-    * [(3/3) download and run demo](#33-download-and-run-demo)
+  * [Installation](#installation)
+    * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
+    * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
+    * [CentOS 7 (amd64)](#centos-7-amd64)
+  * [Run Example Applications](#run-example-applications)
+    * [Wave File Decoding Demo](#wave-file-decoding-demo)
+    * [Live Mic Demo](#live-mic-demo)
+* [Get Started with a Demo STT Service Packaged in Docker](#get-started-with-a-demo-stt-service-packaged-in-docker)
 * [Requirements](#requirements)
 * [Setup Notes](#setup-notes)
 * [Speech Corpora](#speech-corpora)
@@ -44,6 +53,7 @@ Table of Contents
 * [Kaldi Models (recommended)](#kaldi-models-recommended)
   * [English NNet3 Chain Models](#english-nnet3-chain-models)
   * [German NNet3 Chain Models](#german-nnet3-chain-models)
+  * [Model Adaptation](#model-adaptation)
 * [CMU Sphinx Models](#cmu-sphinx-models)
   * [Running pocketsphinx](#running-pocketsphinx)
 * [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
@@ -52,49 +62,239 @@ Table of Contents
   * [(2/3) Split Audio into Segments](#23-split-audio-into-segments)
   * [(3/3) Transcribe Audio](#33-transcribe-audio)
 * [Audiobook Segmentation and Transcription (kaldi)](#audiobook-segmentation-and-transcription-kaldi)
-  * [(0/4) Convert Audio to WAVE Format](#04-convert-audio-to-wave-format)
-  * [(1/4) Convert Audio to 16kHz mono](#14-convert-audio-to-16khz-mono)
-  * [(2/4) Preprocess the Transcript](#24-preprocess-the-transcript)
+  * [Directory Layout](#directory-layout)
+  * [(1/4) Preprocess the Transcript](#14-preprocess-the-transcript)
+  * [(2/4) Model adaptation](#24-model-adaptation)
   * [(3/4) Auto\-Segment using Kaldi](#34-auto-segment-using-kaldi)
   * [(4/4) Retrieve Segmentation Result](#44-retrieve-segmentation-result)
+* [Model Distribution](#model-distribution)
 * [License](#license)
 * [Authors](#authors)
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
-Links
-=====
+Download
+========
 
-* [Data / Models](http://goofy.zamia.org/voxforge/ "models")
+We have various models plus source code and binaries for the tools used to build these models
+available for download. Everything is free and open source.
 
-* [Code](https://github.com/gooofy/nlp "github")
+All our model and data downloads can be found here: [Downloads](http://goofy.zamia.org/zamia-speech/)
+
+ASR Models 
+----------
+
+Our pre-built ASR models can be downloaded here: [ASR Models](http://goofy.zamia.org/zamia-speech/asr-models/)
+
++ Kaldi ASR, English:
+    + `kaldi-generic-en-tdnn_f`
+      Large nnet3-chain factorized TDNN model, trained on ~1200 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings. Should provide the best accuracy but is a bit more resource intensive than the
+      other models.
+    + `kaldi-generic-en-tdnn_sp`
+      Large nnet3-chain model, trained on ~1200 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings. Less accurate but also slightly less resource intensive than the `tddn_f` model.
+    + `kaldi-generic-en-tdnn_250`
+      Same as the larger models but less resource intensive, suitable for use in embedded applications (e.g. a RaspberryPi 3).
+    + `kaldi-generic-en-tri2b_chain`
+      GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
++ Kaldi ASR, German:
+    + `kaldi-generic-de-tdnn_sp`
+      Large nnet3-chain model, trained on ~260 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings.
+    + `kaldi-generic-de-tdnn_250`
+      Same as the large model but less resource intensive, suitable for use in embedded applications (e.g. a RaspberryPi 3).
+    + `kaldi-generic-de-tri2b_chain`
+      GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
++ CMU Sphinx, English:
+    + `cmusphinx-cont-generic-en`
+      Large model, trained on ~800 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings.
+    + `cmusphinx-ptm-generic-en`
+      Same as the large model but less resource intensive, suitable for use in embedded applications.
++ CMU Sphinx, German:
+    + `cmusphinx-ptm-generic-de`
+      Large model, trained on ~260 hours of audio. Has decent background noise resistance and can
+      also be used on phone recordings.
+    + `cmusphinx-cont-generic-de`
+      Same as the large model but less resource intensive, suitable for use in embedded applications.
+
+*NOTE*: It is important to realize that these models can and should be adapted to your application domain. See 
+        [Model Adaptation](#model-adaptation) for details.
+
+IPA Dictionaries (Lexicons)
+---------------------------
+
+Our dictionaries can be downloaded here: [Dictionaries](https://github.com/gooofy/zamia-speech/tree/master/data/src/dicts)
+
++ IPA UTF-8, English:
+    + `dict-en.ipa`
+      Based on CMUDict with many additional entries generated via Sequitur G2P.
++ IPA UTF-8, German:
+    + `dict-de.ipa`
+      Created manually from scratch with many additional auto-reviewed entries extracted from Wiktionary.
+
+G2P Models 
+----------
+
+Our pre-built G2P models can be downloaded here: [G2P Models](http://goofy.zamia.org/zamia-speech/g2p/)
+
++ Sequitur, English:
+    + ` sequitur-dict-en.ipa`
+      Sequitur G2P model trained on our English IPA dictionary (UTF8).
++ Sequitur, German:
+    + ` sequitur-dict-de.ipa`
+      Sequitur G2P model trained on our German IPA dictionary (UTF8).
+
+Language Models
+---------------
+
+Our pre-built ARPA language models can be downloaded here: [Language Models](http://goofy.zamia.org/zamia-speech/lm/)
+
++ SRILM, English, ARPA:
+    + `srilm-generic_en_lang_model`
++ SRILM, German, ARPA:
+    + `srilm-generic_de_lang_model`
+
+Code
+----
+
+* [Zamia-Speech](https://github.com/gooofy/zamia-speech) 
+    where we host all our scripts and other sources used to build our models. 
+* [py-kaldi-asr](https://github.com/gooofy/py-kaldi-asr) 
+    Python wrapper around Kaldi's nnet3-chain decoder complete with example
+    scripts on how to use our models in your application.
+* [Binary AI Packages](http://goofy.zamia.org/repo-ai/)
+    + [Raspbian APT Repo](http://goofy.zamia.org/repo-ai/raspbian/stretch/armhf)
+        Binary packages in Debian format for Raspbian 9 (stretch, armhf, Raspberry Pi 2/3)
+    + [Debian APT Repo](http://goofy.zamia.org/repo-ai/debian/stretch/amd64)
+        Binary packages in Debian format for Debian 9 (stretch, amd64)
+    + [CentOS YUM Repo](http://goofy.zamia.org/repo-ai/centos/7/x86_64/)
+        Binary packages in RPM format for CentOS 7 (x86_64)
+* [Source AI Packages](http://goofy.zamia.org/repo-ai/)
+    + [CentOS 7](http://goofy.zamia.org/repo-ai/centos/7/SRPMS/)
+        Source packages in SRPM format for CentOS 7
 
 Get Started with our Pre-Trained Models 
 =======================================
 
-Raspbian on Raspberry Pi 3
---------------------------
+Installation
+------------
 
-### (1/3) setup apt-source and install packages
+### Raspbian 9 (stretch) on a Raspberry Pi 2/3
+
+Setup apt-source and install packages:
 
 ```bash
-pi@raspberrypi:~ $ sudo -i
+# execute with root permissions (sudo -i):
 
-root@raspberrypi:~# echo "deb http://goofy.zamia.org/raspbian-ai/ ./"
->/etc/apt/sources.list.d/zamia-ai.list
-root@raspberrypi:~# wget -qO -
-http://goofy.zamia.org/raspbian-ai/bofh.asc | sudo apt-key add -
-root@raspberrypi:~# apt-get update
-root@raspberrypi:~# apt-get install kaldi-chain-voxforge-de
-kaldi-chain-voxforge-en python-kaldiasr python-nltools
-pulseaudio-utils pulseaudio
-root@raspberrypi:~# exit
+echo "deb http://goofy.zamia.org/repo-ai/raspbian/stretch/armhf/ ./" >/etc/apt/sources.list.d/zamia-ai.list
+wget -qO - http://goofy.zamia.org/repo-ai/raspbian/stretch/armhf/bofh.asc | sudo apt-key add -
+apt-get update
+apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
 ```
 
-### (2/3) determine the name of your pulseaudio mic source
+### Debian 9 (stretch, amd64)
+
+Setup apt-source and install packages:
 
 ```bash
-pi@raspberrypi:~ $ pactl list sources
+# execute with root permissions (sudo -i):
+
+echo "deb http://goofy.zamia.org/repo-ai/debian/stretch/amd64/ ./" >/etc/apt/sources.list.d/zamia-ai.list
+wget -qO - http://goofy.zamia.org/repo-ai/debian/stretch/amd64/bofh.asc | sudo apt-key add -
+apt-get update
+apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
+```
+
+### CentOS 7 (amd64)
+
+Setup yum repo and install packages:
+
+```bash
+# execute with root permissions (sudo -i):
+
+cd /etc/yum.repos.d
+wget http://goofy.zamia.org/zamia-speech/misc/zamia-ai-centos.repo
+yum install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
+```
+
+alternatively you can download RPMs manually here:
+* [x86\_64](http://goofy.zamia.org/repo-ai/centos/7/x86_64/)
+* [SRPMS](http://goofy.zamia.org/repo-ai/centos/7/SRPMS/)
+
+Run Example Applications
+------------------------
+
+### Wave File Decoding Demo
+
+Download a few sample wave files
+
+```bash
+$ wget http://goofy.zamia.org/zamia-speech/misc/demo_wavs.tgz
+--2018-06-23 16:46:28--  http://goofy.zamia.org/zamia-speech/misc/demo_wavs.tgz
+Resolving goofy.zamia.org (goofy.zamia.org)... 78.47.65.20
+Connecting to goofy.zamia.org (goofy.zamia.org)|78.47.65.20|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 619852 (605K) [application/x-gzip]
+Saving to: ‘demo_wavs.tgz’
+
+demo_wavs.tgz                     100%[==========================================================>] 605.32K  2.01MB/s    in 0.3s    
+
+2018-06-23 16:46:28 (2.01 MB/s) - ‘demo_wavs.tgz’ saved [619852/619852]
+```
+
+unpack them:
+
+```bash
+$ tar xfvz demo_wavs.tgz
+demo1.wav
+demo2.wav
+demo3.wav
+demo4.wav
+```
+
+download the demo program 
+
+
+```bash
+$ wget http://goofy.zamia.org/zamia-speech/misc/kaldi_decode_wav.py
+--2018-06-23 16:47:53--  http://goofy.zamia.org/zamia-speech/misc/kaldi_decode_wav.py
+Resolving goofy.zamia.org (goofy.zamia.org)... 78.47.65.20
+Connecting to goofy.zamia.org (goofy.zamia.org)|78.47.65.20|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2469 (2.4K) [text/plain]
+Saving to: ‘kaldi_decode_wav.py’
+
+kaldi_decode_wav.py               100%[==========================================================>]   2.41K  --.-KB/s    in 0s      
+
+2018-06-23 16:47:53 (311 MB/s) - ‘kaldi_decode_wav.py’ saved [2469/2469]
+```
+
+now run kaldi automatic speech recognition on the demo wav files:
+
+```bash
+$ python kaldi_decode_wav.py -v demo?.wav
+DEBUG:root:/opt/kaldi/model/kaldi-generic-en-tdnn_sp loading model...
+DEBUG:root:/opt/kaldi/model/kaldi-generic-en-tdnn_sp loading model... done, took 1.473226s.
+DEBUG:root:/opt/kaldi/model/kaldi-generic-en-tdnn_sp creating decoder...
+DEBUG:root:/opt/kaldi/model/kaldi-generic-en-tdnn_sp creating decoder... done, took 0.143928s.
+DEBUG:root:demo1.wav decoding took     0.37s, likelyhood: 1.863645
+i cannot follow you she said 
+DEBUG:root:demo2.wav decoding took     0.54s, likelyhood: 1.572326
+i should like to engage just for one whole life in that 
+DEBUG:root:demo3.wav decoding took     0.42s, likelyhood: 1.709773
+philip knew that she was not an indian 
+DEBUG:root:demo4.wav decoding took     1.06s, likelyhood: 1.715135
+he also contented that better confidence was established by carrying no weapons 
+```
+
+### Live Mic Demo
+
+Determine the name of your pulseaudio mic source:
+
+```bash
+$ pactl list sources
 Source #0
     State: SUSPENDED
     Name: alsa_input.usb-C-Media_Electronics_Inc._USB_PnP_Sound_Device-00.analog-mono
@@ -102,24 +302,64 @@ Source #0
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
 
-### (3/3) download and run demo
+download and run demo:
 
 ```bash
-pi@raspberrypi:~ $ wget
-'https://raw.githubusercontent.com/gooofy/py-kaldi-asr/master/examples/chain_live.py'
+$ wget 'http://goofy.zamia.org/zamia-speech/misc/kaldi_decode_live.py'
 
-pi@raspberrypi:~ $ python chain_live.py -s 'CM108'
-Kaldi live demo V0.1
-Loading model from /opt/kaldi/model/kaldi-chain-voxforge-de ...
+$ python kaldi_decode_live.py -s 'CM108'
+Kaldi live demo V0.2
+Loading model from /opt/kaldi/model/kaldi-generic-en-tdnn_250 ...
 Please speak.
-hallo computer
-schalte bitte das radio ein
-mach bitte das licht an
-wie wird das wetter in stuttgart
-wie geht es dir
-vielen dank
-auf wiedersehen
+hallo computer                      
+switch on the radio please                      
+please switch on the light                      
+what about the weather in stuttgart                     
+how are you                      
+thank you                      
+good bye 
 ```
+
+Get Started with a Demo STT Service Packaged in Docker
+======================================================
+
+To start the STT service on your local machine, execute:
+
+```bash
+$ docker pull quay.io/mpuels/docker-py-kaldi-asr-and-model:kaldi-generic-en-tdnn_sp-r20180611
+$ docker run --rm -p 127.0.0.1:8080:80/tcp quay.io/mpuels/docker-py-kaldi-asr-and-model:kaldi-generic-en-tdnn_sp-r20180611
+```
+
+To transfer an audio file for transcription to the service, in a second
+terminal, execute:
+
+```bash
+$ git clone https://github.com/mpuels/docker-py-kaldi-asr-and-model.git
+$ conda env create -f environment.yml
+$ source activate py-kaldi-asr-client
+$ ./asr_client.py asr.wav
+INFO:root: 0.005s:  4000 frames ( 0.250s) decoded, status=200.
+...
+INFO:root:19.146s: 152000 frames ( 9.500s) decoded, status=200.
+INFO:root:27.136s: 153003 frames ( 9.563s) decoded, status=200.
+INFO:root:*****************************************************************
+INFO:root:** wavfn         : asr.wav
+INFO:root:** hstr          : speech recognition system requires training where individuals to exercise political system
+INFO:root:** confidence    : -0.578844
+INFO:root:** decoding time :    27.14s
+INFO:root:*****************************************************************
+```
+
+The Docker image in the example above is the result of stacking 4 images on top
+of each other:
+
+- docker-py-kaldi-asr-and-model: [Source](https://github.com/mpuels/docker-py-kaldi-asr-and-model), [Image](https://quay.io/repository/mpuels/docker-py-kaldi-asr-and-model)
+
+- docker-py-kaldi-asr: [Source](https://github.com/mpuels/docker-py-kaldi-asr), [Image](https://quay.io/repository/mpuels/docker-py-kaldi-asr)
+
+- docker-kaldi-asr: [Source](https://github.com/mpuels/docker-kaldi-asr), [Image](https://quay.io/repository/mpuels/docker-kaldi-asr)
+
+- debian:8: https://hub.docker.com/_/debian/
 
 
 Requirements
@@ -199,7 +439,7 @@ Speech Corpora
 
 The following list contains speech corpora supported by this script collection.
 
-- [Forschergeist (German, 2 hours)](http://goofy.zamia.org/voxforge/de/audio/forschergeist/):
+- [Forschergeist (German, 2 hours)](http://goofy.zamia.org/zamia-speech/corpora/forschergeist/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/forschergeist` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/forschergeist`
 
@@ -209,7 +449,7 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/gspv2`. 
 
-- [Noise](http://goofy.zamia.org/voxforge/):
+- [Noise](http://goofy.zamia.org/zamia-speech/corpora/noise.tar.xz):
     + Download the tarball 
     + unpack it into the directory `<~/.speechrc:speech_corpora>/` (it will generate a `noise` subdirectory there)
 
@@ -220,6 +460,13 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./librispeech_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/librispeech`. 
 
+- [Mozilla Common Voice V1 (English, 252 hours)](https://voice.mozilla.org/en/data):
+    + Download `cv_corpus_v1.tar.gz`
+    + Unpack the archive such that the directory `cv_corpus_v1` is a direct 
+      subdirectory of `<~/.speechrc:speech_arc>`. 
+    + Then run run the script `./mozcv1_to_vf.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_corpus_v1`. 
+
 - [VoxForge (English, 75 hours)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_en` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_en`
@@ -228,11 +475,11 @@ The following list contains speech corpora supported by this script collection.
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_de`
 
-- [Zamia (English, 5 minutes)](http://goofy.zamia.org/voxforge/en/audio/zamia_en/):
+- [Zamia (English, 5 minutes)](http://goofy.zamia.org/zamia-speech/corpora/zamia_en/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_en` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_en`
 
-- [Zamia (German, 18 hours)](http://goofy.zamia.org/voxforge/de/audio/zamia_de/):
+- [Zamia (German, 18 hours)](http://goofy.zamia.org/zamia-speech/corpora/zamia_de/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/zamia_de`
 
@@ -377,9 +624,8 @@ Sequitur G2P
 ------------
 
 Many lexicon-related tools rely on Sequitur G2P to compute pronunciations for words missing from the dictionary. The
-necessary models can be downloaded from our file server: [english](http://goofy.zamia.org/voxforge/en/) and 
-[german](http://goofy.zamia.org/voxforge/de/). For installation, download and unpack them and then put links to them
-under `data/models` like so:
+necessary models can be downloaded from our file server: http://goofy.zamia.org/zamia-speech/g2p/ . 
+For installation, download and unpack them and then put links to them under `data/models` like so:
 
 ```bash
 data/models/sequitur-dict-de.ipa-latest -> <your model dir>/sequitur-dict-de.ipa-r20180510
@@ -468,8 +714,8 @@ The following recipe trains Kaldi models for English.
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
 - language model `generic_en_lang_model` built
-- some or all speech corpora of `voxforge_en`, `librispeech` and `zamia_en` are installed, converted and scanned.
-- optionally noise augmented corpora: `voxforge_en_noisy`, `voxforge_en_phone`, `librispeech_en_noisy`, `librispeech_en_phone`, `zamia_en_noisy` and `zamia_en_phone`
+- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1` and `zamia_en` are installed, converted and scanned.
+- optionally noise augmented corpora: `voxforge_en_noisy`, `voxforge_en_phone`, `librispeech_en_noisy`, `librispeech_en_phone`, `cv_corpus_v1_noisy`, `cv_corpus_v1_phone`, `zamia_en_noisy` and `zamia_en_phone`
 
 ```bash
 ./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en
@@ -481,7 +727,7 @@ cd data/dst/asr-models/kaldi/generic-en-small
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en voxforge_en_noisy librispeech_noisy zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
 ```
 
 German NNet3 Chain Models
@@ -508,6 +754,70 @@ complete export run with noise augmented corpora included:
 ./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
 ```
 
+Model Adaptation
+----------------
+
+For a standalone kaldi model adaptation tool that does not require a complete zamia-speech setup, see
+
+[kaldi-adapt-lm](https://github.com/gooofy/kaldi-adapt-lm)
+
+
+Existing kaldi models (such as the ones we provide for download but also those you may train from scratch using our scripts)
+can be adapted to (typically domain specific) language models, JSGF grammars and grammar FSTs.
+
+Here is an example how to adapt our English model to a simple command and control JSGF grammar. Please note that this is just
+a toy example - for real world usage you will probably want to add garbage phoneme loops to the grammar or produce a language
+model that has some noise resistance built in right away. 
+
+Here is the grammar we will use: 
+
+```jsgf
+#JSGF V1.0;
+
+grammar org.zamia.control;
+
+public <control> = <wake> | <politeCommand> ;
+
+<wake> = ( good morning | hello | ok | activate ) computer;
+
+<politeCommand> = [ please | kindly | could you ] <command> [ please | thanks | thank you ];
+
+<command> = <onOffCommand> | <muteCommand> | <volumeCommand> | <weatherCommand>;
+
+<onOffCommand> = [ turn | switch ] [the] ( light | fan | music | radio ) (on | off) ;
+
+<volumeCommand> = turn ( up | down ) the ( volume | music | radio ) ;
+
+<muteCommand> = mute the ( music | radio ) ;
+
+<weatherCommand> = (what's | what) is the ( temperature | weather ) ;
+```
+
+the next step is to set up a kaldi model adaptation experiment using this script:
+
+```bash
+./speech_kaldi_adapt.py data/models/kaldi-generic-en-tdnn_250-latest dict-en.ipa control.jsgf control-en
+```
+
+here, `data/models/kaldi-generic-en-tdnn_250-latest` is the model to be adapted, `dict-en.ipa` is the dictionary which
+will be used by the new model, `control.jsgf` is the JSGF grammar we want the model to be adapted to (you could specify an
+FST source file or a language model instead here) and `control-en` is the name of the new model that will be created.
+
+To run the actual adaptation, change into the model directory and run the adaptation script there:
+
+```bash
+cd data/dst/asr-models/kaldi/control-en
+./run-adaptation.sh 
+```
+
+finally, you can create a tarball from the newly created model:
+
+```bash
+cd ../../../../..
+./speech_dist.sh control-en kaldi adapt
+```
+
+
 CMU Sphinx Models
 =================
 
@@ -520,7 +830,7 @@ Before running it, make sure all prerequisites are met (see above for instructio
 - optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
 cd data/dst/asr-models/cmusphinx_cont/generic-de
 ./sphinx-run.sh
 ```
@@ -528,7 +838,13 @@ cd data/dst/asr-models/cmusphinx_cont/generic-de
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
+./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
+```
+
+complete export run with noise augmented corpora included for an English model:
+
+```bash
+./speech_sphinx_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en voxforge_en_noisy voxforge_en_phone librispeech librispeech_noisy librispeech_phone zamia_en zamia_en_noisy zamia_en_phone
 ```
 
 For resource constrained applications, PTM models can be trained:
@@ -556,7 +872,7 @@ pocketsphinx_continuous -lw 10 -fwdflatlw 10 -bestpathlw 10 -beam 1e-80 \
                         -wip 0.2 -agc none -varnorm no -cmn current \
                         -lowerf 130 -upperf 6800 -nfilt  25 \
                         -transform dct -lifter 22 -ncep   13 \
-                        -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_6000 \
+                        -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_8000 \
                         -dict ${MODELDIR}/etc/voxforge.dic \
                         -lm ${MODELDIR}/etc/voxforge.lm.bin \
                         -infile $WAVFILE 
@@ -566,7 +882,7 @@ sphinx_fe -c fileids -di wav -do mfcc \
           -part 1 -npart 1 -ei wav -eo mfc -nist no -raw no -mswav yes \
           -samprate 16000 -lowerf 130 -upperf 6800 -nfilt 25 -transform dct -lifter 22
 
-pocketsphinx_batch -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_6000 \
+pocketsphinx_batch -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_8000 \
                    -feat 1s_c_d_dd \
                    -ceplen 13 \
                    -ncep 13 \
@@ -592,7 +908,7 @@ pocketsphinx_batch -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_6000 \
 
 You can download a complete tarball with example scripts and WAV files here:
 
-http://goofy.zamia.org/voxforge/sphinx-example.tgz
+http://goofy.zamia.org/voxforge/misc/sphinx-example.tgz
 
 *NOTE*: According to https://github.com/cmusphinx/pocketsphinx/issues/116 
         pocketsphinx\_continuous will have worse results compared to pocketsphinx\_batch using the same model and parameters.
@@ -624,7 +940,7 @@ opusdec foo.ogg foo.wav
 ---------------------------------
 
 ```bash
-sox foo.wav -r 16000 -c 1 foo\_16m.wav
+sox foo.wav -r 16000 -c 1 -b 16 foo_16m.wav
 ```
 
 
@@ -636,7 +952,7 @@ its settings to achieve a good balance of short-segments but few words split in 
 
 
 ```bash
-./abook-segment.py foo\_16m.wav
+./abook-segment.py foo_16m.wav
 ```
 
 settings:
@@ -679,56 +995,81 @@ Audiobook Segmentation and Transcription (kaldi)
 Some notes on how to segment and transcribe semi-automatically audiobooks or other audio sources (e.g. from librivox) using
 kaldi:
 
-(0/4) Convert Audio to WAVE Format
-----------------------------------
+Directory Layout
+----------------
 
-MP3
-~~~
-```bash
-ffmpeg -i foo.mp3 foo.wav
-```
+Our scripts rely on a fixed directory layout. As segmentation of librivox recordings is one of the main
+applications of these scripts, their terminology of books and sections is used here. For each section of 
+a book two source files are needed: a wave file containing the audio and a text file containing the transcript.
 
-MKV
-~~~
-```bash
-mkvextract tracks foo.mkv 0:foo.ogg
-opusdec foo.ogg foo.wav
-```
+A fixed naming scheme is used for those which is illustrated by this example:
 
-(1/4) Convert Audio to 16kHz mono
----------------------------------
+<pre>
+abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-1.txt
+abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-1.wav
+abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-2.txt
+abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-2.wav
+...
+</pre>
 
-```bash
-sox foo.wav -r 16000 -c 1 foo\_16m.wav
-```
+The `abook-librivox.py` script is provided to help with retrieval of librivox recordings and setting up the
+directory structure. Please note that for now, the tool will not retrieve transcripts automatically but
+will create empty .txt files (according to the naming scheme) which you will have to fill in manually.
 
-(2/4) Preprocess the Transcript
+The tool will convert the retrieved audio to 16kHz mono wav format as required by the segmentation scripts, however.
+If you intend to segment material from other sources, make sure to convert it to that format. For suggestions on
+what tools to use for this step, please refer to the manual segmentation instructions in the previous section.
+
+*NOTE*: As the kaldi process is parallelized for mass-segmentation, at least 4
+audio and prompt files are needed for the process to work.
+
+(1/4) Preprocess the Transcript
 -------------------------------
 
 This tool will tokenize the transcript and detect OOV tokens. Those can then be either
 replaced or added to the dictionary:
 
 ```bash
-./abook-preprocess-transcript.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/dirkweber-sammlung-kurzer-deutscher-prosa-022-03.txt
-mv prompts.txt abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/dirkweber-sammlung-kurzer-deutscher-prosa-022-03.prompt
+./abook-preprocess-transcript.py abook/in/librivox/11442-toten-Seelen/evak-11442-toten-Seelen-1.txt
 ```
 
-make sure to put all wav and prompt files into the same directory. As the kaldi process is parallelized for mass-segmentation, 
-at least 4 audio and prompt files are needed for the process to work.
+(2/4) Model adaptation
+----------------------
+
+For the automatic segmentation to work, we need a GMM model that is adapted to the current dictionary (which likely had
+to be expanded during transcript preprocessing) plus uses a language model that covers the prompts.
+
+First, we create a language model tuned for our purpose:
+
+```bash
+./abook-sentences.py abook/in/librivox/11442-toten-Seelen/*.prompt
+./speech_build_lm.py abook_lang_model abook abook abook parole_de
+```
+
+Now we can create an adapted model using this language model and our current dict:
+
+```bash
+./speech_kaldi_adapt.py data/models/kaldi-generic-de-tri2b_chain-latest dict-de.ipa data/dst/lm/abook_lang_model/lm.arpa abook-de
+pushd data/dst/asr-models/kaldi/abook-de
+./run-adaptation.sh
+popd
+./speech_dist.sh -c abook-de kaldi adapt
+tar xfvJ data/dist/asr-models/kaldi-abook-de-adapt-current.tar.xz -C data/models/
+```
 
 (3/4) Auto-Segment using Kaldi
 ------------------------------
 
-Next, we need to create the kaldi directory structure and files for processing:
+Next, we need to create the kaldi directory structure and files for auto-segmentation:
 
 ```bash
-./abook-kaldi-segment.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/
+./abook-kaldi-segment.py data/models/kaldi-abook-de-adapt-current abook/in/librivox/11442-toten-Seelen
 ```
 
 now we can run the segmentation:
 
 ```bash
-pushd data/dst/speech/de/kaldi/
+pushd data/dst/speech/asr-models/kaldi/segmentation
 ./run-segmentation.sh 
 popd
 ```
@@ -739,9 +1080,19 @@ popd
 Finally, we can retrieve the segmentation result in voxforge format:
 
 ```bash
-./abook-kaldi-retrieve.py abook/in/librivox/sammlung-kurzer-deutscher-prosa-022/
+./abook-kaldi-retrieve.py abook/in/librivox/11442-toten-Seelen/
 ```
 
+Model Distribution
+==================
+
+To build tarballs from models, use the `speech-dist.sh` script, e.g.:
+
+
+```bash
+./speech_dist.sh generic-en kaldi tdnn_sp
+
+```
 
 License
 =======
