@@ -177,9 +177,8 @@ if [ $WHAT = "srilm" ] ; then
 
     DISTDIR=data/dist/lm
 
-    LMNAME="srilm-${MODEL}-{$REVISION}.arpa"
+    LMNAME="srilm-${MODEL}-${REVISION}.arpa"
     echo "$LMNAME ..."
-    # data/dst/lm/generic_de_lang_model/
     cp data/dst/lm/${MODEL}/lm.arpa ${DISTDIR}/$LMNAME
     gzip ${DISTDIR}/$LMNAME
 fi
