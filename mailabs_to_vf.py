@@ -75,9 +75,6 @@ speech_arc     = config.get("speech", "speech_arc")
 speech_corpora = config.get("speech", "speech_corpora")
 
 srcdir  = '%s/m_ailabs' % speech_arc
-destdir = '%s/m_ailabs' % speech_corpora
-
-misc.mkdirs(destdir)
 
 #
 # audio, prompts
@@ -92,6 +89,8 @@ with open('tmp/run_parallel.sh', 'w') as scriptf:
 
         if not os.path.isdir('%s/%s' % (srcdir, localedir)):
             continue
+
+        destdir = '%s/m_ailabs_%s' % (speech_corpora, localedir[:2])
 
         for gender in os.listdir('%s/%s/by_book' % (srcdir, localedir)):
 
@@ -117,7 +116,7 @@ with open('tmp/run_parallel.sh', 'w') as scriptf:
 
                     logging.debug('localedir: %s, gender: %6s, speaker: %16s, book: %s' % (localedir, gender, speaker, book))
 
-                    folder = 'mailabs%s-%s' % (speaker.replace('_','-'), book)
+                    folder = 'mailabs%s-%s' % (speaker.replace('_','').replace('-',''), book.replace('_','-'))
                     dstdir = '%s/%s' % (destdir, folder)
                 
                     misc.mkdirs('%s/wav' % dstdir)
