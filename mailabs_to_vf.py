@@ -75,9 +75,6 @@ speech_arc     = config.get("speech", "speech_arc")
 speech_corpora = config.get("speech", "speech_corpora")
 
 srcdir  = '%s/m_ailabs' % speech_arc
-destdir = '%s/m_ailabs' % speech_corpora
-
-misc.mkdirs(destdir)
 
 #
 # audio, prompts
@@ -92,6 +89,8 @@ with open('tmp/run_parallel.sh', 'w') as scriptf:
 
         if not os.path.isdir('%s/%s' % (srcdir, localedir)):
             continue
+
+        destdir = '%s/m_ailabs_%s' % (speech_corpora, localedir[:2])
 
         for gender in os.listdir('%s/%s/by_book' % (srcdir, localedir)):
 
@@ -117,7 +116,7 @@ with open('tmp/run_parallel.sh', 'w') as scriptf:
 
                     logging.debug('localedir: %s, gender: %6s, speaker: %16s, book: %s' % (localedir, gender, speaker, book))
 
-                    folder = 'mailabs%s-%s' % (speaker.replace('_','-'), book)
+                    folder = 'mailabs%s-%s' % (speaker.replace('_','').replace('-',''), book.replace('_','-'))
                     dstdir = '%s/%s' % (destdir, folder)
                 
                     misc.mkdirs('%s/wav' % dstdir)
@@ -130,7 +129,7 @@ with open('tmp/run_parallel.sh', 'w') as scriptf:
                         for wavfn in meta:
 
                             ts_orig = meta[wavfn]['clean']
-                            uttid = wavfn.replace('_','-')
+                            uttid = os.path.splitext(wavfn.replace('_','-'))[0]
 
                             if uttid in all_utts:
                                 logging.error('utterance id not unique:' % uttid)
@@ -139,7 +138,7 @@ with open('tmp/run_parallel.sh', 'w') as scriptf:
 
                             wav_in = '%s/%s/by_book/%s/%s/%s/wavs/%s' % (srcdir, localedir, gender, speaker, book, wavfn)
 
-                            wav_out = '%s/wav/%s' % (dstdir, uttid)
+                            wav_out = '%s/wav/%s.wav' % (dstdir, uttid)
 
                             cmd = 'sox %s -r 16000 -b 16 -c 1 %s gain -n -3 silence -l 0 -1 0.2 0.1%%' % (wav_in, wav_out)
                             logging.debug(cmd)
