@@ -35,79 +35,19 @@ import os
 import sys
 import logging
 
-import plac
-from pathlib2 import Path
-
-from nltools import misc
+from nltools            import misc
 from speech_transcripts import Transcripts
+from optparse           import OptionParser
 
-
-SPEECH_CORPORA = [
-    "forschergeist",
-    "gspv2",
-    "librivox",
-    "cv_corpus_v1",
-    "voxforge_de",
-    "voxforge_en",
-    "zamia_de",
-]
-
-
-@plac.annotations(
-    verbose=("Enable verbose logging", "flag", "v"),
-    speech_corpora=("Name of the speech corpus to scan. Example values: "
-                    + ", ".join(SPEECH_CORPORA), "positional", None, str, None,
-                    "speech_corpus"))
-def main(verbose=False, *speech_corpora):
-    """Scan directory for audio files and convert them to wav files
-
-    For each speech corpus `speech_corpus`
-
-    1. the resulting wav files are written to the directory
-       `.speechrc.wav16`/<speech_corpus>/
-
-    2. the transcripts in data/src/speech/<speech_corpus>/transcripts_*.csv are
-       updated.
-    """
-    misc.init_app('speech_audio_scan')
-
-    config = misc.load_config('.speechrc')
-
-    speech_corpora_dir = Path(config.get("speech", "speech_corpora"))
-    wav16 = Path(config.get("speech", "wav16"))
-
-    if len(speech_corpora) < 1:
-        logging.error("At least one speech corpus must be provided.")
-        sys.exit(1)
-
-    if verbose:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
-
-    exit_if_corpus_is_missing(speech_corpora_dir, speech_corpora)
-
-    for speech_corpus in speech_corpora:
-        transcripts = Transcripts(corpus_name=speech_corpus, create_db=True)
-        out_wav16_subdir = wav16 / speech_corpus
-        out_wav16_subdir.mkdir(parents=True, exist_ok=True)
-        in_root_corpus_dir = speech_corpora_dir / speech_corpus
-
-        scan_audiodir(str(in_root_corpus_dir),
-                      transcripts,
-                      str(out_wav16_subdir))
-
-        transcripts.save()
-        print speech_corpus, "new transcripts saved."
-        print
-
+PROC_TITLE = 'speech_audio_scan'
 
 def exit_if_corpus_is_missing(speech_corpora_dir, speech_corpora):
+
     missing_directories = []
     for speech_corpus in speech_corpora:
-        corpus_dir = speech_corpora_dir / speech_corpus
-        if not corpus_dir.is_dir():
-            missing_directories.append(str(corpus_dir))
+        corpus_dir = '%s/%s' % (speech_corpora_dir, speech_corpus)
+        if not os.path.isdir(corpus_dir):
+            missing_directories.append(corpus_dir)
 
     if missing_directories:
         logging.error(
@@ -171,6 +111,8 @@ def scan_audiodir(audiodir, transcripts, out_wav16_subdir):
                 cfn_audio.add(cfn)
 
                 if not cfn in transcripts:
+                    # import pdb; pdb.set_trace()
+
                     # print repr(prompts)
                     prompt = prompts[audiofn] if audiofn in prompts else ''
 
@@ -232,4 +174,61 @@ def audio_convert(cfn, subdir, fn, audiodir, wav16_dir):
 
 
 if __name__ == "__main__":
-    plac.call(main)
+# @plac.annotations(
+#     verbose=("Enable verbose logging", "flag", "v"),
+#     speech_corpora=("Name of the speech corpus to scan. Example values: "
+#                     + ", ".join(SPEECH_CORPORA), "positional", None, str, None,
+#                     "speech_corpus"))
+
+    misc.init_app(PROC_TITLE)
+
+    #
+    # config
+    #
+
+    config = misc.load_config('.speechrc')
+
+    speech_corpora_dir = config.get("speech", "speech_corpora")
+    wav16              = config.get("speech", "wav16")
+
+    speech_corpora_available = []
+    for corpus in os.listdir(speech_corpora_dir):
+        if not os.path.isdir('%s/%s' % (speech_corpora_dir, corpus)):
+            continue
+        speech_corpora_available.append(corpus)
+
+    #
+    # commandline
+    #
+
+    parser = OptionParser("usage: %%prog [options] <speech_corpora>\n  speech_corpora: one or more of %s" % ", ".join(speech_corpora_available))
+
+    parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
+                       help="verbose output")
+
+    (options, speech_corpora) = parser.parse_args()
+
+    if options.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
+
+    if len(speech_corpora) < 1:
+        logging.error("At least one speech corpus must be provided.")
+        sys.exit(1)
+
+    exit_if_corpus_is_missing(speech_corpora_dir, speech_corpora)
+
+    for speech_corpus in speech_corpora:
+        transcripts = Transcripts(corpus_name=speech_corpus, create_db=True)
+        out_wav16_subdir = '%s/%s' % (wav16, speech_corpus)
+        misc.mkdirs(out_wav16_subdir)
+        in_root_corpus_dir = '%s/%s' % (speech_corpora_dir, speech_corpus)
+
+        scan_audiodir(str(in_root_corpus_dir), transcripts, str(out_wav16_subdir))
+
+        transcripts.save()
+
+        print speech_corpus, "new transcripts saved."
+        print
+
