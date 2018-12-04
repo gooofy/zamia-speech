@@ -41,7 +41,7 @@ from zamiatts           import audio
 from speech_transcripts import Transcripts
 
 DEBUG_LIMIT  = 0
-# DEBUG_LIMIT = 65
+# DEBUG_LIMIT = 4096
 # DEBUG_LIMIT = 512
 
 PROC_TITLE      = 'ztts_prepare'
@@ -147,8 +147,14 @@ logging.info ('reading transcripts from %s ...' % corpus_name)
 
 transcripts = Transcripts(corpus_name=corpus_name)
 
-training_data  = []
+cnt = 0
 num_skipped = 0
+
+input_data     = np.zeros( (1, max_inp_len), dtype='int32')
+input_lengths  = np.zeros( (1, ), dtype='int32')
+target_data_s  = np.zeros( (1, max_mfc_frames, hparams['num_freq']) , dtype='float32')
+target_data_m  = np.zeros( (1, max_mfc_frames, hparams['num_mels']) , dtype='float32')
+target_lengths = np.zeros( (1, ), dtype='int32')
 
 for cfn in transcripts:
 
@@ -160,8 +166,6 @@ for cfn in transcripts:
     if ts['spk'] != speaker_in:
         continue
 
-    print cfn
-
     ts_orig  = ts['ts']
     ts_clean = cleanup_text(ts_orig, lang, hparams['alphabet'])
     logging.debug(u'ts_orig : %s' % ts_orig)
@@ -169,8 +173,8 @@ for cfn in transcripts:
 
     if len(ts_clean) > (max_inp_len-1):
         num_skipped += 1
-        pskipped = num_skipped * 100 / (len(training_data) + num_skipped)
-        logging.error('%6d %-20s: transcript too long (%4d > %4d) %3d%% skipped' % (len(training_data), cfn, len(ts_clean), max_inp_len, pskipped))
+        pskipped = num_skipped * 100 / (cnt + num_skipped)
+        logging.error('%6d %-20s: transcript too long (%4d > %4d) %3d%% skipped' % (cnt, cfn, len(ts_clean), max_inp_len, pskipped))
         continue
 
     wavfn = '%s/%s/%s.wav' % (wav16_dir, corpus_name, cfn)
@@ -178,8 +182,8 @@ for cfn in transcripts:
 
     if wav.shape[0] < 512:
         num_skipped += 1
-        pskipped = num_skipped * 100 / (len(training_data) + num_skipped)
-        logging.error('%6d %-20s: audio too short (%4d < 512) %3d%% skipped' % (len(training_data), cfn, len(ts_clean), pskipped))
+        pskipped = num_skipped * 100 / (cnt + num_skipped)
+        logging.error('%6d %-20s: audio too short (%4d < 512) %3d%% skipped' % (cnt, cfn, len(ts_clean), pskipped))
         continue
 
     spectrogram     = audio.spectrogram(wav, hparams).astype(np.float32)
@@ -187,77 +191,52 @@ for cfn in transcripts:
 
     if spectrogram.shape[1] > (max_mfc_frames-1):
         num_skipped += 1
-        pskipped = num_skipped * 100 / (len(training_data) + num_skipped)
-        logging.error('%6d %-20s: audio too long (%4d > %4d) %3d%% skipped' % (len(training_data), cfn, spectrogram.shape[1], max_mfc_frames, pskipped))
+        pskipped = num_skipped * 100 / (cnt + num_skipped)
+        logging.error('%6d %-20s: audio too long (%4d > %4d) %3d%% skipped' % (cnt, cfn, spectrogram.shape[1], max_mfc_frames, pskipped))
         continue
 
-    logging.info('%6d %-20s: ok, spectrogram.shape=%s, mel_spectrogram.shape=%s' % (len(training_data), cfn, spectrogram.shape, mel_spectrogram.shape))
-    training_data.append((ts_clean, spectrogram.T, mel_spectrogram.T))
+    logging.info('%6d %-20s: ok, spectrogram.shape=%s, mel_spectrogram.shape=%s' % (cnt, cfn, spectrogram.shape, mel_spectrogram.shape))
 
-    if DEBUG_LIMIT and len(training_data) >= DEBUG_LIMIT:
-        logging.warn ('DEBUG LIMIT REACHED.')
-        break
+    # numpy conversion
 
-random.shuffle(training_data)
+    S = spectrogram.T
+    M = mel_spectrogram.T
 
-logging.info ('training data: %d samples (%d skipped), max_inp_len=%d, max_frames_len=%d' % (len(training_data), num_skipped, max_inp_len, max_num_frames))
+    input_data[0].fill(0)
 
-#
-# create numpy datasets
-#
-
-logging.info ('generating numpy arrays. max_mfc_frames=%d' % max_mfc_frames)
-
-batch_size = hparams['batch_size']
-
-input_data     = np.zeros( (batch_size, max_inp_len), dtype='int32')
-input_lengths  = np.zeros( (batch_size, ), dtype='int32')
-target_data_s  = np.zeros( (batch_size, max_mfc_frames, hparams['num_freq']) , dtype='float32')
-target_data_m  = np.zeros( (batch_size, max_mfc_frames, hparams['num_mels']) , dtype='float32')
-target_lengths = np.zeros( (batch_size, ), dtype='int32')
-
-for i, (ts, S, M) in enumerate(training_data):
-
-    batch_idx = i % batch_size
-    batch_num = i / batch_size
-
-    input_data[batch_idx].fill(0)
-
-    # logging.debug(u'transcript: %s' % ts)
-
-    for j, c in enumerate(ts):
+    for j, c in enumerate(ts_clean):
         c_enc = hparams['alphabet'].find(c)
         if c_enc<0:
             logging.error('missing char in alphabet: %s' % c)
             # c_enc = hparams['alphabet'].find(u' ')
 
-        input_data[batch_idx, j] = c_enc
+        input_data[0, j] = c_enc
 
+    ts_dec = _decode_input(input_data[0])
 
-    ts = _decode_input(input_data[batch_idx])
+    input_lengths[0] = len(ts_dec) + 1 # +1 for start symbol
 
-    input_lengths[batch_idx] = len(ts) + 1 # +1 for start symbol
+    target_data_s[0]  = np.pad(S, ((0, max_mfc_frames - S.shape[0]), (0,0)), 'constant', constant_values=(0.0,0.0))
+    target_data_m[0]  = np.pad(M, ((0, max_mfc_frames - S.shape[0]), (0,0)), 'constant', constant_values=(0.0,0.0))
+    target_lengths[0] = S.shape[0] + 1
 
-    target_data_s[batch_idx]  = np.pad(S, ((0, max_mfc_frames - S.shape[0]), (0,0)), 'constant', constant_values=(0.0,0.0))
-    target_data_m[batch_idx]  = np.pad(M, ((0, max_mfc_frames - S.shape[0]), (0,0)), 'constant', constant_values=(0.0,0.0))
-    target_lengths[batch_idx] = S.shape[0] + 1
+    np.save(DSFN_X % (speaker_out, cnt), input_data)
+    logging.debug("%s written. %s" % (DSFN_X % (speaker_out, cnt), input_data.shape))
 
-    logging.debug(u'batch_idx=%4d, batch_num=%4d %s' % (batch_idx, batch_num, ts[:64]))
+    np.save(DSFN_XL % (speaker_out, cnt), input_lengths)
+    logging.debug("%s written. %s" % (DSFN_XL % (speaker_out, cnt), input_lengths.shape))
 
-    if batch_idx == (batch_size-1):
+    np.save(DSFN_YS % (speaker_out, cnt), target_data_s)
+    logging.debug("%s written. %s" % (DSFN_YS % (speaker_out, cnt), target_data_s.shape))
 
-        np.save(DSFN_X % (speaker_out, batch_num), input_data)
-        logging.info("%s written. %s" % (DSFN_X % (speaker_out, batch_num), input_data.shape))
+    np.save(DSFN_YM % (speaker_out, cnt), target_data_m)
+    logging.debug("%s written. %s" % (DSFN_YM % (speaker_out, cnt), target_data_m.shape))
 
-        np.save(DSFN_XL % (speaker_out, batch_num), input_lengths)
-        logging.info("%s written. %s" % (DSFN_XL % (speaker_out, batch_num), input_lengths.shape))
+    np.save(DSFN_YL % (speaker_out, cnt), target_lengths)
+    logging.debug("%s written. %s" % (DSFN_YL % (speaker_out, cnt), target_lengths.shape))
 
-        np.save(DSFN_YS % (speaker_out, batch_num), target_data_s)
-        logging.info("%s written. %s" % (DSFN_YS % (speaker_out, batch_num), target_data_s.shape))
-
-        np.save(DSFN_YM % (speaker_out, batch_num), target_data_m)
-        logging.info("%s written. %s" % (DSFN_YM % (speaker_out, batch_num), target_data_m.shape))
-
-        np.save(DSFN_YL % (speaker_out, batch_num), target_lengths)
-        logging.info("%s written. %s" % (DSFN_YL % (speaker_out, batch_num), target_lengths.shape))
+    cnt += 1
+    if DEBUG_LIMIT and cnt >= DEBUG_LIMIT:
+        logging.warn ('DEBUG LIMIT REACHED.')
+        break
 
