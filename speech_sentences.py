@@ -19,26 +19,37 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# scan voxforge and kitchen dirs for new audio data and transcripts
-# convert to 16kHz wav, add transcripts entries
+# Generate training sentences for language models
+#
+# Let text_corpus be the argument given on the command line.
+# Then the corpus text_corpus is tokenized and each sentence is written on a
+# separate line into `data/dst/text-corpora/<text_corpus>.txt`. All
+# punctuation marks are stripped.
 #
 
 import codecs
 import json
 import logging
 import os
+import sys
 
-import plac
-
-from nltools.misc import init_app, load_config
-from nltools.tokenizer import tokenize
+from optparse           import OptionParser
+from nltools            import misc
+from nltools.tokenizer  import tokenize
 
 import parole
 
-from parole import load_punkt_tokenizer
-from paths import TEXT_CORPORA_DIR
+from parole             import load_punkt_tokenizer
 from speech_transcripts import Transcripts
 
+PROC_TITLE             = 'speech_sentences'
+
+SENTENCES_STATS        = 1000
+
+DEBUG_LIMIT            = 0
+DEBUG_SGM_LIMIT_PAROLE = 0
+
+TEXT_CORPORA_DIR = 'data/dst/text-corpora'
 
 TEXT_CORPORA = {
     "cornell_movie_dialogs":
@@ -62,6 +73,10 @@ SPEECH_CORPORA = {
         lambda: proc_transcripts("gspv2"),
     "librispeech":
         lambda: proc_transcripts("librispeech"),
+    "m_ailabs_de":
+        lambda: proc_transcripts("m_ailabs_de"),
+    "m_ailabs_en":
+        lambda: proc_transcripts("m_ailabs_en"),
     "voxforge_de":
         lambda: proc_transcripts("voxforge_de"),
     "voxforge_en":
@@ -75,55 +90,6 @@ SPEECH_CORPORA = {
 CORPORA = {}
 CORPORA.update(TEXT_CORPORA)
 CORPORA.update(SPEECH_CORPORA)
-
-SENTENCES_STATS = 1000
-DEBUG_LIMIT = 0
-DEBUG_SGM_LIMIT_PAROLE = 0
-
-
-@plac.annotations(
-    corpus=("Name of corpus to extract sentences from.",
-            "positional", None, str, sorted(CORPORA.keys())),
-    verbose=("Enable verbose logging", "flag", "v"))
-def main(corpus, verbose=False):
-    """Generate training sentences for language models
-
-    Let text_corpus be the argument given on the command line.
-    Then the corpus text_corpus is tokenized and each sentence is written on a
-    separate line into `data/dst/text-corpora/<text_corpus>.txt`. All
-    punctuation marks are stripped.
-    """
-    init_app('speech_sentences')
-
-    if verbose:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
-
-    config = load_config('.speechrc')
-
-    TEXT_CORPORA_DIR.mkdir(parents=True, exist_ok=True)
-
-    out_file = TEXT_CORPORA_DIR / (corpus + ".txt")
-
-    with codecs.open(str(out_file), "w", "utf-8") as outf:
-        # I haven't figured out how to refactor the processing algorithms of the
-        # parole corpus to implement a generator.
-        if corpus == "parole_de":
-            corpus_path = config.get("speech", corpus)
-            proc_parole_de(corpus_path, load_punkt_tokenizer, outf)
-        elif corpus in TEXT_CORPORA:
-            corpus_path = config.get("speech", corpus)
-            for sentence in TEXT_CORPORA[corpus](corpus_path):
-                outf.write(sentence + "\n")
-        elif corpus in SPEECH_CORPORA:
-            for sentence in SPEECH_CORPORA[corpus]():
-                outf.write(sentence + "\n")
-        else:
-            raise Exception("This shouldn't happen.")
-
-    logging.info('%s written.' % out_file)
-
 
 def proc_cornell_movie_dialogs(corpus_path, tokenize):
     num_sentences = 0
@@ -258,11 +224,82 @@ def proc_yahoo_answers(corpus_path, tokenize):
 
 
 def proc_transcripts(corpus_name):
+
+    global use_prompts, lang
+
     transcripts = Transcripts(corpus_name=corpus_name)
-    transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
+
+    if use_prompts:
+        transcripts_set = set((u' '.join(tokenize(transcripts[key]["prompt"], lang))) for key in transcripts)
+    else:
+        transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
+
     for ts in transcripts_set:
         yield ts
 
 
 if __name__ == "__main__":
-    plac.call(main)
+
+    misc.init_app(PROC_TITLE)
+
+    #
+    # config
+    #
+
+    config = misc.load_config('.speechrc')
+
+    #
+    # commandline
+    #
+
+    parser = OptionParser("usage: %%prog [options] <corpus>")
+
+    parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+                       help="language (default: de)")
+    parser.add_option ("-p", "--prompts", action="store_true", dest="use_prompts",
+                       help="extract original prompts instead of transcripts")
+    parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
+                       help="verbose output")
+
+    (options, args) = parser.parse_args()
+
+    if options.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
+
+    lang        = options.lang
+    use_prompts = options.use_prompts
+
+    if len(args) != 1:
+        logging.error("Exactly one corpus (text or speech) must be provided.")
+
+        parser.print_help()
+
+        sys.exit(1)
+
+    corpus = args[0]
+
+    misc.mkdirs(TEXT_CORPORA_DIR)
+
+    out_file = '%s/%s.txt' % (TEXT_CORPORA_DIR, corpus)
+
+    with codecs.open(out_file, "w", "utf-8") as outf:
+        # I haven't figured out how to refactor the processing algorithms of the
+        # parole corpus to implement a generator.
+        if corpus == "parole_de":
+            corpus_path = config.get("speech", corpus)
+            proc_parole_de(corpus_path, load_punkt_tokenizer, outf)
+        elif corpus in TEXT_CORPORA:
+            corpus_path = config.get("speech", corpus)
+            for sentence in TEXT_CORPORA[corpus](corpus_path):
+                outf.write(sentence + "\n")
+        elif corpus in SPEECH_CORPORA:
+            for sentence in SPEECH_CORPORA[corpus]():
+                outf.write(sentence + "\n")
+        else:
+            raise Exception("This shouldn't happen.")
+
+    logging.info('%s written.' % out_file)
+
+
