@@ -67,6 +67,9 @@ Table of Contents
   * [(2/4) Model adaptation](#24-model-adaptation)
   * [(3/4) Auto\-Segment using Kaldi](#34-auto-segment-using-kaldi)
   * [(4/4) Retrieve Segmentation Result](#44-retrieve-segmentation-result)
+* [Training Voices for Zamia\-TTS](#training-voices-for-zamia-tts)
+  * [(1/2) Prepare a Training Data Set](#12-prepare-a-training-data-set)
+  * [(2/2) Run the Training](#22-run-the-training)
 * [Model Distribution](#model-distribution)
 * [License](#license)
 * [Authors](#authors)
@@ -1081,6 +1084,23 @@ Finally, we can retrieve the segmentation result in voxforge format:
 
 ```bash
 ./abook-kaldi-retrieve.py abook/in/librivox/11442-toten-Seelen/
+```
+
+Training Voices for Zamia-TTS
+=============================
+
+(1/2) Prepare a Training Data Set
+---------------------------------
+
+```bash
+./ztts_prepare.py -l en m_ailabs_en mailabselliotmiller elliot
+```
+
+(2/2) Run the Training
+----------------------
+
+```bash
+./ztts_train.py -v elliot 2>&1 | tee train_elliot.log
 ```
 
 Model Distribution
