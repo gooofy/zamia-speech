@@ -38,6 +38,8 @@ from zamiatts             import audio, CHECKPOINT_DIR, EVAL_DIR, VOICE_PATH, DS
 
 PROC_TITLE      = 'ztts_train'
 
+DEFAULT_NUM_EPOCHS = 10000
+
 #
 # init
 #
@@ -50,8 +52,11 @@ misc.init_app(PROC_TITLE)
 
 parser = OptionParser("usage: %prog [options] voice")
 
-parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
-                  help="enable debug output")
+parser.add_option ("-n", "--num-epochs", dest="num_epochs", type="int", default=DEFAULT_NUM_EPOCHS,
+                   help="number of epochs to train, default: %d" % DEFAULT_NUM_EPOCHS)
+
+parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
+                   help="enable debug output")
 
 
 (options, args) = parser.parse_args()
@@ -98,5 +103,5 @@ os.system(cmd)
 
 taco = Tacotron(voice, is_training=True)
 
-taco.train()
+taco.train(num_epochs = options.num_epochs)
 
