@@ -172,7 +172,7 @@ for optional_file in [ 'final.mat', 'splice_opts', 'final.occs', 'full.mat' ] :
     if os.path.exists('%s/model/%s' % (src_model, optional_file)):
         misc.copy_file ('%s/model/%s' % (src_model, optional_file), '%s/exp/adapt/%s' % (dst_dir, optional_file))
 
-if os.path.exists('%s/model/extractor' % src_model):
+if os.path.exists('%s/extractor' % src_model):
 
     misc.mkdirs ('%s/exp/extractor' % dst_dir)
 
@@ -184,7 +184,9 @@ if os.path.exists('%s/model/extractor' % src_model):
 
     misc.mkdirs ('%s/exp/ivectors_test_hires/conf' % dst_dir)
 
-    misc.copy_file ('%s/ivectors_test_hires/conf/splice.conf'       % src_model, '%s/exp/ivectors_test_hires/conf'    % dst_dir)
+    misc.copy_file ('%s/ivectors_test_hires/conf/ivector_extractor.conf' % src_model, '%s/exp/ivectors_test_hires/conf'    % dst_dir)
+    misc.copy_file ('%s/ivectors_test_hires/conf/online_cmvn.conf'       % src_model, '%s/exp/ivectors_test_hires/conf'    % dst_dir)
+    misc.copy_file ('%s/ivectors_test_hires/conf/splice.conf'            % src_model, '%s/exp/ivectors_test_hires/conf'    % dst_dir)
 
 misc.mkdirs ('%s/conf'  % dst_dir)
 misc.copy_file ('%s/conf/mfcc.conf' % src_model,        '%s/conf/mfcc.conf' % dst_dir)
