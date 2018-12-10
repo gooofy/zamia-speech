@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2018 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -46,12 +46,13 @@ from speech_lexicon         import Lexicon
 PROC_TITLE      = 'speech_editor'
 DEFAULT_MARY    = False # switch between mary and sequitur default g2p
 SEQUITUR_MODEL  = 'data/models/sequitur-dict-de.ipa-latest'
+DEFAULT_DICT    = 'dict-de.ipa'
 
 def play_wav(ts):
 
-    global wav16_dir, tts
+    global wav16_dir, tts, corpus_name
 
-    wavfn = '%s/%s.wav' % (wav16_dir, ts['cfn'])
+    wavfn = '%s/%s/%s.wav' % (wav16_dir, corpus_name, ts['cfn'])
 
     with open(wavfn) as wavf:
         wav = wavf.read()
@@ -326,7 +327,10 @@ misc.init_app(PROC_TITLE)
 # command line
 #
 
-parser = OptionParser("usage: %prog [options] [filters])")
+parser = OptionParser("usage: %prog [options] <corpus> [filters])")
+
+parser.add_option ("-d", "--dict", dest="dict_name", type = "str", default=DEFAULT_DICT,
+                   help="dictionary to work on (default: %s)" % DEFAULT_DICT)
 
 parser.add_option("-p", "--prompts", dest="promptsfn",
                   help="read prompts from FILE", metavar="FILE")
@@ -346,14 +350,16 @@ parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
 
 (options, args) = parser.parse_args()
 
-ts_filters = []
+if len(args)<1:
+    parser.print_help()
+    sys.exit(1)
 
-for a in args:
-    ts_filters.append(a.decode('utf8'))
+corpus_name = args[0]
+
+ts_filters = [ a.decode('utf8') for a in args[1:] ]
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
-    logging.getLogger("requests").setLevel(logging.WARNING)
 else:
     logging.basicConfig(level=logging.INFO)
 
@@ -362,7 +368,7 @@ else:
 #
 
 logging.info("loading transcripts...")
-transcripts = Transcripts(corpus_name=options.lang)
+transcripts = Transcripts(corpus_name=corpus_name)
 logging.info("loading transcripts...done.")
 
 #
@@ -370,7 +376,7 @@ logging.info("loading transcripts...done.")
 #
 
 logging.info("loading lexicon...")
-lex = Lexicon(file_name=options.lang)
+lex = Lexicon(file_name=options.dict_name)
 logging.info("loading lexicon...done.")
 
 #
@@ -403,7 +409,7 @@ stdscr.keypad(1)
 
 config = misc.load_config('.speechrc')
 
-wav16_dir   = config.get("speech", "wav16_dir_%s" % options.lang)
+wav16_dir   = config.get("speech", "wav16")
 host        = config.get('tts', 'host')
 port        = int(config.get('tts', 'port'))
 
