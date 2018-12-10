@@ -47,6 +47,21 @@ PROC_TITLE      = 'speech_editor'
 DEFAULT_MARY    = False # switch between mary and sequitur default g2p
 SEQUITUR_MODEL  = 'data/models/sequitur-dict-de.ipa-latest'
 DEFAULT_DICT    = 'dict-de.ipa'
+DEFAULT_WRT     = 'data/src/wrt/librivox_de.csv'
+
+PUNCTUATION = set([',','.','\'','!','?','"','-'])
+
+def tokwrt (ts):
+
+    global options, wrt
+
+    res = []
+    for t in tokenize(ts, lang=options.lang, keep_punctuation=options.keep_punctuation):
+        if t in wrt:
+            res.append(wrt[t])
+        else:
+            res.append(t)
+    return res
 
 def play_wav(ts):
 
@@ -338,6 +353,9 @@ parser.add_option("-p", "--prompts", dest="promptsfn",
 parser.add_option("-l", "--lang", dest="lang", type = "str", default='de',
                   help="language (default: de)")
 
+parser.add_option("-k", "--keep-punctuation", action="store_true", dest="keep_punctuation", 
+                  help="keep punctuation marks")
+
 parser.add_option("-m", "--missing-words", action="store_true", dest="missing_words", 
                   help="only work on submissions that have at least one missing word")
 
@@ -346,6 +364,9 @@ parser.add_option("-r", "--random", action="store_true", dest="random",
 
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
                   help="enable debug output")
+
+parser.add_option("-w", "--wrt", dest="wrt", type = "str", default=DEFAULT_WRT,
+                  help="word replacement table (default: %s)" % DEFAULT_WRT)
 
 
 (options, args) = parser.parse_args()
@@ -362,6 +383,23 @@ if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.INFO)
+
+#
+# load WRT
+#
+
+wrt = {}
+
+logging.info('loading WRT from %s ...' % options.wrt)
+
+with codecs.open(options.wrt, 'r', 'utf8') as wrtf:
+    for line in wrtf:
+        parts = line.strip().split(';')
+        if len(parts) != 2:
+            continue
+        wrt[parts[0]] = parts[1]
+
+logging.info(repr(wrt))
 
 #
 # load transcripts
@@ -388,7 +426,7 @@ prompt_token_idx = 0
 if options.promptsfn:
     with codecs.open(options.promptsfn, 'r', 'utf8') as promptsf:
         for line in promptsf:
-            prompt_tokens.extend(tokenize(line, lang=options.lang))
+            prompt_tokens.extend(tokwrt(line))
 
     logging.info("%s read. %d tokens." % (options.promptsfn, len(prompt_tokens)))
 
@@ -453,7 +491,7 @@ def paint_main(stdscr, cur_ts):
     stdscr.insstr(3, 0, ts['prompt'].encode('utf8'))
 
     if len(ts['ts']) == 0:
-        ts['ts'] = ' '.join(tokenize(ts['prompt'], lang=options.lang))
+        ts['ts'] = ' '.join(tokwrt(ts['prompt']))
 
     cy = 5
     cx = 0
@@ -484,10 +522,14 @@ def paint_main(stdscr, cur_ts):
             stdscr.insstr(cy, cx, s.encode('utf8') )
             
         else:
-            if not missing_token:
-                missing_token = token
+            if token in PUNCTUATION:
+                stdscr.insstr(cy, cx, token.encode('utf8'))
+    
+            else:
+                if not missing_token:
+                    missing_token = token
 
-            stdscr.insstr(cy, cx, token.encode('utf8'), curses.A_REVERSE)
+                stdscr.insstr(cy, cx, token.encode('utf8'), curses.A_REVERSE)
 
         cy += 1
         if cy > my-2:
@@ -533,13 +575,14 @@ try:
 
                 t = ts['ts']
                 if len(t) == 0:
-                    t = ' '.join(tokenize(ts['prompt'], lang=options.lang))
+                    t = ' '.join(tokwrt(ts['prompt']))
                     
                 for token in t.split(' '):
 
-                    if not token in lex:
+                    if (not token in lex) and (not token in PUNCTUATION) :
                         missing = True
                         break
+
                 if missing:
                     edit_ts.append(ts)
 
@@ -604,7 +647,7 @@ try:
 
                 prompt_token_idx -= 1
 
-                cur_tokens = tokenize(ts['ts'], lang=options.lang)
+                cur_tokens = tokwrt(ts['ts'])
 
                 if len(cur_tokens)>1:
                     ts['prompt'] = ' '.join(cur_tokens[0:len(cur_tokens)-1])
@@ -623,7 +666,7 @@ try:
                 if missing_token:
                     t = missing_token
                 else:
-                    t = tokenize(ts['ts'], lang=options.lang)[0]
+                    t = tokwrt(ts['ts'])[0]
 
                 lex_edit(t)
 
