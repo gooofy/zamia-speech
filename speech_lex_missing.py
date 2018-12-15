@@ -150,10 +150,7 @@ for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
     if cnt > options.num_words:
         break
 
-    if verbose:
-        logging.info(u"Missing %4d times: %s" % (item[1], item[0]))
-    else:
-        logging.info(item[0].encode('utf8'))
+    logging.info(u"Missing %4d times: %s" % (item[1], item[0]))
 
     if options.generate:
         ipas = sequitur_gen_ipa (sequitur_model, item[0])
