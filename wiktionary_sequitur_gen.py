@@ -71,6 +71,9 @@ misc.init_app(PROC_TITLE)
 
 parser = OptionParser("usage: %prog [options] )")
 
+parser.add_option ("-F", "--filter", dest="filter_file", type="str",
+                   help="limit extraction to tokens listed in this file, default: no filtering")
+
 parser.add_option ("-n", "--num-cpus", dest="num_cpus", type="int", default=DEFAULT_NUM_CPUS,
                    help="number of cpus to use in parallel, default: %d" % DEFAULT_NUM_CPUS)
 
@@ -189,13 +192,6 @@ def merge_check(token, ipa_r, ipa_w):
     return None 
 
 
-# token = u"abakteriell"
-# ipa_r = u"'ʔaːb-ak-'teː-ʁiː-'ɛl"
-# ipa_w = u"ʔabakteːʁiː'ɛl"
-# print merge_check(token, ipa_r, ipa_w)
-# sys.exit(0)
-
-
 #
 # load lexicon
 #
@@ -203,6 +199,17 @@ def merge_check(token, ipa_r, ipa_w):
 logging.info("loading lexicon...")
 lex = Lexicon('dict-de.ipa')
 logging.info("loading lexicon...done.")
+
+#
+# read filter
+#
+filter_set = None
+if options.filter_file:
+    logging.info("reading filter file %s ..." % options.filter_file)
+    filter_set = set()
+    with codecs.open(options.filter_file, 'r', 'utf8') as filterf:
+        for line in filterf:
+            filter_set.add(line.strip())
 
 #
 # load wiktionary
@@ -233,6 +240,10 @@ with codecs.open(DICTFN, 'r', 'utf8') as dictf:
 
         if token in lex:
             logging.debug("%05d ignoring %s as it is already in our dict." % (len(wiktionary), token))
+            continue
+
+        if filter_set and not (token in filter_set):
+            logging.debug("%05d ignoring %s as it is not in the filter file." % (len(wiktionary), token))
             continue
 
         wiktionary[token] = (word, ipa)
@@ -352,7 +363,6 @@ with codecs.open(OUTDICTFN, 'w', 'utf8') as outdictf, \
             ipa_r = ipa_r_map[token]
             ipa_w = ipa_w_map[token]
 
-            # matched = ipa_r.replace(u"-", u"") == ipa_w
             ipa_m = merge_check(token, ipa_r, ipa_w)
             if ipa_m and (not u"'" in ipa_m): # at least one stress marker is required
                 ipa_m = None
