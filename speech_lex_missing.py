@@ -67,6 +67,9 @@ parser.add_option ("-n", "--num-words", dest="num_words", type="int", default=50
 parser.add_option ("-i", "--ignore-rating", action="store_true", dest="ignore_rating", 
                    help="check all submissions (ignore rating)")
 
+parser.add_option ("-o", "--output-file", dest="output_file", type = "str",
+                   help="append missing words to this file (default: no output file is written)")
+
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
                    help="enable debug output")
 
@@ -156,6 +159,10 @@ for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
         ipas = sequitur_gen_ipa (sequitur_model, item[0])
         logging.info(u"%4d/%4d generated lex entry: %s -> %s" % (cnt, options.num_words, item[0], ipas))
         lex[item[0]] = {'ipa': ipas}
+
+    if options.output_file:
+        with codecs.open(options.output_file, 'a', 'utf8') as outf:
+            outf.write(u'%s\n' % item[0])
 
 logging.info("%d missing words total. %d submissions lack at least one word, %d are covered fully by the lexicon." % (len(missing), num_ts_lacking, num_ts_complete))
 
