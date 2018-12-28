@@ -48,14 +48,14 @@ SEQUITUR_MODEL  = 'data/models/sequitur-dict-de.ipa-latest'
 DEFAULT_DICT    = 'dict-de.ipa'
 DEFAULT_WRT     = 'data/src/wrt/librivox_de.csv'
 
-PUNCTUATION = set([',','.','\'','!','?','"','-'])
+PUNCTUATION = set([',','.','\'','!','?','"','-',':'])
 
 def tokwrt (ts):
 
     global options, wrt
 
     res = []
-    for t in tokenize(ts, lang=options.lang, keep_punctuation=options.keep_punctuation):
+    for t in tokenize(ts, lang=options.lang, keep_punctuation=not options.ignore_punctuation):
         if t in wrt:
             res.append(wrt[t])
         else:
@@ -342,8 +342,8 @@ parser.add_option("-p", "--prompts", dest="promptsfn",
 parser.add_option("-l", "--lang", dest="lang", type = "str", default='de',
                   help="language (default: de)")
 
-parser.add_option("-k", "--keep-punctuation", action="store_true", dest="keep_punctuation", 
-                  help="keep punctuation marks")
+parser.add_option("-i", "--ignore-punctuation", action="store_true", dest="ignore_punctuation", 
+                  help="ignore (remove) punctuation marks")
 
 parser.add_option("-m", "--missing-words", action="store_true", dest="missing_words", 
                   help="only work on submissions that have at least one missing word")
@@ -388,7 +388,8 @@ with codecs.open(options.wrt, 'r', 'utf8') as wrtf:
             continue
         wrt[parts[0]] = parts[1]
 
-logging.info(repr(wrt))
+# logging.info(repr(wrt))
+logging.info('loading WRT from %s ... done, %d entries.' % (options.wrt, len(wrt)))
 
 #
 # load transcripts
@@ -596,6 +597,17 @@ try:
 
             readline.add_history(ts['ts'].encode('utf8'))
             ts['ts'] = raw_input('transcript: ').decode('utf8')
+
+        elif c == 'w':
+
+            if missing_token:
+                readline.add_history(missing_token.encode('utf8'))
+                r = raw_input(u'WRT entry for %s: ' % missing_token).decode('utf8')
+                if r:
+                    wrt[missing_token] = r
+                else:
+                    del wrt[missing_token]
+                ts['ts'] = ''
 
         elif c == 'a':
 
