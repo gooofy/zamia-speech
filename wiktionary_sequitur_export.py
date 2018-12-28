@@ -48,7 +48,7 @@ misc.init_app(PROC_TITLE)
 # commandline parsing
 #
 
-parser = OptionParser("usage: %prog [options] )")
+parser = OptionParser("usage: %prog [options]")
 
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="enable verbose logging")
@@ -71,7 +71,7 @@ config = misc.load_config ('.speechrc')
 #
 
 print "loading lexicon..."
-lex = Lexicon()
+lex = Lexicon('dict-de.ipa')
 print "loading lexicon...done."
 
 #
