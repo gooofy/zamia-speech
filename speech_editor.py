@@ -373,6 +373,15 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
 
+def save_wrt():
+    global wrt, options
+
+    with codecs.open(options.wrt, 'w', 'utf8') as wrtf:
+        for old in sorted(wrt):
+            wrtf.write(u'%s;%s\n' % (old, wrt[old]))
+
+    logging.info ('%s written.' % options.wrt)
+
 #
 # load WRT
 #
@@ -608,6 +617,8 @@ try:
                 else:
                     del wrt[missing_token]
                 ts['ts'] = ''
+
+                save_wrt()
 
         elif c == 'a':
 
