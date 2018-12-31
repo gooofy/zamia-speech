@@ -35,16 +35,29 @@ from optparse               import OptionParser
 from nltools                import misc
 from speech_lexicon         import Lexicon
 from nltools.sequiturclient import sequitur_gen_ipa, sequitur_gen_ipa_multi
+from nltools.phonetics      import xsampa2ipa
+
 
 PROC_TITLE       = 'wiktionary_sequitur_gen'
 DICTFN           = 'data/dst/speech/de/dict_wiktionary_de.txt'
 OUTDICTFN        = 'data/dst/speech/de/dict_wiktionary_gen.txt'
 OUTREJFN         = 'data/dst/speech/de/dict_wiktionary_rej.txt'
+CHUNKINRFN       = 'data/dst/speech/de/dict_wiktionary_chinr_%04d.txt'
+CHUNKINWFN       = 'data/dst/speech/de/dict_wiktionary_chinw_%04d.txt'
+CHUNKOUTRFN      = 'data/dst/speech/de/dict_wiktionary_choutr_%04d.txt'
+CHUNKOUTWFN      = 'data/dst/speech/de/dict_wiktionary_choutw_%04d.txt'
+SCRIPTFN         = 'data/dst/speech/de/dict_wiktionary_run_parallel.sh'
 REGULAR_MODEL    = 'data/models/sequitur-dict-de.ipa-latest'
 WIKTIONARY_MODEL = 'data/dst/speech/de/wiktionary_sequitur/model-6'
 TEST_TOKEN       = u'aalbestand'
 
-CHUNK_SIZE       = 1000
+# CHUNK_SIZE       = 1000
+CHUNK_SIZE       = 256
+DEFAULT_NUM_CPUS = 4
+# DEBUG_CHUNK_LIMIT= 12
+DEBUG_CHUNK_LIMIT= 0
+
+ALPHABET         = set([ u'a', u'b', u'c', u'd', u'e', u'f', u'g', u'h', u'i', u'j', u'k', u'l', u'm', u'n', u'o', u'p', u'q', u'r', u's', u't', u'u', u'v', u'w', u'x', u'y', u'z', u'ü', u'ö', u'ä', u'ß'])
 
 #
 # init
@@ -57,6 +70,12 @@ misc.init_app(PROC_TITLE)
 #
 
 parser = OptionParser("usage: %prog [options] )")
+
+parser.add_option ("-F", "--filter", dest="filter_file", type="str",
+                   help="limit extraction to tokens listed in this file, default: no filtering")
+
+parser.add_option ("-n", "--num-cpus", dest="num_cpus", type="int", default=DEFAULT_NUM_CPUS,
+                   help="number of cpus to use in parallel, default: %d" % DEFAULT_NUM_CPUS)
 
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="enable verbose logging")
@@ -173,27 +192,32 @@ def merge_check(token, ipa_r, ipa_w):
     return None 
 
 
-# token = u"abakteriell"
-# ipa_r = u"'ʔaːb-ak-'teː-ʁiː-'ɛl"
-# ipa_w = u"ʔabakteːʁiː'ɛl"
-# print merge_check(token, ipa_r, ipa_w)
-# sys.exit(0)
-
-
 #
 # load lexicon
 #
 
-print "loading lexicon..."
+logging.info("loading lexicon...")
 lex = Lexicon('dict-de.ipa')
-print "loading lexicon...done."
+logging.info("loading lexicon...done.")
+
+#
+# read filter
+#
+filter_set = None
+if options.filter_file:
+    logging.info("reading filter file %s ..." % options.filter_file)
+    filter_set = set()
+    with codecs.open(options.filter_file, 'r', 'utf8') as filterf:
+        for line in filterf:
+            filter_set.add(line.strip())
 
 #
 # load wiktionary
 #
 
-print "loading wiktionary..."
+logging.info("loading wiktionary...")
 wiktionary = {}
+wiktionary_reverse = {}
 with codecs.open(DICTFN, 'r', 'utf8') as dictf:
     for line in dictf:
         parts = line.strip().split(';')
@@ -202,12 +226,30 @@ with codecs.open(DICTFN, 'r', 'utf8') as dictf:
             continue
 
         word  = parts[0]
-        ipa   = parts[1]
-        token = word.replace(u"·", u"").lower()
+        ipa   = parts[1].strip()
+
+        if u" " in word:
+            continue
+        if u"''" in word:
+            continue
+
+        token = u''
+        for c in word.lower():
+            if c in ALPHABET:
+                token += c
+
+        if token in lex:
+            logging.debug("%05d ignoring %s as it is already in our dict." % (len(wiktionary), token))
+            continue
+
+        if filter_set and not (token in filter_set):
+            logging.debug("%05d ignoring %s as it is not in the filter file." % (len(wiktionary), token))
+            continue
 
         wiktionary[token] = (word, ipa)
+        wiktionary_reverse[ipa] = token
 
-print "loading wiktionary... done. %d entries." % len(wiktionary)
+logging.info("loading wiktionary... done. %d entries." % len(wiktionary))
 
 #
 # predict missing entries
@@ -218,6 +260,92 @@ def chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
+logging.info ('predicting missing entries in parallel...')
+
+num_chunks = 0
+
+with open(SCRIPTFN, 'w') as scriptf:
+
+    for i, chunk in enumerate(chunks(sorted(wiktionary), CHUNK_SIZE)):
+
+        with codecs.open(CHUNKINRFN % i, 'w', 'utf8') as chunkinrf:
+            with codecs.open(CHUNKINWFN % i, 'w', 'utf8') as chunkinwf:
+
+                for token in chunk:
+                    w, ipa = wiktionary[token]
+
+                    chunkinrf.write('%s\n' % token)
+                    chunkinwf.write('%s\n' % ipa)
+
+        scriptf.write('echo %04d\n' % i)
+        scriptf.write('g2p.py -e utf-8 --model %s --apply %s > %s &\n' % (REGULAR_MODEL, CHUNKINRFN % i, CHUNKOUTRFN % i))
+        scriptf.write('g2p.py --model %s --apply %s > %s &\n' % (WIKTIONARY_MODEL, CHUNKINWFN % i, CHUNKOUTWFN % i))
+        num_chunks += 1
+        if DEBUG_CHUNK_LIMIT and num_chunks > DEBUG_CHUNK_LIMIT:
+            logging.warn('debug limit reached.')
+            break
+
+        if i % options.num_cpus == (options.num_cpus-1):
+            scriptf.write('wait\n')
+
+    scriptf.write('wait\n')
+
+logging.info ('%s written.' % SCRIPTFN)
+os.system('chmod 700 %s' % SCRIPTFN)
+os.system(SCRIPTFN)
+
+ipa_r_map = {}
+ipa_w_map = {}
+
+for chunkidx in range(num_chunks):
+
+    with codecs.open(CHUNKOUTRFN % chunkidx, 'r', 'utf8') as chunkf:
+
+        for line in chunkf:
+
+            parts = line.strip().split('\t')
+
+            if len(parts) < 2:
+                continue
+
+            try:
+                word = parts[0]
+                if word in wiktionary:
+
+                    xs = parts[1]
+
+                    ipa = xsampa2ipa(word, xs)
+                    ipa_r_map[word] = ipa
+            except:
+                logging.error("Error processing line %s:" % line)
+                logging.error(traceback.format_exc())
+
+    with codecs.open(CHUNKOUTWFN % chunkidx, 'r', 'utf8') as chunkf:
+
+        for line in chunkf:
+
+            parts = line.strip().split('\t')
+
+            if len(parts) < 2:
+                continue
+
+            try:
+                ipan = parts[0]
+                if ipan in wiktionary_reverse:
+
+                    word = wiktionary_reverse[ipan]
+
+                    xs = parts[1]
+
+                    ipa = xsampa2ipa(word, xs)
+                    ipa_w_map[word] = ipa
+            except:
+                logging.error("Error processing line %s:" % line)
+                logging.error(traceback.format_exc())
+
+# print repr(ipa_r_map)
+# print repr(ipa_w_map)
+
 with codecs.open(OUTDICTFN, 'w', 'utf8') as outdictf, \
      codecs.open(OUTREJFN, 'w', 'utf8')  as outrejf:
 
@@ -225,70 +353,33 @@ with codecs.open(OUTDICTFN, 'w', 'utf8') as outdictf, \
 
     cnt = 0
 
-    for chunk in chunks(sorted(wiktionary), CHUNK_SIZE):
+    for token in ipa_r_map:
 
-        tokens = []
-        ipas   = []
-
-        for token in chunk:
-
-            cnt += 1
-
-            if token in lex:
-                continue
-
-            if u" " in token:
-                continue
-
-            ipa  = wiktionary[token][1].strip()
-
-            tokens.append(token)
-            ipas.append(ipa)
-
-        if not tokens:
+        if not token in ipa_w_map:
             continue
 
-        logging.info ("predicting %d tokens (%s) using the regular model..." % (len(tokens), repr(tokens[:3])))
-        ipa_r_map = sequitur_gen_ipa_multi (REGULAR_MODEL, tokens)
+        try:
 
-        # print repr(tokens), repr(ipa_r_map)
+            ipa_r = ipa_r_map[token]
+            ipa_w = ipa_w_map[token]
 
-        logging.info ("predicting %d tokens (%s) using the wiktionary model..." % (len(tokens), repr(tokens[:3])))
-        ipa_w_map = sequitur_gen_ipa_multi (WIKTIONARY_MODEL, ipas)
+            ipa_m = merge_check(token, ipa_r, ipa_w)
+            if ipa_m and (not u"'" in ipa_m): # at least one stress marker is required
+                ipa_m = None
 
-        logging.info ("comparing...")
+            # if matched:
+            if ipa_m:
+                logging.info("%6d/%6d %6d %-30s: %s vs %s MATCHED!" % (cnt, len(wiktionary), cnt_matched, token, ipa_r, ipa_w))
+                cnt_matched += 1
 
-        for token in chunk:
+                outdictf.write(u"%s;%s\n" % (token, ipa_m))
 
-            try:
+            else:
+                logging.info("%6d/%6d %6d %-30s: %s vs %s" % (cnt, len(wiktionary), cnt_matched, token, ipa_r, ipa_w))
+                outrejf.write(u"\n%s\nIPA_R %s\nIPA_W %s\n" % (token, ipa_r.replace(u"-", u""), ipa_w))
+        except:
+            logging.error(traceback.format_exc())
 
-                ipa  = wiktionary[token][1].strip()
-
-                if not token in ipa_r_map:
-                    continue
-                if not ipa in ipa_w_map:
-                    continue
-
-                ipa_r = ipa_r_map[token]
-                ipa_w = ipa_w_map[ipa]
-
-                # matched = ipa_r.replace(u"-", u"") == ipa_w
-                ipa_m = merge_check(token, ipa_r, ipa_w)
-                if ipa_m and (not u"'" in ipa_m): # at least one stress marker is required
-                    ipa_m = None
-
-                # if matched:
-                if ipa_m:
-                    logging.info("%6d/%6d %6d %-30s: %s vs %s MATCHED!" % (cnt, len(wiktionary), cnt_matched, token, ipa_r, ipa_w))
-                    cnt_matched += 1
-
-                    outdictf.write(u"%s;%s\n" % (token, ipa_m))
-
-                else:
-                    logging.info("%6d/%6d %6d %-30s: %s vs %s" % (cnt, len(wiktionary), cnt_matched, token, ipa_r, ipa_w))
-                    outrejf.write(u"\n%s\nIPA_R %s\nIPA_W %s\n" % (token, ipa_r.replace(u"-", u""), ipa_w))
-            except:
-                logging.error(traceback.format_exc())
-
-logging.info ("%s written." % OUTDICTFN)
+logging.info (" %s written." % OUTDICTFN)
+logging.info (" %s written." % OUTREJFN)
 

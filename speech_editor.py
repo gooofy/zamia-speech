@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# interactive all-in-one curses application for audio review, transcription 
+# interactive all-in-one readline application for audio review, transcription 
 # and lexicon editing
 #
 
@@ -26,8 +26,7 @@ import os
 import sys
 import logging
 import traceback
-import curses
-import curses.textpad
+import readline
 import locale
 import codecs
 import random
@@ -49,14 +48,14 @@ SEQUITUR_MODEL  = 'data/models/sequitur-dict-de.ipa-latest'
 DEFAULT_DICT    = 'dict-de.ipa'
 DEFAULT_WRT     = 'data/src/wrt/librivox_de.csv'
 
-PUNCTUATION = set([',','.','\'','!','?','"','-'])
+PUNCTUATION = set([',','.','\'','!','?','"','-',':'])
 
 def tokwrt (ts):
 
     global options, wrt
 
     res = []
-    for t in tokenize(ts, lang=options.lang, keep_punctuation=options.keep_punctuation):
+    for t in tokenize(ts, lang=options.lang, keep_punctuation=not options.ignore_punctuation):
         if t in wrt:
             res.append(wrt[t])
         else:
@@ -96,7 +95,7 @@ def goto_next_ts(cur_ts):
     else:
         cur_ts = (cur_ts + 1) % len(edit_ts)
 
-    missing_token = paint_main(stdscr, cur_ts)
+    missing_token = paint_main(cur_ts)
     ts = edit_ts[cur_ts]
     play_wav(ts)
 
@@ -115,38 +114,25 @@ def accept_ts(qty, cur_ts):
 
 def lex_paint_main():
 
-    global stdscr, lex_token, lex, lex_entry
+    global lex_token, lex, lex_entry
 
-    stdscr.clear()
-
-    my, mx = stdscr.getmaxyx()
-
-    for x in range(mx):
-        stdscr.insstr(   0, x, ' ', curses.A_REVERSE)
-        stdscr.insstr(my-2, x, ' ', curses.A_REVERSE)
-        stdscr.insstr(my-1, x, ' ', curses.A_REVERSE)
-
-    stdscr.insstr(0, mx-15, "Lexicon Editor", curses.A_REVERSE )
-
-    stdscr.insstr(4, 2, ("Token : %s" % lex_token).encode('utf8'))
-    stdscr.insstr(5, 2, ("  IPA : %s" % lex_entry['ipa']).encode('utf8'))
+    print
+    print u"Token : %s" % lex_token
+    print u"  IPA : %s" % lex_entry['ipa']
+    print
 
     if lex_token in lex:
-
         m = lex.get_multi(lex_token)
-        cy = 10
         for k in m:
-            stdscr.insstr(cy, 4, ("%s [%s]" % (k, m[k]['ipa'])).encode('utf8'))
-            cy += 1
+            print u"   lex: %s [%s]" % (k, m[k]['ipa'])
 
     else:
-        stdscr.insstr(10, 4, "NEW TOKEN")
+        print "   NEW TOKEN"
 
-    stdscr.insstr(my-2, 0, "SPEAK  P:de-unitsel  O:de-hsmm                   I:fr-hsmm   U:en-hsmm", curses.A_REVERSE )
-    stdscr.insstr(my-1, 0, "GEN    G:de-mary     H:de-espeak  J:de-sequitur  K:fr-mary   L:en-mary", curses.A_REVERSE )
-    stdscr.insstr(my-2, mx-40, "                                        ", curses.A_REVERSE )
-    stdscr.insstr(my-1, mx-40, "           E:Edit  T:Token       Q:Quit ", curses.A_REVERSE )
-    stdscr.refresh()
+    print
+    print "SPEAK  p:de-unitsel  o:de-hsmm                   i:fr-hsmm   u:en-hsmm"
+    print "GEN    g:de-mary     h:de-espeak  j:de-sequitur  k:fr-mary   l:en-mary           e:edit  t:token       q:quit"
+    print
 
 def lex_set_token(token):
 
@@ -192,14 +178,14 @@ def lex_edit(token):
         try:
 
             lex_paint_main()
-        
-            c = stdscr.getch()
-            if c == ord('q'):
+       
+            c = raw_input('lex > ').lower() 
+            if c == 'q':
                 lex.save()
                 break  
         
             # generate de-mary
-            elif c == ord('g'):
+            elif c == 'g':
                 
                 tts.locale = 'de'
                 tts.engine = 'mary'
@@ -210,7 +196,7 @@ def lex_edit(token):
                 lex_entry['ipa'] = ipas
        
             # generate de-espeak
-            elif c == ord('h'):
+            elif c == 'h':
                 
                 tts.locale ='de'
                 tts.engine ='espeak'
@@ -225,7 +211,7 @@ def lex_edit(token):
 
         
             # generate en-mary 
-            elif c == ord('l'):
+            elif c == 'l':
                 
                 tts.locale ='en-US'
                 tts.engine ='mary'
@@ -236,7 +222,7 @@ def lex_edit(token):
                 lex_entry['ipa'] = ipas
 
             # generate fr-mary 
-            elif c == ord('k'):
+            elif c == 'k':
                 
                 tts.locale ='fr'
                 tts.engine ='mary'
@@ -247,7 +233,7 @@ def lex_edit(token):
                 lex_entry['ipa'] = ipas
 
             # generate de-sequitur
-            elif c == ord('j'):
+            elif c == 'j':
                 
                 ipas = sequitur_gen_ipa (SEQUITUR_MODEL, lex_base)
                 tts.locale ='de'
@@ -257,7 +243,7 @@ def lex_edit(token):
                 lex_entry['ipa'] = ipas
 
             # speak de mary unitsel 
-            elif c == ord('p'):
+            elif c == 'p':
         
                 if len(lex_entry['ipa']) == 0:
                     continue
@@ -271,7 +257,7 @@ def lex_edit(token):
                 tts.say_ipa(ipas)
 
             # speak de mary hsmm
-            elif c == ord('o'):
+            elif c == 'o':
         
                 if len(lex_entry['ipa']) == 0:
                     continue
@@ -285,7 +271,7 @@ def lex_edit(token):
                 tts.say_ipa(ipas)
 
             # speak fr mary hsmm
-            elif c == ord('i'):
+            elif c == 'i':
        
                 if len(lex_entry['ipa']) == 0:
                     continue
@@ -299,7 +285,7 @@ def lex_edit(token):
                 tts.say_ipa(ipas)
        
             # speak en mary hsmm
-            elif c == ord('u'):
+            elif c == 'u':
         
                 ipas = lex_entry['ipa']
 
@@ -310,20 +296,22 @@ def lex_edit(token):
                 tts.say_ipa(ipas)
        
             # edit token
-            elif c == ord('t'):
+            elif c == 't':
 
-                token = misc.edit_popup(stdscr, ' Token ', '')
+                readline.add_history(lex_token.encode('utf8'))
+                token = raw_input('token: ').decode('utf8')
 
                 lex_set_token (token)
 
             # edit XS
-            elif c == ord('e'):
+            elif c == 'e':
         
                 ipas = lex_entry['ipa']
 
                 xs = ipa2xsampa (lex_token, ipas, stress_to_vowels=False)
 
-                xs = misc.edit_popup(stdscr, ' X-SAMPA ', xs)
+                readline.add_history(xs.encode('utf8'))
+                xs = raw_input('X-SAMPA: ').decode('utf8')
 
                 ipas = xsampa2ipa (lex_token, xs)
         
@@ -337,6 +325,7 @@ def lex_edit(token):
 #
 
 misc.init_app(PROC_TITLE)
+readline.set_history_length(1000)
 
 #
 # command line
@@ -353,8 +342,8 @@ parser.add_option("-p", "--prompts", dest="promptsfn",
 parser.add_option("-l", "--lang", dest="lang", type = "str", default='de',
                   help="language (default: de)")
 
-parser.add_option("-k", "--keep-punctuation", action="store_true", dest="keep_punctuation", 
-                  help="keep punctuation marks")
+parser.add_option("-i", "--ignore-punctuation", action="store_true", dest="ignore_punctuation", 
+                  help="ignore (remove) punctuation marks")
 
 parser.add_option("-m", "--missing-words", action="store_true", dest="missing_words", 
                   help="only work on submissions that have at least one missing word")
@@ -384,6 +373,15 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
 
+def save_wrt():
+    global wrt, options
+
+    with codecs.open(options.wrt, 'w', 'utf8') as wrtf:
+        for old in sorted(wrt):
+            wrtf.write(u'%s;%s\n' % (old, wrt[old]))
+
+    logging.info ('%s written.' % options.wrt)
+
 #
 # load WRT
 #
@@ -399,7 +397,8 @@ with codecs.open(options.wrt, 'r', 'utf8') as wrtf:
             continue
         wrt[parts[0]] = parts[1]
 
-logging.info(repr(wrt))
+# logging.info(repr(wrt))
+logging.info('loading WRT from %s ... done, %d entries.' % (options.wrt, len(wrt)))
 
 #
 # load transcripts
@@ -431,17 +430,6 @@ if options.promptsfn:
     logging.info("%s read. %d tokens." % (options.promptsfn, len(prompt_tokens)))
 
 #
-# curses
-#
-
-locale.setlocale(locale.LC_ALL,"")
-
-stdscr = curses.initscr()
-curses.noecho()
-curses.cbreak()
-stdscr.keypad(1)
-
-#
 # config
 #
 
@@ -457,44 +445,31 @@ port        = int(config.get('tts', 'port'))
 
 tts = TTS (host, port, locale='de', voice='bits3', engine='espeak')
 
-def paint_main(stdscr, cur_ts):
+def paint_main(cur_ts):
 
     global edit_ts, prompt_tokens, prompt_token_idx
 
     ts = edit_ts[cur_ts]
 
-    stdscr.clear()
-
-    my, mx = stdscr.getmaxyx()
-
-    for x in range(mx):
-        stdscr.insstr(   0, x, ' ', curses.A_REVERSE)
-        stdscr.insstr(my-2, x, ' ', curses.A_REVERSE)
-        stdscr.insstr(my-1, x, ' ', curses.A_REVERSE)
-
     # header
 
-    s = u"%2d/%2d %-30s QTY: %d" % (cur_ts+1, len(edit_ts), ts['cfn'], ts['quality'])
-
-    stdscr.insstr(0, 0, s.encode('utf8'), curses.A_BOLD | curses.A_REVERSE )
-    stdscr.insstr(0, mx-13, 'Speech Editor', curses.A_REVERSE)
+    print
+    print u"%5d/%5d %s QLTY: %d" % (cur_ts+1, len(edit_ts), ts['cfn'], ts['quality'])
 
     # prompts file
 
     if prompt_token_idx < len(prompt_tokens):
-        pstr = ' '.join(prompt_tokens[prompt_token_idx:prompt_token_idx+8])
-        stdscr.insstr(1, mx-len(pstr), pstr.encode('utf8'))
+        print 
+        print u"prompts file: %s" % u' '.join(prompt_tokens[prompt_token_idx:prompt_token_idx+8])
 
     # body / transcript
 
-    stdscr.insstr(2, 0, 'Prompt:', curses.A_BOLD)
-    stdscr.insstr(3, 0, ts['prompt'].encode('utf8'))
+    print
+    print u"%s" % ts['prompt']
+    print
 
     if len(ts['ts']) == 0:
         ts['ts'] = ' '.join(tokwrt(ts['prompt']))
-
-    cy = 5
-    cx = 0
 
     missing_token = None
 
@@ -502,7 +477,7 @@ def paint_main(stdscr, cur_ts):
 
         if token in lex:
 
-            s = ''
+            s = u''
 
             m = lex.get_multi(token)
 
@@ -511,38 +486,32 @@ def paint_main(stdscr, cur_ts):
                 v = m[t]
 
                 if len(s) > 0:
-                    s += ', '
+                    s += u', '
 
                 if len(m)>1 and t == token:
-                    s += '**'
+                    s += u'**'
                 s += t
-                s += ' [' + m[t]['ipa']
-                s += ']'
+                s += u' [' + m[t]['ipa']
+                s += u']'
 
-            stdscr.insstr(cy, cx, s.encode('utf8') )
+            print u"           %s" % s
             
         else:
             if token in PUNCTUATION:
-                stdscr.insstr(cy, cx, token.encode('utf8'))
+                print u"           %s" % token
     
             else:
                 if not missing_token:
                     missing_token = token
 
-                stdscr.insstr(cy, cx, token.encode('utf8'), curses.A_REVERSE)
+                print u"  MISSING  %s" % token
 
-        cy += 1
-        if cy > my-2:
-            break
-        
+    # menu
 
-    # footer
-
-    stdscr.insstr(my-2, 0,     " P:Play     E:Prompt  T:Transcript                      ", curses.A_REVERSE )
-    stdscr.insstr(my-1, 0,     " L:LexEdit            Prompts File: A=add S=skip B=Back ", curses.A_REVERSE )
-    stdscr.insstr(my-2, mx-40, "           Accept: 1=Poor 2=Fair 3=Good ", curses.A_REVERSE )
-    stdscr.insstr(my-1, mx-40, "                                 Q:Quit ", curses.A_REVERSE )
-    stdscr.refresh()
+    print
+    print "p:play     e:prompt  t:transcript                        accept: 1=poor 2=fair 3=good"
+    print "l:lex      w:wrt     prompts file: a=add s=skip b=back                         q:quit"
+    print
 
     return missing_token
 
@@ -601,33 +570,57 @@ try:
     
         ts = edit_ts[cur_ts]
 
-        missing_token = paint_main(stdscr, cur_ts)
+        missing_token = paint_main(cur_ts)
 
-        c = stdscr.getch()
-        if c == ord('q'):
+        c = raw_input('%s > ' % missing_token)
+        if not c:
+            break
+
+        c = c.strip().lower()
+
+        if c == 'q':
             break  
    
-        elif c == ord('p'):
+        elif c == 'p':
             play_wav(ts)
 
-        elif c == ord('1'):
+        elif c == '1':
             accept_ts(1, cur_ts)
             missing_token, cur_ts = goto_next_ts(cur_ts)
-        elif c == ord('2'):
+        elif c == '2':
             if not missing_token:
                 accept_ts(2, cur_ts)
                 missing_token, cur_ts = goto_next_ts(cur_ts)
-        elif c == ord('3'):
+        elif c == '3':
             if not missing_token:
                 accept_ts(3, cur_ts)
                 missing_token, cur_ts = goto_next_ts(cur_ts)
                     
-        elif c == ord('e'):
+        elif c == 'e':
 
-            ts['prompt'] = misc.edit_popup(stdscr, ' Prompt ', ts['prompt'])
+            readline.add_history(ts['prompt'].encode('utf8'))
+            ts['prompt'] = raw_input('prompt: ').decode('utf8')
             ts['ts'] = ''
 
-        elif c == ord('a'):
+        elif c == 't':
+
+            readline.add_history(ts['ts'].encode('utf8'))
+            ts['ts'] = raw_input('transcript: ').decode('utf8')
+
+        elif c == 'w':
+
+            if missing_token:
+                readline.add_history(missing_token.encode('utf8'))
+                r = raw_input(u'WRT entry for %s: ' % missing_token).decode('utf8')
+                if r:
+                    wrt[missing_token] = r
+                else:
+                    del wrt[missing_token]
+                ts['ts'] = ''
+
+                save_wrt()
+
+        elif c == 'a':
 
             if prompt_token_idx < len(prompt_tokens):
                 if len(ts['prompt']) > 0:
@@ -636,12 +629,12 @@ try:
                 ts['ts'] = ''
                 prompt_token_idx += 1
 
-        elif c == ord('s'):
+        elif c == 's':
 
             if prompt_token_idx < len(prompt_tokens):
                 prompt_token_idx += 1
 
-        elif c == ord('b'):
+        elif c == 'b':
 
             if prompt_token_idx >0:
 
@@ -655,11 +648,7 @@ try:
                     ts['prompt'] = ''
                 ts['ts'] = ''
 
-        elif c == ord('t'):
-
-            ts['ts'] = misc.edit_popup(stdscr, ' Transcript ', ts['ts'])
-
-        elif c == ord('l'):
+        elif c == 'l':
 
             if len(ts['ts'])>0 or missing_token:
 
@@ -671,13 +660,6 @@ try:
                 lex_edit(t)
 
 
-    #
-    # fini
-    #
-
-    curses.nocbreak(); stdscr.keypad(0); curses.echo()
-    curses.endwin()
-
     transcripts.save()
     logging.info("new transcripts saved.")
 
@@ -685,8 +667,5 @@ try:
     logging.info("new lexicon saved.")
 
 except:
-    curses.nocbreak(); stdscr.keypad(0); curses.echo()
-    curses.endwin()
-
     logging.error('EXCEPTION CAUGHT %s' % traceback.format_exc())
 
