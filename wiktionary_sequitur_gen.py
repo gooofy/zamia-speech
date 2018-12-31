@@ -279,7 +279,7 @@ with open(SCRIPTFN, 'w') as scriptf:
 
         scriptf.write('echo %04d\n' % i)
         scriptf.write('g2p.py -e utf-8 --model %s --apply %s > %s &\n' % (REGULAR_MODEL, CHUNKINRFN % i, CHUNKOUTRFN % i))
-        scriptf.write('g2p.py --model %s --apply %s > %s &\n' % (WIKTIONARY_MODEL, CHUNKINWFN % i, CHUNKOUTWFN % i))
+        scriptf.write('g2p.py -e utf-8 --model %s --apply %s > %s &\n' % (WIKTIONARY_MODEL, CHUNKINWFN % i, CHUNKOUTWFN % i))
         num_chunks += 1
         if DEBUG_CHUNK_LIMIT and num_chunks > DEBUG_CHUNK_LIMIT:
             logging.warn('debug limit reached.')
