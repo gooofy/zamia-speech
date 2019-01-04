@@ -205,7 +205,7 @@ if [ $WHAT = "voice" ] ; then
 
     DISTDIR=data/dist/tts
     EPOCH=$3
-    ARCNAME="voice-${MODEL}-${REVISION}"
+    ARCNAME="voice-${MODEL}-${EPOCH}-${REVISION}"
 
     echo "${ARCNAME}..."
 
