@@ -140,7 +140,7 @@ with open('tmp/run_parallel.sh', 'w') as scriptf:
 
                             wav_out = '%s/wav/%s.wav' % (dstdir, uttid)
 
-                            cmd = 'sox %s -r 16000 -b 16 -c 1 %s gain -n -3 silence -l 0 -1 0.2 0.1%%' % (wav_in, wav_out)
+                            cmd = 'sox %s -r 16000 -b 16 -c 1 %s gain -n -3 silence -l 0 -1 0.2 0.1%% compand 0.02,0.20 5:-60,-40,-10 -5 -90 0.1 ' % (wav_in, wav_out)
                             logging.debug(cmd)
                             # os.system(cmd)
                             scriptf.write('echo %6d %s &\n' % (cnt, uttid))
