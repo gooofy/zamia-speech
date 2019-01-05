@@ -481,7 +481,7 @@ The following list contains speech corpora supported by this script collection.
     + Download `de_DE.tgz`, `en_UK.tgz`, `en_US.tgz`
     + Create a subdirectory `m_ailabs` in `<~/.speechrc:speech_arc>`
     + Unpack the downloaded tarbals inside the `m_ailabs` subdirectory
-    + Then run run the script `./labs_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./mailabs_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/m_ailabs_en` and `<~/.speechrc:speech_corpora>/m_ailabs_de`.
 
 - [VoxForge (English, 75 hours)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
