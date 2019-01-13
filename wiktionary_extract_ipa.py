@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016, 2017, 2018 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2018, 2019 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,7 @@
 #
 
 #
-# extract pronounciations from (german, for now) wiktionary
+# extract pronounciations from (english and german, for now) wiktionary
 #
 
 import os
@@ -28,16 +28,26 @@ import xml.sax
 import re
 import string
 import codecs
+import logging
 
-from nltools                import misc
+from optparse           import OptionParser
+from nltools            import misc
+from functools          import reduce
 
 PROC_TITLE      = 'wiktionary_extract_ipa'
-# ARTICLE_LIMIT = 1000
+# ARTICLE_LIMIT   = 1000
 ARTICLE_LIMIT   = 0
-DICTFN          = 'data/dst/speech/de/dict_wiktionary_de.txt'
+DICTFN          = 'data/dst/speech/%s/dict_wiktionary_%s.txt'
 
-# :{{IPA}} {{Lautschrift|çi}}
-IPA_PATTERN = re.compile(r"^:{{IPA}} {{Lautschrift\|([^}]+)}}")
+
+IPA_PATTERN = {      # :{{IPA}} {{Lautschrift|çi}}
+               'de': re.compile(r"^:{{IPA}} {{Lautschrift\|([^}]+)}}"),
+                     # * {{IPA|/ˈkɑmədɔɹ/|lang=en}}
+               'en': re.compile(r"{{IPA\|([^|]+)\|.*lang=en}}"),
+              }
+
+ALPHABET    = {'de': set("abcdefghijklmnopqrstuvwxyzäöüß"),
+               'en': set("abcdefghijklmnopqrstuvwxyz'") }
 
 # :ver·rückt, {{Komp.}} ver·rück·ter, {{Sup.}} ver·rück·tes·ten
 HYP_PATTERN = re.compile(r"^:([^,]+)")
@@ -69,7 +79,7 @@ class ArticleExtractor(xml.sax.ContentHandler):
 
     def endElement(self, name):
 
-        global article_cnt, ipa_cnt, dictf
+        global article_cnt, ipa_cnt, dictf, options
 
         #print("endElement '" + name + "'")
         if name == 'page':
@@ -86,9 +96,9 @@ class ArticleExtractor(xml.sax.ContentHandler):
 
             for line in body.split('\n'):
                 if not ipa:
-                    m = IPA_PATTERN.match(line)
-                    if m:
-                        ipa = m.group(1)
+                    for m in IPA_PATTERN[options.lang].findall(line):
+                        ipa = m
+                        break # pick the first one
                 if not hyphenation:
                     if hyp_armed:
                         hyp_armed = False
@@ -101,22 +111,36 @@ class ArticleExtractor(xml.sax.ContentHandler):
                     if u'{{Sprache|Deutsch}}' in line:
                         german = True
 
-            if not german:
-                print "%7d %7d %s NOT GERMAN." % (article_cnt, ipa_cnt, title)
-                return
-            if not ipa:
-                print "%7d %7d %s NO PRONOUNCIATION FOUND." % (article_cnt, ipa_cnt, title)
-                return
-            if not hyphenation:
-                print "%7d %7d %s NO HYPHENTATION   FOUND." % (article_cnt, ipa_cnt, title)
-                return
+            if options.lang == 'de':
+                if not german:
+                    logging.debug("%7d %7d %s NOT GERMAN." % (article_cnt, ipa_cnt, title))
+                    return
+                if not ipa:
+                    logging.debug("%7d %7d %s NO PRONOUNCIATION FOUND." % (article_cnt, ipa_cnt, title))
+                    return
+                if not hyphenation:
+                    logging.debug("%7d %7d %s NO HYPHENTATION   FOUND." % (article_cnt, ipa_cnt, title))
+                    return
+            elif options.lang == 'en':
+                if not ipa:
+                    logging.debug("%7d %7d %s NO PRONOUNCIATION FOUND." % (article_cnt, ipa_cnt, title))
+                    return
+
+                # all characters used in title covered by our alphabet?
+                alphacheck = reduce(lambda t, c: False if not t else c.lower() in ALPHABET[options.lang], title, True)
+                if not alphacheck:
+                    logging.debug("%7d %7d %s NOT COVERED BY ALPHABET." % (article_cnt, ipa_cnt, repr(title)))
+                    return
+
+                hyphenation = title
 
             ipa_cnt     += 1
-            print u"%7d %7d %s IPA: %s" % (article_cnt, ipa_cnt, title, ipa)
+            logging.info(u"%7d %7d %s IPA: %s" % (article_cnt, ipa_cnt, title, ipa))
 
             dictf.write('%s;%s\n' % (hyphenation, ipa))
 
             if ARTICLE_LIMIT and article_cnt >= ARTICLE_LIMIT:
+                logging.warn('DEBUG limit of %d reached -> exit.' % ARTICLE_LIMIT)
                 sys.exit(0)
 
 #
@@ -126,23 +150,44 @@ class ArticleExtractor(xml.sax.ContentHandler):
 misc.init_app(PROC_TITLE)
 
 #
+# command line
+#
+
+parser = OptionParser("usage: %%prog [options]")
+
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default="de",
+                   help="language (default: de)")
+
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose", 
+                  help="enable debug output")
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+
+#
 # load config, set up global variables
 #
 
 config = misc.load_config ('.speechrc')
 
-wikfn  = config.get("speech", "wiktionary_de")
+wikfn  = config.get("speech", "wiktionary_%s" % options.lang)
+
 
 #
 # main program: SAX parsing of wiktionary dump
 #
 
-dictf = codecs.open(DICTFN, 'w', 'utf8')
+dictf = codecs.open(DICTFN % (options.lang, options.lang), 'w', 'utf8')
 
 source = open(wikfn)
 xml.sax.parse(source, ArticleExtractor())
 
 dictf.close()
 
-print "%s written." % DICTFN
+logging.info("%s written." % (DICTFN % (options.lang, options.lang)))
+
 
