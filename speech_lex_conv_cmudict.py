@@ -204,7 +204,7 @@ with codecs.open(CMUDICTFN, 'w', 'utf8') as cmudictf:
     for word in sorted(lex_new):
 
         ipa_new = lex_new[word]
-        cmudictf.write(u'%s %s\n' % (word, ipa_new))
+        cmudictf.write(u'%s;%s\n' % (word, ipa_new))
 
 logging.info ('%s written.' % CMUDICTFN)
 
