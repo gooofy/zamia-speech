@@ -73,6 +73,8 @@ SPEECH_CORPORA = {
         lambda: proc_transcripts("gspv2"),
     "librispeech":
         lambda: proc_transcripts("librispeech"),
+    "ljspeech":
+        lambda: proc_transcripts("ljspeech"),
     "m_ailabs_de":
         lambda: proc_transcripts("m_ailabs_de"),
     "m_ailabs_en":
