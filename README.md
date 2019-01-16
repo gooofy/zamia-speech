@@ -572,6 +572,9 @@ Sentences can also be extracted from our speech corpora. To do that, run:
     + `./speech_sentences.py voxforge_en`
     + `./speech_sentences.py librispeech`
     + `./speech_sentences.py zamia_en`
+    + `./speech_sentences.py cv_corpus_v1`
+    + `./speech_sentences.py ljspeech`
+    + `./speech_sentences.py m_ailabs_en`
 
 - German Speech Corpora
     + `./speech_sentences.py forschergeist`
@@ -587,12 +590,12 @@ English
 
 Prerequisites: 
 - text corpora `europarl_en`, `cornell_movie_dialogs`, `web_questions`, and `yahoo_answers` are installed, sentences extracted (see instructions above).
-- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`
+- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`
 
 To train an English language model using SRILM for use in both sphinx and kaldi builds run:
 
 ```bash
-./speech_build_lm.py generic_en_lang_model europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en
+./speech_build_lm.py generic_en_lang_model europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en
 ```
 
 German
