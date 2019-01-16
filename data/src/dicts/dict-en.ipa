@@ -15449,7 +15449,6 @@ bolter;b'oʊltɜ
 bolter's;b'oʊltɜz
 bolthouse;b'oʊlthaʊs
 bolting;b'oʊltɪɳ
-bolting”;
 bolton;b'oʊltʌn
 bolton's;b'oʊltʌnz
 boltons;b'oʊltʌnz
@@ -31099,7 +31098,6 @@ crate;kr'eɪt
 crater;kr'eɪtɜ
 cratered;kr'eɪtɜd
 craters;kr'eɪtɜz
-crater”;
 crates;kr'eɪts
 cratia;kr'eɪʃʌ
 crating;kr'eɪtɪɳ
@@ -32890,7 +32888,6 @@ czeslaw;tʃɛsl'ɔ
 czolgosz;z'oʊlgoʊs
 czyz;tʃ'ɪz
 czyzewski;tʃɪz'ɛfski
-célèbre;
 d;d'i
 d'affaires;dʌf'ɛrz
 d'agostino;dɑgʌst'inoʊ
@@ -59069,7 +59066,6 @@ grzyb;g'ɜzɪb
 grzybowski;gɜzɪb'aʊski
 grzywacz;g'ɜzɪvætʃ
 grzywinski;gɜzɪw'ɪnski
-grâce;
 gschwind;gʌʃw'ɪnd
 gsell;gʌs'ɛl
 gtech;dʒ'itɛk
@@ -59918,7 +59914,6 @@ habituated;hʌb'ɪtʃueɪtɪd
 habituating;hʌb'ɪtʃueɪtɪɳ
 habitue;h'æbɪtʃu
 habitues;h'æbɪtʃuz
-habitué;
 hable;h'eɪbʌl
 habor;h'eɪbɜ
 habs;h'æbz
@@ -95028,8 +95023,6 @@ mythology;mʌθ'ɑlʌdʒi
 myths;m'ɪθs
 mytishchi;m'ɪtɪʃi
 myung;mj'ʌɳ
-müller;
-müller's;
 n;'ɛn
 n'djamena;ndjʌm'inʌ
 n'dour;nd'aʊr
@@ -98200,7 +98193,7 @@ nozzles;n'ɑzʌlz
 npr;'ɛnp'i'ɑr
 npr's;'ɛnp'i'ɑrz
 ns;nz
-nspc;'ɛn'ɛsp'is'i
+nspc;#
 nt;nt
 nth;'ɛnθ
 nu;n'u
@@ -156846,6 +156839,3 @@ zyskowski;zɪsk'ɔfski
 zyuganov;zj'ugɑnɑv
 zyuganov's;zj'ugɑnɑvz
 zywicki;zɪw'ɪki
-à;
-être;
-”;
