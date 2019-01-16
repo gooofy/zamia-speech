@@ -734,11 +734,11 @@ The following recipe trains Kaldi models for English.
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
 - language model `generic_en_lang_model` built
-- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1` and `zamia_en` are installed, converted and scanned.
+- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en` and `zamia_en` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_en_noisy`, `voxforge_en_phone`, `librispeech_en_noisy`, `librispeech_en_phone`, `cv_corpus_v1_noisy`, `cv_corpus_v1_phone`, `zamia_en_noisy` and `zamia_en_phone`
 
 ```bash
-./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en
+./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en 
 cd data/dst/asr-models/kaldi/generic-en-small
 ./run-lm.sh
 ./run-chain.sh
@@ -747,7 +747,7 @@ cd data/dst/asr-models/kaldi/generic-en-small
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
 ```
 
 German NNet3 Chain Models
