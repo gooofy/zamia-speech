@@ -3,7 +3,7 @@
 
 #
 # Copyright 2018 Marc Puels
-# Copyright 2013, 2014, 2016, 2017, 2018 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2018, 2019 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -67,6 +67,8 @@ TEXT_CORPORA = {
 }
 
 SPEECH_CORPORA = {
+    "cv_corpus_v1":
+        lambda: proc_transcripts("cv_corpus_v1"),
     "forschergeist":
         lambda: proc_transcripts("forschergeist"),
     "gspv2":
@@ -234,7 +236,7 @@ def proc_transcripts(corpus_name):
     if use_prompts:
         transcripts_set = set((u' '.join(tokenize(transcripts[key]["prompt"], lang))) for key in transcripts)
     else:
-        transcripts_set = set((transcripts[key]["ts"] for key in transcripts))
+        transcripts_set = set( (u' '.join(tokenize(transcripts[key]["ts"], lang)))  for key in transcripts )
 
     for ts in transcripts_set:
         yield ts
