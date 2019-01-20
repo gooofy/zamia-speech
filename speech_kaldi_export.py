@@ -342,7 +342,7 @@ wav16_dir  = config.get("speech", "wav16")
 misc.mkdirs('%s/local/dict' % data_dir)
 misc.mkdirs(wav16_dir)
 misc.mkdirs(mfcc_dir)
-misc.symlink(language_model_dir, '%s/lm' % work_dir)
+misc.symlink('../../../../../%s' % language_model_dir, '%s/lm' % work_dir)
 misc.symlink('%s/egs/wsj/s5/steps' % kaldi_root, '%s/steps' % work_dir)
 misc.symlink('%s/egs/wsj/s5/utils' % kaldi_root, '%s/utils' % work_dir)
 
