@@ -673,7 +673,7 @@ Manual Editing
 ```
 
 is the main curses based, interactive lexicon editor. It will automatically
-produce candidate entries for new new words using Sequitur G2P, MaryTTS and
+produce candidate entries for new words using Sequitur G2P, MaryTTS and
 eSpeakNG. The user can then edit these entries manually if necessary and check
 them by listening to them being synthesized via MaryTTS in different voices.
 
