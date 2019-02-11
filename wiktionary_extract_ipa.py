@@ -35,9 +35,10 @@ from nltools            import misc
 from functools          import reduce
 
 PROC_TITLE      = 'wiktionary_extract_ipa'
-# ARTICLE_LIMIT   = 1000
+# ARTICLE_LIMIT   = 100
 ARTICLE_LIMIT   = 0
 DICTFN          = 'data/dst/speech/%s/dict_wiktionary_%s.txt'
+WORDLISTFN      = 'data/dst/speech/%s/wordlist_wiktionary_%s.txt'
 
 
 IPA_PATTERN = {      # :{{IPA}} {{Lautschrift|çi}}
@@ -46,8 +47,8 @@ IPA_PATTERN = {      # :{{IPA}} {{Lautschrift|çi}}
                'en': re.compile(r"{{IPA\|([^|]+)\|.*lang=en}}"),
               }
 
-ALPHABET    = {'de': set("abcdefghijklmnopqrstuvwxyzäöüß"),
-               'en': set("abcdefghijklmnopqrstuvwxyz'") }
+ALPHABET    = {'de': set(u"abcdefghijklmnopqrstuvwxyzäöüß"),
+               'en': set(u"abcdefghijklmnopqrstuvwxyz'") }
 
 # :ver·rückt, {{Komp.}} ver·rück·ter, {{Sup.}} ver·rück·tes·ten
 HYP_PATTERN = re.compile(r"^:([^,]+)")
@@ -61,7 +62,7 @@ class ArticleExtractor(xml.sax.ContentHandler):
         xml.sax.ContentHandler.__init__(self)
  
     def startElement(self, name, attrs):
-        #print("startElement '" + name + "'")
+
         self.ce = name
 
         if name == 'title':
@@ -69,6 +70,13 @@ class ArticleExtractor(xml.sax.ContentHandler):
         if name == 'text':
             self.text = ''
 
+        if name == 'page':
+            loc = self._locator
+            if loc is not None:
+                line, col = loc.getLineNumber(), loc.getColumnNumber()
+            else:
+                line, col = 'unknown', 'unknown'
+            logging.debug('page starts at line %s col %s' % (line, col))
 
     def characters(self, content):
 
@@ -79,7 +87,7 @@ class ArticleExtractor(xml.sax.ContentHandler):
 
     def endElement(self, name):
 
-        global article_cnt, ipa_cnt, dictf, options
+        global article_cnt, ipa_cnt, dictf, options, wordlistf
 
         #print("endElement '" + name + "'")
         if name == 'page':
@@ -115,6 +123,12 @@ class ArticleExtractor(xml.sax.ContentHandler):
                 if not german:
                     logging.debug("%7d %7d %s NOT GERMAN." % (article_cnt, ipa_cnt, title))
                     return
+                # all characters used in title covered by our alphabet?
+                alphacheck = reduce(lambda t, c: False if not t else c.lower() in ALPHABET[options.lang], title, True)
+                if not alphacheck:
+                    logging.debug("%7d %7d %s NOT COVERED BY ALPHABET." % (article_cnt, ipa_cnt, repr(title)))
+                    return
+                wordlistf.write('%s\n' % title)
                 if not ipa:
                     logging.debug("%7d %7d %s NO PRONOUNCIATION FOUND." % (article_cnt, ipa_cnt, title))
                     return
@@ -122,14 +136,16 @@ class ArticleExtractor(xml.sax.ContentHandler):
                     logging.debug("%7d %7d %s NO HYPHENTATION   FOUND." % (article_cnt, ipa_cnt, title))
                     return
             elif options.lang == 'en':
-                if not ipa:
-                    logging.debug("%7d %7d %s NO PRONOUNCIATION FOUND." % (article_cnt, ipa_cnt, title))
-                    return
-
                 # all characters used in title covered by our alphabet?
                 alphacheck = reduce(lambda t, c: False if not t else c.lower() in ALPHABET[options.lang], title, True)
                 if not alphacheck:
                     logging.debug("%7d %7d %s NOT COVERED BY ALPHABET." % (article_cnt, ipa_cnt, repr(title)))
+                    return
+
+                wordlistf.write('%s\n' % title)
+
+                if not ipa:
+                    logging.debug("%7d %7d %s NO PRONOUNCIATION FOUND." % (article_cnt, ipa_cnt, title))
                     return
 
                 hyphenation = title
@@ -168,6 +184,9 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.INFO)
 
+for c in ALPHABET[options.lang]:
+    logging.debug(c)
+
 #
 # load config, set up global variables
 #
@@ -181,13 +200,15 @@ wikfn  = config.get("speech", "wiktionary_%s" % options.lang)
 # main program: SAX parsing of wiktionary dump
 #
 
-dictf = codecs.open(DICTFN % (options.lang, options.lang), 'w', 'utf8')
+dictf     = codecs.open(DICTFN % (options.lang, options.lang), 'w', 'utf8')
+wordlistf = codecs.open(WORDLISTFN % (options.lang, options.lang), 'w', 'utf8')
 
-source = open(wikfn)
+source = codecs.open(wikfn, 'r', 'utf8')
 xml.sax.parse(source, ArticleExtractor())
 
 dictf.close()
+wordlistf.close()
 
 logging.info("%s written." % (DICTFN % (options.lang, options.lang)))
-
+logging.info("%s written." % (WORDLISTFN % (options.lang, options.lang)))
 
