@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2019 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -157,7 +157,7 @@ logging.basicConfig(level=logging.INFO)
 # command line
 #
 
-parser = OptionParser("usage: %prog [options] tokens ...)")
+parser = OptionParser("usage: %prog [options] tokens ...")
 
 (options, args) = parser.parse_args()
 
