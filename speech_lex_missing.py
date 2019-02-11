@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2016, 2017, 2018 Guenter Bartsch
+# Copyright 2016, 2017, 2018, 2019 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -73,6 +73,10 @@ parser.add_option ("-o", "--output-file", dest="output_file", type = "str",
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
                    help="enable debug output")
 
+parser.add_option ("-w", "--wiktionary", dest="wiktionaryfn", type = "str",
+                   help="only generate phoneme transcriptions for words present in wiktionary (default: no check against wiktionary)")
+
+
 (options, args) = parser.parse_args()
 
 if options.verbose:
@@ -95,6 +99,15 @@ sequitur_model = SEQUITUR_MODEL % lex_name
 # load lexicon, transcripts
 #
 
+wiktionary = None
+if options.wiktionaryfn:
+    logging.info("loading wiktionary...")
+    wiktionary = set()
+    with codecs.open(options.wiktionaryfn, 'r', 'utf8') as wiktionaryf:
+        for line in wiktionaryf:
+            wiktionary.add(line.strip().lower())
+    logging.info ('%d words loaded from wiktionary' % len(wiktionary))
+
 logging.info("loading lexicon...")
 lex = Lexicon(file_name=lex_name)
 logging.info("loading lexicon...done.")
@@ -102,6 +115,7 @@ logging.info("loading lexicon...done.")
 logging.info("loading transcripts...")
 transcripts = Transcripts(corpus_name=corpus_name)
 logging.info("loading transcripts...done.")
+
 
 #
 # find missing words
@@ -155,14 +169,21 @@ for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
 
     logging.info(u"Missing %4d times: %s" % (item[1], item[0]))
 
+    if options.output_file:
+        with codecs.open(options.output_file, 'a', 'utf8') as outf:
+            outf.write(u'%s\n' % item[0])
+
     if options.generate:
+
+        if wiktionary:
+            if not item[0] in wiktionary:
+                logging.info(u"%4d/%4d not generating phonemes for entry %s because it is not covered by wiktionary" % (cnt, options.num_words, item[0]))
+                continue
+
         ipas = sequitur_gen_ipa (sequitur_model, item[0])
         logging.info(u"%4d/%4d generated lex entry: %s -> %s" % (cnt, options.num_words, item[0], ipas))
         lex[item[0]] = {'ipa': ipas}
 
-    if options.output_file:
-        with codecs.open(options.output_file, 'a', 'utf8') as outf:
-            outf.write(u'%s\n' % item[0])
 
 logging.info("%d missing words total. %d submissions lack at least one word, %d are covered fully by the lexicon." % (len(missing), num_ts_lacking, num_ts_complete))
 
