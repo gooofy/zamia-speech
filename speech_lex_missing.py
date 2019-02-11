@@ -70,6 +70,9 @@ parser.add_option ("-i", "--ignore-rating", action="store_true", dest="ignore_ra
 parser.add_option ("-o", "--output-file", dest="output_file", type = "str",
                    help="append missing words to this file (default: no output file is written)")
 
+parser.add_option ("-O", "--max-occurences", dest="max_occurences", type="int",
+                   help="generate phonemes only for rare words up to the specified number of occurences, default: no limit")
+
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
                    help="enable debug output")
 
@@ -178,6 +181,11 @@ for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
         if wiktionary:
             if not item[0] in wiktionary:
                 logging.info(u"%4d/%4d not generating phonemes for entry %s because it is not covered by wiktionary" % (cnt, options.num_words, item[0]))
+                continue
+
+        if options.max_occurences:
+            if item[1] > options.max_occurences:
+                logging.info(u"%4d/%4d not generating phonemes for entry %s because it is too common" % (cnt, options.num_words, item[0]))
                 continue
 
         ipas = sequitur_gen_ipa (sequitur_model, item[0])
