@@ -48,7 +48,7 @@ misc.init_app ('speech_sequitur_export')
 parser = OptionParser("usage: %prog [options] ")
 
 parser.add_option ("-d", "--dict", dest="dict_name", type = "str", default=DEFAULT_DICT,
-           help="dict to export (default: %s)" % DEFAULT_DICT)
+                   help="dict to export (default: %s)" % DEFAULT_DICT)
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="verbose output")
 

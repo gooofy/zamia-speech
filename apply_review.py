@@ -111,7 +111,7 @@ for csvfn in args[1:]:
                     continue
            
             transcripts[utt_id]['quality'] = quality
-            transcripts[utt_id]['ts']      = u' '.join(tokenize(transcripts[utt_id]['prompt'], lang=options.lang))
+            transcripts[utt_id]['ts']      = u' '.join(tokenize(transcripts[utt_id]['prompt'], lang=options.lang, keep_punctuation=True))
 
             cnt += 1
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -lt 2 ] ; then
-    echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm]"
+    echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
     exit 1
 fi
 
@@ -30,7 +30,7 @@ WHAT=$2
 if [ $WHAT = "kaldi" ] ; then
 
     if [ $# != 3 ] ; then
-        echo "usage: $0 <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm]"
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
         exit 2
     fi
 
@@ -194,6 +194,39 @@ if [ $WHAT = "sequitur" ] ; then
     echo "$MODELNAME ..."
     cp data/dst/dict-models/${MODEL}/sequitur/model-6 $DISTDIR/$MODELNAME
     gzip $DISTDIR/$MODELNAME
+fi
+
+if [ $WHAT = "voice" ] ; then
+
+    if [ $# != 3 ] ; then
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
+        exit 2
+    fi
+
+    DISTDIR=data/dist/tts
+    EPOCH=$3
+    ARCNAME="voice-${MODEL}-${EPOCH}-${REVISION}"
+
+    echo "${ARCNAME}..."
+
+    echo rm -rf "$DISTDIR/$ARCNAME*"
+    rm -rf "$DISTDIR/$ARCNAME*"
+    mkdir -p "$DISTDIR/$ARCNAME"
+
+    cp data/dst/tts/voices/${MODEL}/cp/cp${EPOCH}-*.data-00000-of-00001 "$DISTDIR/$ARCNAME/model.data-00000-of-00001"
+    cp data/dst/tts/voices/${MODEL}/cp/cp${EPOCH}-*.index               "$DISTDIR/$ARCNAME/model.index"
+    cp data/dst/tts/voices/${MODEL}/cp/cp${EPOCH}-*.meta                "$DISTDIR/$ARCNAME/model.meta"
+    cp data/dst/tts/voices/${MODEL}/hparams.json                        "$DISTDIR/$ARCNAME/hparams.json"
+
+    cp README.md LICENSE AUTHORS                                        "$DISTDIR/$ARCNAME/"
+
+    pushd $DISTDIR
+    tar cfv "$ARCNAME.tar" $ARCNAME
+    xz -v -8 -T 12 "$ARCNAME.tar"
+    popd
+
+    rm -r "$DISTDIR/$ARCNAME"
+
 fi
 
 #

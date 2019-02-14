@@ -67,6 +67,9 @@ Table of Contents
   * [(2/4) Model adaptation](#24-model-adaptation)
   * [(3/4) Auto\-Segment using Kaldi](#34-auto-segment-using-kaldi)
   * [(4/4) Retrieve Segmentation Result](#44-retrieve-segmentation-result)
+* [Training Voices for Zamia\-TTS](#training-voices-for-zamia-tts)
+  * [(1/2) Prepare a Training Data Set](#12-prepare-a-training-data-set)
+  * [(2/2) Run the Training](#22-run-the-training)
 * [Model Distribution](#model-distribution)
 * [License](#license)
 * [Authors](#authors)
@@ -460,12 +463,26 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./librispeech_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/librispeech`. 
 
+- [The LJ Speech Dataset (English, 24 hours)](https://keithito.com/LJ-Speech-Dataset/):
+    + Download the tarball
+    + Unpack the archive such that the directory `LJSpeech-1.1` is a direct 
+      subdirectory of `<~/.speechrc:speech_arc>`. 
+    + Then run run the script `ljspeech_to_vf.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/lindajohnson-11`. 
+
 - [Mozilla Common Voice V1 (English, 252 hours)](https://voice.mozilla.org/en/data):
     + Download `cv_corpus_v1.tar.gz`
     + Unpack the archive such that the directory `cv_corpus_v1` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
     + Then run run the script `./mozcv1_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_corpus_v1`. 
+
+- [Munich Artificial Intelligence Laboratories GmbH (M-AILABS) Speech Dataset (English, 147 hours, German, 237 hours)](http://www.m-ailabs.bayern/en/):
+    + Download `de_DE.tgz`, `en_UK.tgz`, `en_US.tgz`
+    + Create a subdirectory `m_ailabs` in `<~/.speechrc:speech_arc>`
+    + Unpack the downloaded tarbals inside the `m_ailabs` subdirectory
+    + Then run run the script `./mailabs_to_vf.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/m_ailabs_en` and `<~/.speechrc:speech_corpora>/m_ailabs_de`.
 
 - [VoxForge (English, 75 hours)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_en` 
@@ -555,6 +572,9 @@ Sentences can also be extracted from our speech corpora. To do that, run:
     + `./speech_sentences.py voxforge_en`
     + `./speech_sentences.py librispeech`
     + `./speech_sentences.py zamia_en`
+    + `./speech_sentences.py cv_corpus_v1`
+    + `./speech_sentences.py ljspeech`
+    + `./speech_sentences.py m_ailabs_en`
 
 - German Speech Corpora
     + `./speech_sentences.py forschergeist`
@@ -570,12 +590,12 @@ English
 
 Prerequisites: 
 - text corpora `europarl_en`, `cornell_movie_dialogs`, `web_questions`, and `yahoo_answers` are installed, sentences extracted (see instructions above).
-- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`
+- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`
 
 To train an English language model using SRILM for use in both sphinx and kaldi builds run:
 
 ```bash
-./speech_build_lm.py generic_en_lang_model europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en
+./speech_build_lm.py generic_en_lang_model europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en
 ```
 
 German
@@ -653,7 +673,7 @@ Manual Editing
 ```
 
 is the main curses based, interactive lexicon editor. It will automatically
-produce candidate entries for new new words using Sequitur G2P, MaryTTS and
+produce candidate entries for new words using Sequitur G2P, MaryTTS and
 eSpeakNG. The user can then edit these entries manually if necessary and check
 them by listening to them being synthesized via MaryTTS in different voices.
 
@@ -714,11 +734,11 @@ The following recipe trains Kaldi models for English.
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
 - language model `generic_en_lang_model` built
-- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1` and `zamia_en` are installed, converted and scanned.
+- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en` and `zamia_en` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_en_noisy`, `voxforge_en_phone`, `librispeech_en_noisy`, `librispeech_en_phone`, `cv_corpus_v1_noisy`, `cv_corpus_v1_phone`, `zamia_en_noisy` and `zamia_en_phone`
 
 ```bash
-./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en
+./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en 
 cd data/dst/asr-models/kaldi/generic-en-small
 ./run-lm.sh
 ./run-chain.sh
@@ -727,7 +747,7 @@ cd data/dst/asr-models/kaldi/generic-en-small
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
 ```
 
 German NNet3 Chain Models
@@ -1081,6 +1101,23 @@ Finally, we can retrieve the segmentation result in voxforge format:
 
 ```bash
 ./abook-kaldi-retrieve.py abook/in/librivox/11442-toten-Seelen/
+```
+
+Training Voices for Zamia-TTS
+=============================
+
+(1/2) Prepare a Training Data Set
+---------------------------------
+
+```bash
+./ztts_prepare.py -l en m_ailabs_en mailabselliotmiller elliot
+```
+
+(2/2) Run the Training
+----------------------
+
+```bash
+./ztts_train.py -v elliot 2>&1 | tee train_elliot.log
 ```
 
 Model Distribution

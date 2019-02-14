@@ -3,7 +3,7 @@
 
 #
 # Copyright 2018 Marc Puels
-# Copyright 2016, 2017, 2018 Guenter Bartsch
+# Copyright 2016, 2017, 2018, 2019 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -18,171 +18,41 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 #
 # export speech training data to create a kaldi case
 #
 
 import sys
 import logging
-from pathlib2 import Path
+import os
 
-import plac
+from optparse               import OptionParser
 
 from nltools                import misc
 from nltools.tokenizer      import tokenize
 from nltools.phonetics      import ipa2xsampa
 from nltools.sequiturclient import sequitur_gen_ipa
 
-from speech_lexicon     import Lexicon
-from speech_transcripts import Transcripts
+from speech_lexicon         import Lexicon
+from speech_transcripts     import Transcripts
 
-from paths import ASR_MODELS_DIR, LANGUAGE_MODELS_DIR
+SEQUITUR_MODEL_DIR  = 'data/models/sequitur'
+LANGUAGE_MODELS_DIR = 'data/dst/lm'
+ASR_MODELS_DIR      = 'data/dst/asr-models'
 
-SEQUITUR_MODEL_DIR = Path('data/models/sequitur')
+def concat_sort_write(src_paths, dst_path):
+    lines = []
+    for src_path in src_paths:
+        with open(src_path) as f:
+            lines += [line for line in f]
 
-@plac.annotations(
-    model_name="The name of the resulting speech recognition system. All files "
-               "belonging to the experiment will be written to the "
-               "directory data/dst/asr-models/<model_name>/.",
-    dictionary="The pronunciation dictionary to use. Valid values are the "
-               "names of the files in data/src/dicts/.",
-    language_model="The language model to use. Valid values are the names of "
-                   "the directories in data/dst/lm/.",
-    sequitur_model=("Name of a sequitur model. Valid values are the names of "
-                    "the files in data/models/sequitur/. If a name is given, "
-                    "then missing entries in the pronunciation dictionary will "
-                    "be automaticially generated with the sequitur model.",
-                    "option", "s", str),
-    debug=("Limit number of sentences (debug purposes only), default: 0 "
-           "(unlimited)", "option", "d", int),
-    verbose=("Enable verbose logging", "flag", "v"),
-    prompt_words=("Limit dict to tokens covered in prompts", "flag", "p"),
-    audio_corpora=("The audio corpora to train the acoustic model on.",
-                   "positional", None, None, None, "audio_corpus"))
-def main(model_name, dictionary, language_model, sequitur_model=None, debug=0,
-         verbose=False, prompt_words=False, *audio_corpora):
-
-    misc.init_app('speech_kaldi_export')
-
-    if verbose:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
-
-    language_model_dir = LANGUAGE_MODELS_DIR.resolve() / language_model
-    exit_if_language_model_dir_doesnt_exist(language_model_dir)
-
-    config = misc.load_config ('.speechrc')
-
-    work_dir = ASR_MODELS_DIR / 'kaldi' / model_name
-    kaldi_root = config.get("speech", "kaldi_root")
-
-    data_dir = work_dir / "data"
-    mfcc_dir = work_dir / "mfcc"
-
-    wav16_dir = config.get("speech", "wav16")
-
-    create_basic_work_dir_structure(
-        str(data_dir),
-        wav16_dir,
-        str(mfcc_dir),
-        str(work_dir),
-        str(language_model_dir),
-        kaldi_root)
-
-    if sequitur_model:
-        sequitur_model_path = str(SEQUITUR_MODEL_DIR / sequitur_model)
-    else:
-        sequitur_model_path = None
-
-    generate_speech_and_text_corpora(data_dir,
-                                     wav16_dir,
-                                     debug,
-                                     sequitur_model_path,
-                                     dictionary,
-                                     audio_corpora,
-                                     prompt_words)
-
-    copy_scripts_and_config_files(work_dir, kaldi_root)
-
-
-def exit_if_language_model_dir_doesnt_exist(language_model_dir):
-    if not language_model_dir.is_dir():
-        logging.error(
-            "Could not find language model directory {}. Create a language "
-            "model first with speech_build_lm.py.".format(language_model_dir))
-        sys.exit(1)
-
-
-def create_basic_work_dir_structure(data_dir, wav16_dir, mfcc_dir, work_dir,
-                                    language_model_dir, kaldi_root):
-    # FIXME: unused, remove misc.mkdirs('%s/lexicon' % data_dir)
-    misc.mkdirs('%s/local/dict' % data_dir)
-    misc.mkdirs(wav16_dir)
-    misc.mkdirs(mfcc_dir)
-    misc.symlink(language_model_dir, '%s/lm' % work_dir)
-    misc.symlink('%s/egs/wsj/s5/steps' % kaldi_root, '%s/steps' % work_dir)
-    misc.symlink('%s/egs/wsj/s5/utils' % kaldi_root, '%s/utils' % work_dir)
-
-
-def generate_speech_and_text_corpora(data_dir,
-                                     wav16_dir,
-                                     debug,
-                                     sequitur_model_path,
-                                     lexicon_file_name,
-                                     audio_corpora,
-                                     prompt_words):
-    logging.info("loading lexicon...")
-    lex = Lexicon(file_name=lexicon_file_name)
-    logging.info("loading lexicon...done.")
-    logging.info("loading transcripts...")
-
-    if sequitur_model_path:
-        add_all = True
-    else:
-        add_all = False
-
-    ts_all = {}
-    ts_train = {}
-    ts_test = {}
-    transcript_objs = []
-    for audio_corpus in audio_corpora:
-        transcripts = Transcripts(corpus_name=audio_corpus)
-
-        ts_all_, ts_train_, ts_test_ = transcripts.split(limit=debug, add_all=add_all)
-
-        logging.info("loading transcripts from %s (%d train, %d test) ..." % (audio_corpus, len(ts_train_), len(ts_test_)))
-
-        ts_all.update(ts_all_)
-        ts_train.update(ts_train_)
-        ts_test.update(ts_test_)
-        transcript_objs.append(transcripts)
-
-    logging.info("loading transcripts (%d train, %d test) ...done." % (
-        len(ts_train), len(ts_test)))
-
-    export_kaldi_data(wav16_dir, audio_corpora, '%s/train/' % data_dir, ts_train)
-    export_kaldi_data(wav16_dir, audio_corpora, '%s/test/' % data_dir, ts_test)
-
-    if sequitur_model_path:
-        for transcript_obj in transcript_objs:
-            lex = add_missing_words(transcript_obj, lex, sequitur_model_path)
-
-    ps, utt_dict = export_dictionary(ts_all,
-                                     lex,
-                                     '%s/local/dict/lexicon.txt' % data_dir,
-                                     prompt_words)
-    write_nonsilence_phones(
-        ps, '%s/local/dict/nonsilence_phones.txt' % data_dir)
-
-    write_silence_phones('%s/local/dict/silence_phones.txt' % data_dir)
-    write_optional_silence('%s/local/dict/optional_silence.txt' % data_dir)
-    write_extra_questions(ps, '%s/local/dict/extra_questions.txt' % data_dir)
-    create_training_data_for_language_model(transcript_objs, utt_dict, data_dir)
-
+    with open(dst_path, "wt") as f:
+        for line in sorted(lines):
+            f.write(line)
 
 def export_kaldi_data (wav16_dir, audio_corpora, destdirfn, tsdict):
-    logging.info ( "Exporting to %s..." % destdirfn)
+    logging.info ( "Exporting kaldi data to %s..." % destdirfn)
 
     misc.mkdirs(destdirfn)
 
@@ -204,17 +74,6 @@ def export_kaldi_data (wav16_dir, audio_corpora, destdirfn, tsdict):
     #     ['data/src/speech/%s/spk2gender' % audio_corpus
     #      for audio_corpus in audio_corpora],
     #     '%s/spk2gender' % destdirfn)
-
-
-def concat_sort_write(src_paths, dst_path):
-    lines = []
-    for src_path in src_paths:
-        with open(src_path) as f:
-            lines += [line for line in f]
-
-    with open(dst_path, "wt") as f:
-        for line in sorted(lines):
-            f.write(line)
 
 
 def add_missing_words(transcripts, lex, sequitur_model_path):
@@ -416,7 +275,144 @@ def copy_scripts_and_config_files(work_dir, kaldi_root):
                    '%s/local/nnet3/run_ivector_common.sh' % work_dir)
 
 
-if __name__ == "__main__":
-    plac.call(main)
-    logging.info ( "All done." )
+misc.init_app('speech_kaldi_export')
+
+#
+# commandline
+#
+
+parser = OptionParser("usage: %prog [options] <model_name> <dictionary> <language_model> <audio_corpus> [ <audio_corpus2> ... ]")
+
+parser.add_option ("-d", "--debug", dest="debug", type='int', default=0, help="Limit number of sentences (debug purposes only), default: 0")
+
+parser.add_option ("-s", "--sequitur-model", dest="sequitur_model", type='str', 
+                   help="sequitur model (used to generate missing dict entries, if given)")
+
+parser.add_option ("-p", "--prompt-words", action="store_true", dest="prompt_words", help="Limit dict to tokens covered in prompts")
+
+parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", help="verbose output")
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+
+if len(args) < 4:
+    parser.print_usage()
+    sys.exit(1)
+
+model_name     = args[0]
+dictionary     = args[1]
+language_model = args[2]
+audio_corpora  = args[3:]
+
+language_model_dir = '%s/%s' % (LANGUAGE_MODELS_DIR, language_model)
+
+if not os.path.isdir(language_model_dir):
+    logging.error(
+        "Could not find language model directory {}. Create a language "
+        "model first with speech_build_lm.py.".format(language_model_dir))
+    sys.exit(1)
+
+work_dir = '%s/kaldi/%s' % (ASR_MODELS_DIR, model_name)
+data_dir = '%s/data' % work_dir
+mfcc_dir = '%s/mfcc' % work_dir
+
+if options.sequitur_model:
+    sequitur_model_path = '%s/%s' % (SEQUITUR_MODEL_DIR, options.sequitur_model)
+else:
+    sequitur_model_path = None
+
+#
+# config
+#
+
+config = misc.load_config ('.speechrc')
+
+kaldi_root = config.get("speech", "kaldi_root")
+wav16_dir  = config.get("speech", "wav16")
+
+#
+# create basic work dir structure
+#
+
+# FIXME: unused, remove misc.mkdirs('%s/lexicon' % data_dir)
+misc.mkdirs('%s/local/dict' % data_dir)
+misc.mkdirs(wav16_dir)
+misc.mkdirs(mfcc_dir)
+misc.symlink('../../../../../%s' % language_model_dir, '%s/lm' % work_dir)
+misc.symlink('%s/egs/wsj/s5/steps' % kaldi_root, '%s/steps' % work_dir)
+misc.symlink('%s/egs/wsj/s5/utils' % kaldi_root, '%s/utils' % work_dir)
+
+#
+# generate speech and text corpora
+#
+
+logging.info("loading lexicon...")
+lex = Lexicon(file_name=dictionary)
+logging.info("loading lexicon...done.")
+
+if sequitur_model_path:
+    add_all = True
+else:
+    add_all = False
+
+ts_all = {}
+ts_train = {}
+ts_test = {}
+transcript_objs = []
+for audio_corpus in audio_corpora:
+
+    logging.info("loading transcripts from %s ..." % audio_corpus)
+
+    transcripts = Transcripts(corpus_name=audio_corpus)
+
+    ts_all_, ts_train_, ts_test_ = transcripts.split(limit=options.debug, add_all=add_all)
+
+
+    ts_all.update(ts_all_)
+    ts_train.update(ts_train_)
+    ts_test.update(ts_test_)
+    transcript_objs.append(transcripts)
+
+    logging.info("loading transcripts from %s: %d train, %d test samples." % (audio_corpus, len(ts_train_), len(ts_test_)))
+
+logging.info("loading transcripts done, total: %d train, %d test samples." % (len(ts_train), len(ts_test)))
+
+export_kaldi_data(wav16_dir, audio_corpora, '%s/train/' % data_dir, ts_train)
+export_kaldi_data(wav16_dir, audio_corpora, '%s/test/' % data_dir, ts_test)
+
+#
+# export dict
+#
+
+if sequitur_model_path:
+    for transcript_obj in transcript_objs:
+        lex = add_missing_words(transcript_obj, lex, sequitur_model_path)
+
+ps, utt_dict = export_dictionary(ts_all,
+                                 lex,
+                                 '%s/local/dict/lexicon.txt' % data_dir,
+                                 options.prompt_words)
+
+#
+# phones etc
+#
+
+write_nonsilence_phones(ps, '%s/local/dict/nonsilence_phones.txt' % data_dir)
+
+write_silence_phones('%s/local/dict/silence_phones.txt' % data_dir)
+write_optional_silence('%s/local/dict/optional_silence.txt' % data_dir)
+write_extra_questions(ps, '%s/local/dict/extra_questions.txt' % data_dir)
+create_training_data_for_language_model(transcript_objs, utt_dict, data_dir)
+
+#
+# script
+#
+
+copy_scripts_and_config_files(work_dir, kaldi_root)
+
+logging.info ( "All done." )
 
