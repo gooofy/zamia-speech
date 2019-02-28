@@ -156,9 +156,9 @@ duration_test  = ts_stats(ts_test, 'test')
 duration_train = ts_stats(ts_train, 'train')
 duration_total = duration_test + duration_train
 
-logging.info( "test : duration of %6d submissions: %s" % (len(ts_test), format_duration(duration_test)))
-logging.info( "train: duration of %6d submissions: %s" % (len(ts_train), format_duration(duration_train)))
-logging.info( "total: duration of %6d submissions: %s" % (len(ts_test) + len(ts_train), format_duration(duration_total)))
+logging.info( "test : %s duration of %6d submissions: %s" % (corpus_name, len(ts_test), format_duration(duration_test)))
+logging.info( "train: %s duration of %6d submissions: %s" % (corpus_name, len(ts_train), format_duration(duration_train)))
+logging.info( "total: %s duration of %6d submissions: %s" % (corpus_name, len(ts_test) + len(ts_train), format_duration(duration_total)))
 
 
 
