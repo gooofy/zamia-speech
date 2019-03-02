@@ -17,8 +17,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 #
-# interactive curses lexicon editor
+# interactive curses based lexicon editor
 #
 
 import os
@@ -30,17 +31,17 @@ import curses.textpad
 import locale
 import codecs
 
-from optparse import OptionParser
+from optparse               import OptionParser
 
-from nltools import misc
+from nltools                import misc
 
 from nltools.phonetics      import ipa2xsampa, xsampa2ipa
 from nltools.tokenizer      import tokenize
 from nltools.sequiturclient import sequitur_gen_ipa
 from nltools.tts            import TTS
 
-from speech_transcripts import Transcripts
-from speech_lexicon     import Lexicon
+from speech_transcripts     import Transcripts
+from speech_lexicon         import Lexicon
 
 #
 # Lex Editor
@@ -48,7 +49,7 @@ from speech_lexicon     import Lexicon
 
 TOKENIZER_ERRORS = 'data/src/speech/de/tokenizer_errors.txt'
 SEQUITUR_MODEL   = 'data/models/sequitur-dict-de.ipa-latest'
-LEXICON_NAME     = 'dict-de.ipa'
+DEFAULT_DICT     = 'dict-de.ipa'
 
 def lex_paint_main():
 
@@ -159,6 +160,9 @@ logging.basicConfig(level=logging.INFO)
 
 parser = OptionParser("usage: %prog [options] tokens ...")
 
+parser.add_option ("-d", "--dict", dest="dict_name", type = "str", default=DEFAULT_DICT,
+                   help="dictionary to work on (default: %s)" % DEFAULT_DICT)
+
 (options, args) = parser.parse_args()
 
 if len(args)<1:
@@ -173,7 +177,7 @@ lex_tokens    = map(lambda x: x.decode('utf8'), args)
 #
 
 print "loading lexicon..."
-lex = Lexicon(LEXICON_NAME)
+lex = Lexicon(options.dict_name)
 print "loading lexicon...done."
 
 #
