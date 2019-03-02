@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- 
 
 #
-# Copyright 2013, 2014, 2016, 2017, 2018 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2018, 2019 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -36,6 +36,7 @@ from nltools import misc
 from nltools.phonetics  import ipa2xsampa, xsampa2ipa, xsampa2xarpabet
 from speech_lexicon     import Lexicon
 from speech_transcripts import Transcripts
+from nltools.tokenizer  import tokenize
 
 WORKDIR_CONT = 'data/dst/asr-models/cmusphinx_cont/%s'
 WORKDIR_PTM  = 'data/dst/asr-models/cmusphinx_ptm/%s'
@@ -59,8 +60,12 @@ config = misc.load_config ('.speechrc')
 
 parser = OptionParser("usage: %prog [options] model_name dict lm corpus [corpus2 ...]")
 
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+                  help="language (default: de)")
+
 parser.add_option ("-d", "--debug", dest="debug", type='int', default=0,
                    help="limit number of transcripts (debug purposes only), default: 0 (unlimited)")
+
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="enable verbose logging")
 
@@ -255,11 +260,13 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
         for cfn in ts_train:
             train_fif.write ('%s\n' % cfn)
-            train_tsf.write (u'<s> %s </s> (%s)\n' % (ts_train[cfn]['ts'], cfn))
+            ts = u' '.join(tokenize(ts_train[cfn]['ts'], lang=options.lang, keep_punctuation=False))
+            train_tsf.write (u'<s> %s </s> (%s)\n' % (ts, cfn))
 
         for cfn in ts_test:
             test_fif.write ('%s\n' % cfn)
-            test_tsf.write (u'<s> %s </s> (%s)\n' % (ts_test[cfn]['ts'], cfn))
+            ts = u' '.join(tokenize(ts_test[cfn]['ts'], lang=options.lang, keep_punctuation=False))
+            test_tsf.write (u'<s> %s </s> (%s)\n' % (ts, cfn))
 
     logging.info ("%s written." % train_tsfn)
     logging.info ("%s written." % train_fifn)
