@@ -143,10 +143,19 @@ for cfn in transcripts:
 
     lacking = False
 
+    # debug only
+    # do_trace = True if 'snatcher' in ts['prompt'] else False
+    do_trace = False
+
     for word in tokenize(ts['prompt'], lang=options.lang):
 
         if word in lex:
+            if do_trace:
+                logging.debug('word %s is in lex.' % word)
             continue
+
+        if do_trace:
+            logging.debug('word %s is in missing.' % word)
 
         if word in missing:
             missing[word] += 1
