@@ -180,6 +180,70 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
         misc.copy_file ('data/src/speech/sphinx-voxforge.filler', '%s/etc/voxforge.filler' % work_dir)
     misc.copy_file ('data/src/speech/sphinx-feat.params', '%s/etc/feat.params' % work_dir)
 
+    #
+    # prompts
+    #
+
+    train_fifn = '%s/etc/voxforge_train.fileids'       % work_dir
+    train_tsfn = '%s/etc/voxforge_train.transcription' % work_dir
+    test_fifn  = '%s/etc/voxforge_test.fileids'        % work_dir
+    test_tsfn  = '%s/etc/voxforge_test.transcription'  % work_dir
+    runfeatfn  = '%s/run-feat.sh'                      % work_dir
+
+    lex_covered = set()
+
+    SPHINXFE = "sphinx_fe -i '%s' -part 1 -npart 1 -ei wav -o '%s' -eo mfc -nist no -raw no -mswav yes -samprate 16000 -lowerf 130 -upperf 6800 -nfilt 25 -transform dct -lifter 22 >>logs/mfcc%02d.log 2>&1 &\n"
+    with codecs.open (runfeatfn,  'w', 'utf8') as runfeatf:
+
+        runfeatf.write('#!/bin/bash\n\n')
+
+        cnt = 0
+        for cfn in ts_all:
+
+            w16filename = "%s/%s/%s.wav" % (wav16_dir, cfn2corpus[cfn], cfn)
+            mfcfilename = "mfcc/%s.mfc" % cfn
+            runfeatf.write(SPHINXFE % (w16filename, mfcfilename, cnt) )
+            cnt = (cnt + 1) % NJOBS
+
+            if cnt == 0:
+                runfeatf.write('wait\n')
+
+    logging.info("%s written." % runfeatfn)
+
+    with codecs.open (train_fifn, 'w', 'utf8') as train_fif, \
+         codecs.open (train_tsfn, 'w', 'utf8') as train_tsf, \
+         codecs.open (test_fifn,  'w', 'utf8') as test_fif,  \
+         codecs.open (test_tsfn,  'w', 'utf8') as test_tsf:
+
+        for cfn in ts_train:
+            train_fif.write ('%s\n' % cfn)
+            tokens = tokenize(ts_train[cfn]['ts'], lang=options.lang, keep_punctuation=False)
+            ts = u' '.join(tokens)
+            train_tsf.write (u'<s> %s </s> (%s)\n' % (ts, cfn))
+
+            for token in tokens:
+                if not token in lex:
+                    logging.error('word %s not covered by dict!')
+                    sys.exit(1)
+                lex_covered.add(token)
+
+        for cfn in ts_test:
+            test_fif.write ('%s\n' % cfn)
+            tokens = tokenize(ts_test[cfn]['ts'], lang=options.lang, keep_punctuation=False)
+            ts = u' '.join(tokens)
+            test_tsf.write (u'<s> %s </s> (%s)\n' % (ts, cfn))
+
+            for token in tokens:
+                if not token in lex:
+                    logging.error('word %s not covered by dict!')
+                    sys.exit(1)
+                lex_covered.add(token)
+
+    logging.info ("%s written." % train_tsfn)
+    logging.info ("%s written." % train_fifn)
+    logging.info ("%s written." % test_tsfn)
+    logging.info ("%s written." % test_fifn)
+
     # generate dict
 
     phoneset = set()
@@ -193,6 +257,10 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
                 if word == NOISE_WORD:
                     logging.debug ('skipping noise word')
                     continue
+
+            if not word in lex_covered:
+                logging.debug ('skipping word %s as it is not covered by transcripts' % word)
+                continue
 
             ipa = lex[word]['ipa']
 
@@ -225,53 +293,6 @@ def export_sphinx_case(work_dir, sphinxtrain_cfg_fn):
 
     logging.info("%s written." % phfn)
 
-    #
-    # prompts
-    #
-
-    train_fifn = '%s/etc/voxforge_train.fileids'       % work_dir
-    train_tsfn = '%s/etc/voxforge_train.transcription' % work_dir
-    test_fifn  = '%s/etc/voxforge_test.fileids'        % work_dir
-    test_tsfn  = '%s/etc/voxforge_test.transcription'  % work_dir
-    runfeatfn  = '%s/run-feat.sh'                      % work_dir
-
-    SPHINXFE = "sphinx_fe -i '%s' -part 1 -npart 1 -ei wav -o '%s' -eo mfc -nist no -raw no -mswav yes -samprate 16000 -lowerf 130 -upperf 6800 -nfilt 25 -transform dct -lifter 22 >>logs/mfcc%02d.log 2>&1 &\n"
-    with codecs.open (runfeatfn,  'w', 'utf8') as runfeatf:
-
-        runfeatf.write('#!/bin/bash\n\n')
-
-        cnt = 0
-        for cfn in ts_all:
-
-            w16filename = "%s/%s/%s.wav" % (wav16_dir, cfn2corpus[cfn], cfn)
-            mfcfilename = "mfcc/%s.mfc" % cfn
-            runfeatf.write(SPHINXFE % (w16filename, mfcfilename, cnt) )
-            cnt = (cnt + 1) % NJOBS
-
-            if cnt == 0:
-                runfeatf.write('wait\n')
-
-    logging.info("%s written." % runfeatfn)
-
-    with codecs.open (train_fifn, 'w', 'utf8') as train_fif, \
-         codecs.open (train_tsfn, 'w', 'utf8') as train_tsf, \
-         codecs.open (test_fifn,  'w', 'utf8') as test_fif,  \
-         codecs.open (test_tsfn,  'w', 'utf8') as test_tsf:
-
-        for cfn in ts_train:
-            train_fif.write ('%s\n' % cfn)
-            ts = u' '.join(tokenize(ts_train[cfn]['ts'], lang=options.lang, keep_punctuation=False))
-            train_tsf.write (u'<s> %s </s> (%s)\n' % (ts, cfn))
-
-        for cfn in ts_test:
-            test_fif.write ('%s\n' % cfn)
-            ts = u' '.join(tokenize(ts_test[cfn]['ts'], lang=options.lang, keep_punctuation=False))
-            test_tsf.write (u'<s> %s </s> (%s)\n' % (ts, cfn))
-
-    logging.info ("%s written." % train_tsfn)
-    logging.info ("%s written." % train_fifn)
-    logging.info ("%s written." % test_tsfn)
-    logging.info ("%s written." % test_fifn)
 
     misc.render_template('data/src/speech/sphinx-run.sh.template', '%s/sphinx-run.sh' % work_dir, lm_name=lm_name)
 
