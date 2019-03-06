@@ -10,7 +10,7 @@
 
 # ./speech_kaldi_adapt.py data/models/kaldi-generic-en-tdnn_f-latest dict-en.ipa lm.arpa voxforge_en
 # pushd data/dst/asr-models/kaldi/voxforge_en
-
+# bash run-adaptation.sh
 # popd
 
 # ./speech_dist.sh voxforge_en kaldi adapt
