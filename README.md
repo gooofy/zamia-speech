@@ -470,6 +470,13 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `ljspeech_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/lindajohnson-11`. 
 
+- [Mozilla Common Voice German (German, 140 hours)](https://voice.mozilla.org/en/datasets):
+    + Download `de.tar.gz`
+    + Unpack the archive such that the directory `cv_de` is a direct 
+      subdirectory of `<~/.speechrc:speech_arc>`. 
+    + Then run run the script `./mozde_to_vf.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_de`. 
+
 - [Mozilla Common Voice V1 (English, 252 hours)](https://voice.mozilla.org/en/data):
     + Download `cv_corpus_v1.tar.gz`
     + Unpack the archive such that the directory `cv_corpus_v1` is a direct 
