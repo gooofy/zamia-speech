@@ -71,6 +71,8 @@ speech_corpora = config.get("speech", "speech_corpora")
 # (since we have no speaker information)
 #
 
+uttids = set()
+
 cnt = 0
 with open('tmp/run_parallel.sh', 'w') as scriptf:
     with codecs.open('%s/cv_de/validated.tsv' % speech_arc, 'r', 'utf8') as csvfile:
@@ -82,8 +84,13 @@ with open('tmp/run_parallel.sh', 'w') as scriptf:
                 continue
             # print ', '.join(row)
          
-            uttid = row[1].replace('.mp3', '')
+            uttid = row[1].replace('.mp3', '')[:12]
             spk = uttid
+
+            if uttid in uttids:
+                logging.error('uttid %s ist not unique!' % uttid)
+                continue
+            uttids.add(uttid)
 
             misc.mkdirs('%s/cv_de/%s-de/etc' % (speech_corpora, spk))
             misc.mkdirs('%s/cv_de/%s-de/wav' % (speech_corpora, spk))
