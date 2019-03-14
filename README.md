@@ -470,6 +470,13 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `ljspeech_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/lindajohnson-11`. 
 
+- [Mozilla Common Voice German (German, 140 hours)](https://voice.mozilla.org/en/datasets):
+    + Download `de.tar.gz`
+    + Unpack the archive such that the directory `cv_de` is a direct 
+      subdirectory of `<~/.speechrc:speech_arc>`. 
+    + Then run run the script `./mozde_to_vf.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_de`. 
+
 - [Mozilla Common Voice V1 (English, 252 hours)](https://voice.mozilla.org/en/data):
     + Download `cv_corpus_v1.tar.gz`
     + Unpack the archive such that the directory `cv_corpus_v1` is a direct 
@@ -855,16 +862,16 @@ cd data/dst/asr-models/cmusphinx_cont/generic-de
 ./sphinx-run.sh
 ```
 
-complete export run with noise augmented corpora included:
+complete export run (without noise augmented corpora):
 
 ```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
+./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de m_ailabs_de
 ```
 
 complete export run with noise augmented corpora included for an English model:
 
 ```bash
-./speech_sphinx_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en voxforge_en_noisy voxforge_en_phone librispeech librispeech_noisy librispeech_phone zamia_en zamia_en_noisy zamia_en_phone
+./speech_sphinx_export.py -l en generic-en dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en cv_corpus_v1 ljspeech m_ailabs_en 
 ```
 
 For resource constrained applications, PTM models can be trained:
