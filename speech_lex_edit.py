@@ -51,6 +51,8 @@ TOKENIZER_ERRORS = 'data/src/speech/de/tokenizer_errors.txt'
 SEQUITUR_MODEL   = 'data/models/sequitur-dict-de.ipa-latest'
 DEFAULT_DICT     = 'dict-de.ipa'
 
+GEN_ALL_TTS      = False # generate proposals from all TTS (results in slowdown)
+
 def lex_paint_main():
 
     global stdscr, lex_token, lex, lex_entry, lex_tokens, lex_cur_token, lex_gen
@@ -72,7 +74,8 @@ def lex_paint_main():
 
     cy = 6
     for engine in sorted(lex_gen):
-        stdscr.insstr(cy, 2, ("%-11s : %s" % (engine, lex_gen[engine])).encode('utf8'))
+        if GEN_ALL_TTS:
+            stdscr.insstr(cy, 2, ("%-11s : %s" % (engine, lex_gen[engine])).encode('utf8'))
         cy += 1
 
     cy += 1
@@ -145,9 +148,10 @@ def lex_set_token(token):
 
     say_ipa('de', 'mary', 'dfki-pavoque-neutral-hsmm', ipas)
 
-    lex_gen['de-mary']     = lex_gen_ipa('de', 'mary',     'bits3')
-    lex_gen['de-espeak']   = lex_gen_ipa('de', 'espeak',   'de')
-    lex_gen['de-sequitur'] = lex_gen_ipa('de', 'sequitur', 'de')
+    if GEN_ALL_TTS:
+        lex_gen['de-mary']     = lex_gen_ipa('de', 'mary',     'bits3')
+        lex_gen['de-espeak']   = lex_gen_ipa('de', 'espeak',   'de')
+        lex_gen['de-sequitur'] = lex_gen_ipa('de', 'sequitur', 'de')
 
 
 # logging.basicConfig(level=logging.DEBUG)
