@@ -588,6 +588,8 @@ Sentences can also be extracted from our speech corpora. To do that, run:
     + `./speech_sentences.py gspv2`
     + `./speech_sentences.py voxforge_de`
     + `./speech_sentences.py zamia_de`
+    + `./speech_sentences.py m_ailabs_de`
+    + `./speech_sentences.py cv_de`
 
 Language Model
 ==============
@@ -610,12 +612,12 @@ German
 
 Prerequisites: 
 - text corpora `europarl_de` and `parole_de` are installed, sentences extracted (see instructions above).
-- sentences are extracted from speech corpora `forschergeist`, `gspv2`, `voxforge_de`, `zamia_de`
+- sentences are extracted from speech corpora `forschergeist`, `gspv2`, `voxforge_de`, `zamia_de`, `m_ailabs_de`, `cv_de`
 
 To train a German language model using SRILM for use in both sphinx and kaldi builds run:
 
 ```bash
-./speech_build_lm.py generic_de_lang_model europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de
+./speech_build_lm.py generic_de_lang_model europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
 ```
 
 Submission Review and Transcription

@@ -69,6 +69,8 @@ TEXT_CORPORA = {
 SPEECH_CORPORA = {
     "cv_corpus_v1":
         lambda: proc_transcripts("cv_corpus_v1"),
+    "cv_de":
+        lambda: proc_transcripts("cv_de"),
     "forschergeist":
         lambda: proc_transcripts("forschergeist"),
     "gspv2":
