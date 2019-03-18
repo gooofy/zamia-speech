@@ -33,12 +33,12 @@ import numpy as np
 from optparse             import OptionParser
 
 from nltools              import misc
-from zamiatts.tacotron    import Tacotron
+from zamiatts.tacotron    import Tacotron, DEFAULT_DEVICE
 from zamiatts             import audio, CHECKPOINT_DIR, EVAL_DIR, VOICE_PATH, DSFN_HPARAMS, HPARAMS_FN
 
 PROC_TITLE      = 'ztts_train'
 
-DEFAULT_NUM_EPOCHS = 10000
+DEFAULT_NUM_EPOCHS = 250
 
 #
 # init
@@ -51,6 +51,12 @@ misc.init_app(PROC_TITLE)
 #
 
 parser = OptionParser("usage: %prog [options] voice")
+
+parser.add_option ("-D", "--tf-device", dest="tf_device", type="str", default=DEFAULT_DEVICE,
+                   help="tensorflow device to use, default: %s" % DEFAULT_DEVICE)
+
+parser.add_option ("-i", "--incremental", action="store_true", dest="incremental", 
+                   help="continue training on previous run")
 
 parser.add_option ("-n", "--num-epochs", dest="num_epochs", type="int", default=DEFAULT_NUM_EPOCHS,
                    help="number of epochs to train, default: %d" % DEFAULT_NUM_EPOCHS)
@@ -76,32 +82,34 @@ voice = args[0]
 # clean up / setup directory
 #
 
-cmd = 'rm -rf %s' % (VOICE_PATH % voice)
-logging.info(cmd)
-os.system(cmd)
+if not options.incremental:
 
-cmd = 'mkdir -p %s' % (VOICE_PATH % voice)
-logging.info(cmd)
-os.system(cmd)
+    cmd = 'rm -rf %s' % (VOICE_PATH % voice)
+    logging.info(cmd)
+    os.system(cmd)
 
-cmd = 'cp %s %s' % (DSFN_HPARAMS % voice, HPARAMS_FN % voice)
-logging.info(cmd)
-os.system(cmd)
+    cmd = 'mkdir -p %s' % (VOICE_PATH % voice)
+    logging.info(cmd)
+    os.system(cmd)
 
-cmd = 'mkdir -p %s' % (CHECKPOINT_DIR % voice)
-logging.info(cmd)
-os.system(cmd)
+    cmd = 'cp %s %s' % (DSFN_HPARAMS % voice, HPARAMS_FN % voice)
+    logging.info(cmd)
+    os.system(cmd)
 
-cmd = 'mkdir -p %s' % (EVAL_DIR % voice)
-logging.info(cmd)
-os.system(cmd)
+    cmd = 'mkdir -p %s' % (CHECKPOINT_DIR % voice)
+    logging.info(cmd)
+    os.system(cmd)
+
+    cmd = 'mkdir -p %s' % (EVAL_DIR % voice)
+    logging.info(cmd)
+    os.system(cmd)
 
 
 #
 # training
 #
 
-taco = Tacotron(voice, is_training=True)
+taco = Tacotron(voice, is_training=True, tf_device=options.tf_device)
 
 taco.train(num_epochs = options.num_epochs)
 
