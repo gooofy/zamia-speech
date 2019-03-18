@@ -767,7 +767,7 @@ The following recipe trains Kaldi models for German.
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
 - language model `generic_de_lang_model` built
-- some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
+- some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist`, `zamia_de`, `m_ailabs_de`, `cv_de` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
@@ -780,7 +780,7 @@ cd data/dst/asr-models/kaldi/generic-de-small
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone
+./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
 ```
 
 Model Adaptation
