@@ -161,8 +161,8 @@ def export_dictionary(ts_all, lex, dictfn2, prompt_words):
 
                 if len(p) < 1:
                     logging.error(
-                        u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s')" % (
-                        xs, xsr, ipa))
+                        u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s', token: '%s')" % (
+                        xs, xsr, ipa, token))
 
                 pws = p[1:] if p[0] == '\'' else p
 
