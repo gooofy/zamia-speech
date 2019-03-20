@@ -484,7 +484,7 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./mozcv1_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_corpus_v1`. 
 
-- [Munich Artificial Intelligence Laboratories GmbH (M-AILABS) Speech Dataset (English, 147 hours, German, 237 hours)](http://www.m-ailabs.bayern/en/) :
+- [Munich Artificial Intelligence Laboratories GmbH (M-AILABS) Speech Dataset (English, 147 hours, German, 237 hours)](http://www.m-ailabs.bayern/en/):
     + Download `de_DE.tgz`, `en_UK.tgz`, `en_US.tgz` ([Mirror](https://www.caito.de/2019/01/the-m-ailabs-speech-dataset/))
     + Create a subdirectory `m_ailabs` in `<~/.speechrc:speech_arc>`
     + Unpack the downloaded tarbals inside the `m_ailabs` subdirectory
