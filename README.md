@@ -39,6 +39,8 @@ Table of Contents
 * [Get Started with a Demo STT Service Packaged in Docker](#get-started-with-a-demo-stt-service-packaged-in-docker)
 * [Requirements](#requirements)
 * [Setup Notes](#setup-notes)
+  * [~/\.speechrc](#speechrc)
+  * [tmp directory](#tmp-directory)
 * [Speech Corpora](#speech-corpora)
   * [Adding Artificial Noise or Other Effects](#adding-artificial-noise-or-other-effects)
 * [Text Corpora](#text-corpora)
@@ -407,7 +409,8 @@ Setup Notes
 Just some rough notes on the environment needed to get these scripts to run. This is in no way a complete set of
 instructions, just some hints to get you started.
 
-`~/.speechrc`:
+`~/.speechrc`
+-------------
 
 ```ini
 [speech]
@@ -436,6 +439,16 @@ wiktionary_de         = /home/bofh/projects/ai/data/corpora/de/dewiktionary-2018
 host                  = localhost
 port                  = 8300
 ```
+
+tmp directory
+-------------
+
+Some scripts expect al local `tmp` directory to be present, located in the same directory where all the scripts live, i.e.
+
+```bash
+mkdir tmp
+```
+
 
 Speech Corpora
 ==============
