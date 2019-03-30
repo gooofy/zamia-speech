@@ -433,6 +433,9 @@ cornell_movie_dialogs = /home/bofh/projects/ai/data/corpora/en/cornell_movie_dia
 web_questions         = /home/bofh/projects/ai/data/corpora/en/WebQuestions
 yahoo_answers         = /home/bofh/projects/ai/data/corpora/en/YahooAnswers
 
+europarl_fr           = /home/bofh/projects/ai/data/corpora/fr/europarl-v7.fr-en.fr
+est_republicain       = /home/bofh/projects/ai/data/corpora/fr/est_republicain.txt
+
 wiktionary_de         = /home/bofh/projects/ai/data/corpora/de/dewiktionary-20180320-pages-meta-current.xml
 
 [tts]
@@ -497,12 +500,13 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./mozcv1_to_vf.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_corpus_v1`. 
 
-- [Munich Artificial Intelligence Laboratories GmbH (M-AILABS) Speech Dataset (English, 147 hours, German, 237 hours)](http://www.m-ailabs.bayern/en/):
-    + Download `de_DE.tgz`, `en_UK.tgz`, `en_US.tgz` ([Mirror](https://www.caito.de/2019/01/the-m-ailabs-speech-dataset/))
+- [Munich Artificial Intelligence Laboratories GmbH (M-AILABS) Speech Dataset (English, 147 hours, German, 237 hours, French, 190 hours)](http://www.m-ailabs.bayern/en/):
+    + Download `de_DE.tgz`, `en_UK.tgz`, `en_US.tgz`, `fr_FR.tgz` ([Mirror](https://www.caito.de/2019/01/the-m-ailabs-speech-dataset/))
     + Create a subdirectory `m_ailabs` in `<~/.speechrc:speech_arc>`
     + Unpack the downloaded tarbals inside the `m_ailabs` subdirectory
+    + For French, create a directory `by_book` and move `male` and `female` directories in it as the archive does not follow exactly English and German structures
     + Then run run the script `./mailabs_to_vf.py` to convert the corpus to the VoxForge
-      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/m_ailabs_en` and `<~/.speechrc:speech_corpora>/m_ailabs_de`.
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/m_ailabs_en`, `<~/.speechrc:speech_corpora>/m_ailabs_de` and `<~/.speechrc:speech_corpora>/m_ailabs_fr`.
 
 - [VoxForge (English, 75 hours)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_en` 
@@ -511,6 +515,10 @@ The following list contains speech corpora supported by this script collection.
 - [VoxForge (German, 56 hours)](http://www.repository.voxforge1.org/downloads/de/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_de` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_de`
+
+- [VoxForge (French, 140 hours)](http://www.repository.voxforge1.org/downloads/fr/Trunk/Audio/Main/16kHz_16bit/):
+    + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_fr` 
+    + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_fr`
 
 - [Zamia (English, 5 minutes)](http://goofy.zamia.org/zamia-speech/corpora/zamia_en/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/zamia_en` 
@@ -566,9 +574,9 @@ Text Corpora
 The following list contains text corpora that can be used to train language
 models with the scripts contained in this repository:
 
-- [Europarl](http://www.statmt.org/europarl/), specifically [parallel corpus German-English](http://www.statmt.org/europarl/v7/de-en.tgz): 
-    + corresponding variable in `.speechrc`: `europarl_de`, `europarl_en`
-    + sentences extraction: run `./speech_sentences.py europarl_de` and `./speech_sentences.py europarl_en`
+- [Europarl](http://www.statmt.org/europarl/), specifically [parallel corpus German-English](http://www.statmt.org/europarl/v7/de-en.tgz) and [parallel corpus French-English](http://www.statmt.org/europarl/v7/fr-en.tgz): 
+    + corresponding variable in `.speechrc`: `europarl_de`, `europarl_en`, `europarl_fr`
+    + sentences extraction: run `./speech_sentences.py europarl_de`, `./speech_sentences.py europarl_en` and `./speech_sentences.py europarl_fr`
 
 - [Cornell Movie--Dialogs Corpus](http://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html): 
     + corresponding variable in `.speechrc`: `cornell_movie_dialogs`
@@ -585,6 +593,10 @@ models with the scripts contained in this repository:
 - [Yahoo! Answers dataset](https://cogcomp.org/page/resource_view/89): `yahoo_answers`
     + corresponding variable in `.speechrc`: `yahoo_answers`
     + sentences extraction: run `./speech_sentences.py yahoo_answers`
+
+- [CNRTL Est Républicain Corpus](http://cnrtl.fr/corpus/estrepublicain/), large corpus of news articles (4.3M headlines/paragraphs) available under a CC BY-NC-SA license. Download XML files and extract headlines and paragraphs to a text file with the following command: `xmllint --xpath '//*[local-name()="div"][@type="article"]//*[local-name()="p" or local-name()="head"]/text()' Annee*/*.xml | perl -pe 's/^  +//g ; s/^ (.+)/$1\n/g ; chomp' > est_republicain.txt`
+    + corresponding variable in `.speechrc`: `est_republicain`
+    + sentences extraction: run `./speech_sentences.py est_republicain`
 
 Sentences can also be extracted from our speech corpora. To do that, run:
 
@@ -631,6 +643,18 @@ To train a German language model using SRILM for use in both sphinx and kaldi bu
 
 ```bash
 ./speech_build_lm.py generic_de_lang_model europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
+```
+
+French
+------
+
+Prerequisites:
+- text corpora `europarl_fr` and `est_republicain` are installed, sentences extracted (see instructions above).
+- sentences are extracted from speech corpora `voxforge_fr` and `m_ailabs_fr`
+
+To train a French language model using KenLM run:
+```bash
+./speech_build_lm.py -k generic_fr_lang_model europarl_fr est_republicain voxforge_fr m_ailabs_fr
 ```
 
 Submission Review and Transcription
