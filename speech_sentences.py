@@ -57,7 +57,11 @@ TEXT_CORPORA = {
     "europarl_de":
         lambda corpus_path: proc_europarl_de(corpus_path, tokenize),
     "europarl_en":
-        lambda corpus_path: proc_europarl_en(corpus_path, tokenize),
+        lambda corpus_path: proc_corpus_with_one_sentence_perline(corpus_path, tokenize, 'en'),
+    "europarl_fr":
+        lambda corpus_path: proc_corpus_with_one_sentence_perline(corpus_path, tokenize, 'fr'),
+    "est_republicain":
+        lambda corpus_path: proc_corpus_with_one_sentence_perline(corpus_path, tokenize, 'fr'),
     "parole_de":
         None,
     "web_questions":
@@ -71,6 +75,8 @@ SPEECH_CORPORA = {
         lambda: proc_transcripts("cv_corpus_v1"),
     "cv_de":
         lambda: proc_transcripts("cv_de"),
+    "cv_fr":
+        lambda: proc_transcripts("cv_fr"),
     "forschergeist":
         lambda: proc_transcripts("forschergeist"),
     "gspv2":
@@ -83,10 +89,14 @@ SPEECH_CORPORA = {
         lambda: proc_transcripts("m_ailabs_de"),
     "m_ailabs_en":
         lambda: proc_transcripts("m_ailabs_en"),
+    "m_ailabs_fr":
+        lambda: proc_transcripts("m_ailabs_fr"),
     "voxforge_de":
         lambda: proc_transcripts("voxforge_de"),
     "voxforge_en":
         lambda: proc_transcripts("voxforge_en"),
+    "voxforge_fr":
+        lambda: proc_transcripts("voxforge_fr"),
     "zamia_de":
         lambda: proc_transcripts("zamia_de"),
     "zamia_en":
@@ -136,28 +146,26 @@ def proc_europarl_de(corpus_path, tokenize):
                 logging.info ('%8d sentences.' % num_sentences)
 
 
-def proc_europarl_en(corpus_path, tokenize):
-    logging.info("adding sentences from europarl...")
+def proc_corpus_with_one_sentence_perline(corpus_path, tokenize, lang):
+    logging.info("adding sentences from %s..." % corpus_path)
     num_sentences = 0
     with codecs.open(corpus_path, 'r', 'utf8') as inf:
         for line in inf:
-
-            sentence = u' '.join(tokenize(line, lang='en'))
+            sentence = u' '.join(tokenize(line, lang=lang))
 
             if not sentence:
-                logging.warn('europarl: skipping null sentence.')
+                logging.warn('%s: skipping null sentence.' % corpus_path)
                 continue
 
             yield u'%s' % sentence
 
             num_sentences += 1
             if num_sentences % SENTENCES_STATS == 0:
-                logging.info('europarl: %8d sentences.' % num_sentences)
+                logging.info('%s: %8d sentences.' % (corpus_path, num_sentences))
 
             if DEBUG_LIMIT and num_sentences >= DEBUG_LIMIT:
-                logging.warn('europarl: debug limit reached, stopping.')
+                logging.warn('%s: debug limit reached, stopping.' % corpus_path)
                 break
-
 
 def proc_parole_de(corpus_path, load_punkt_tokenizer, outf):
     punkt_tokenizer = load_punkt_tokenizer()
