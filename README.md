@@ -956,6 +956,20 @@ http://goofy.zamia.org/voxforge/misc/sphinx-example.tgz
         pocketsphinx\_continuous will have worse results compared to pocketsphinx\_batch using the same model and parameters.
 
 
+wav2letter++ models
+===================
+
+*NOTE*: experimental.
+
+Example: train a "generic" german model:
+
+```bash
+./speech_wav2letter_export.py -l de -v generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
+pushd data/dst/asr-models/wav2letter/generic-de/
+bash run_train.sh
+```
+
+
 Audiobook Segmentation and Transcription (Manual)
 =================================================
 
