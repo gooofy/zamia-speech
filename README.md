@@ -58,6 +58,7 @@ Table of Contents
   * [Model Adaptation](#model-adaptation)
 * [CMU Sphinx Models](#cmu-sphinx-models)
   * [Running pocketsphinx](#running-pocketsphinx)
+* [wav2letter\+\+ models](#wav2letter-models)
 * [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
   * [(0/3) Convert Audio to WAVE Format](#03-convert-audio-to-wave-format)
   * [(1/3) Convert Audio to 16kHz mono](#13-convert-audio-to-16khz-mono)
