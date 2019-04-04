@@ -140,7 +140,7 @@ class Transcripts(object):
 
         f.close()
 
-    def split(self, limit=0, min_quality=2, add_all=False):
+    def split(self, limit=0, min_quality=2, add_all=False, lang='de'):
 
         ts_all   = {}
         ts_train = {}
@@ -163,7 +163,7 @@ class Transcripts(object):
 
             if len(v['ts']) == 0:
                 if add_all:
-                    v['ts'] = ' '.join(tokenize(v['prompt']))
+                    v['ts'] = ' '.join(tokenize(v['prompt'], lang=lang))
                 else:
                     print "WARNING: %s transcript missing" % cfn
                     continue

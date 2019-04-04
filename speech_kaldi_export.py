@@ -73,7 +73,7 @@ def add_missing_words(transcripts, lex, sequitur_model_path):
         if ts['quality'] > 0:
             continue
 
-        for word in tokenize(ts['prompt']):
+        for word in tokenize(ts['prompt'], lang=options.lang):
             if word in lex:
                 continue
 
@@ -247,6 +247,9 @@ parser = OptionParser("usage: %prog [options] <model_name> <dictionary> <languag
 
 parser.add_option ("-d", "--debug", dest="debug", type='int', default=0, help="Limit number of sentences (debug purposes only), default: 0")
 
+parser.add_option ("-l", "--lang", dest="lang", type = "str", default='de',
+                   help="language (default: de)")
+
 parser.add_option ("-s", "--sequitur-model", dest="sequitur_model", type='str', 
                    help="sequitur model (used to generate missing dict entries, if given)")
 
@@ -331,7 +334,7 @@ for audio_corpus in audio_corpora:
 
     transcripts = Transcripts(corpus_name=audio_corpus)
 
-    ts_all_, ts_train_, ts_test_ = transcripts.split(limit=options.debug, add_all=add_all)
+    ts_all_, ts_train_, ts_test_ = transcripts.split(limit=options.debug, add_all=add_all, lang=options.lang)
 
     ts_all.update(ts_all_)
     ts_train.update(ts_train_)
