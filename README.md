@@ -1183,4 +1183,5 @@ Authors
 
 * Guenter Bartsch <guenter@zamia.org>
 * Marc Puels <marc@zamia.org>
+* Paul Guyot <pguyot@kallisys.net>
 
