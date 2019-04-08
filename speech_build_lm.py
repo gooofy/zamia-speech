@@ -97,6 +97,10 @@ def prune_ngram_model(ngram_path, lm_fn, lm_pruned_fn):
 
     os.system(cmd)
 
+def train_pruned_model_with_kenlm(train_fn, lm_fn):
+    cmd = 'lmplz --skip_symbols -o 4 -S 70%% --prune 0 3 5 --text %s > %s' % (train_fn, lm_fn)
+    logging.info(cmd)
+    os.system(cmd)
 
 init_app(PROC_TITLE)
 
@@ -105,17 +109,6 @@ init_app(PROC_TITLE)
 #
 
 config = load_config('.speechrc')
-srilm_root = config.get("speech", "srilm_root")
-ngram_path = '%s/bin/i686-m64/ngram' % srilm_root
-ngram_count_path = '%s/bin/i686-m64/ngram-count' % srilm_root
-
-if not os.path.exists(ngram_path):
-    logging.error("Could not find required executable %s" % ngram_path)
-    sys.exit(1)
-
-if not os.path.exists(ngram_count_path):
-    logging.error("Could not find required executable %s" % ngram_count_path)
-    sys.exit(1)
 
 #
 # commandline
@@ -128,6 +121,8 @@ parser.add_option ("-d", "--debug", dest="debug", type='int', default=0, help="d
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="verbose output")
 
+parser.add_option ("-k", "--kenlm", action="store_true", dest="kenlm", help="use KenLM instead of srilm")
+
 (options, args) = parser.parse_args()
 
 if options.verbose:
@@ -138,6 +133,19 @@ else:
 if len(args) < 2:
     parser.print_usage()
     sys.exit(1)
+
+if not options.kenlm:
+    srilm_root = config.get("speech", "srilm_root")
+    ngram_path = '%s/bin/i686-m64/ngram' % srilm_root
+    ngram_count_path = '%s/bin/i686-m64/ngram-count' % srilm_root
+
+    if not os.path.exists(ngram_path):
+        logging.error("Could not find required executable %s" % ngram_path)
+        sys.exit(1)
+
+    if not os.path.exists(ngram_count_path):
+        logging.error("Could not find required executable %s" % ngram_count_path)
+        sys.exit(1)
 
 language_model = args[0]
 text_corpora   = args[1:]
@@ -174,8 +182,10 @@ with codecs.open(str(train_fn), 'w', 'utf8') as dstf:
 logging.info('done. %s written, %d sentences.' % (train_fn, num_sentences))
 
 lm_fn = '%s/lm_full.arpa' % outdir
-train_ngram_model(ngram_count_path, train_fn, lm_fn)
-
 lm_pruned_fn = '%s/lm.arpa' % outdir
-prune_ngram_model(ngram_path, lm_fn, lm_pruned_fn)
 
+if options.kenlm:
+    train_pruned_model_with_kenlm(train_fn, lm_pruned_fn)
+else:
+    train_ngram_model(ngram_count_path, train_fn, lm_fn)
+    prune_ngram_model(ngram_path, lm_fn, lm_pruned_fn)
