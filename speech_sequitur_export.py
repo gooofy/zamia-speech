@@ -26,6 +26,7 @@ import sys
 import logging
 import codecs
 import traceback
+import random
 
 from optparse           import OptionParser
 from nltools            import misc
@@ -51,8 +52,14 @@ parser.add_option ("-d", "--dict", dest="dict_name", type = "str", default=DEFAU
                    help="dict to export (default: %s)" % DEFAULT_DICT)
 parser.add_option ("-v", "--verbose", action="store_true", dest="verbose",
                    help="verbose output")
+parser.add_option ("-r", "--train-ratio", type="float", dest="ratio", default=0.9,
+                   help="ratio of train words (0.0-1.0)")
 
 (options, args) = parser.parse_args()
+
+if options.ratio <= 0.0 or options.ratio >= 1.0:
+    logging.error("Invalid ratio %f, valid values are between 0.0 and 1.0 exclusive" % options.ratio)
+    sys.exit(1)
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
@@ -88,7 +95,7 @@ with codecs.open('%s/train.lex' % workdir, 'w', 'utf8') as trainf, \
 
         xs = ipa2xsampa (word, ipa, spaces=True, stress_to_vowels=False)
 
-        if cnt % 10 == 0:
+        if options.ratio < random.random():
             testf.write (u'%s %s\n' % (word, xs))
         else:
             trainf.write (u'%s %s\n' % (word, xs))
