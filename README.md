@@ -634,6 +634,15 @@ To train a German language model using SRILM for use in both sphinx and kaldi bu
 ./speech_build_lm.py generic_de_lang_model europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
 ```
 
+kenlm:
+```bash
+lmplz --skip_symbols -o 4 -S 70% --prune 0 0 1 --text data/dst/lm/generic_de_lang_model_kenlm/train_all.txt > data/dst/lm/generic_de_lang_model_kenlm/lm4.arpa
+lmplz --skip_symbols -o 5 -S 70% --prune 0 0 0 1 --text data/dst/lm/generic_de_lang_model_kenlm/train_all.txt > data/dst/lm/generic_de_lang_model_kenlm/lm5.arpa
+lmplz --skip_symbols -o 5 -S 70% --prune 0 0 1 2 --text data/dst/lm/generic_de_lang_model_kenlm/train_all.txt > data/dst/lm/generic_de_lang_model_kenlm/lm5p.arpa
+lmplz --skip_symbols -o 6 -S 70% --prune 0 0 0 0 1 --text data/dst/lm/generic_de_lang_model_kenlm/train_all.txt > data/dst/lm/generic_de_lang_model_kenlm/lm6.arpa
+```
+
+
 Submission Review and Transcription
 ===================================
 
