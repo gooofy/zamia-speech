@@ -463,7 +463,7 @@ The following list contains speech corpora supported by this script collection.
 - [German Speechdata Package Version 2 (German, 148 hours)](http://www.repository.voxforge1.org/downloads/de/german-speechdata-package-v2.tar.gz):
     + Unpack the archive such that the directories `dev`, `test`, and `train` are
       direct subdirectories of `<~/.speechrc:speech_arc>/gspv2`. 
-    + Then run run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_gspv2.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/gspv2`. 
 
 - [Noise](http://goofy.zamia.org/zamia-speech/corpora/noise.tar.xz):
@@ -474,35 +474,35 @@ The following list contains speech corpora supported by this script collection.
     + Download the set of 360 hours "clean" speech tarball
     + Unpack the archive such that the directory `LibriSpeech` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
-    + Then run run the script `./librispeech_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_librispeech.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/librispeech`. 
 
 - [The LJ Speech Dataset (English, 24 hours)](https://keithito.com/LJ-Speech-Dataset/):
     + Download the tarball
     + Unpack the archive such that the directory `LJSpeech-1.1` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
-    + Then run run the script `ljspeech_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `import_ljspeech.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/lindajohnson-11`. 
 
 - [Mozilla Common Voice German (German, 140 hours)](https://voice.mozilla.org/en/datasets):
     + Download `de.tar.gz`
     + Unpack the archive such that the directory `cv_de` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
-    + Then run run the script `./mozde_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_mozde.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_de`. 
 
 - [Mozilla Common Voice V1 (English, 252 hours)](https://voice.mozilla.org/en/data):
     + Download `cv_corpus_v1.tar.gz`
     + Unpack the archive such that the directory `cv_corpus_v1` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
-    + Then run run the script `./mozcv1_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_mozcv1.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_corpus_v1`. 
 
 - [Munich Artificial Intelligence Laboratories GmbH (M-AILABS) Speech Dataset (English, 147 hours, German, 237 hours)](http://www.m-ailabs.bayern/en/):
     + Download `de_DE.tgz`, `en_UK.tgz`, `en_US.tgz` ([Mirror](https://www.caito.de/2019/01/the-m-ailabs-speech-dataset/))
     + Create a subdirectory `m_ailabs` in `<~/.speechrc:speech_arc>`
     + Unpack the downloaded tarbals inside the `m_ailabs` subdirectory
-    + Then run run the script `./mailabs_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_mailabs.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/m_ailabs_en` and `<~/.speechrc:speech_corpora>/m_ailabs_de`.
 
 - [VoxForge (English, 75 hours)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):

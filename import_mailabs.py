@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #
-# Copyright 2018 Guenter Bartsch
+# Copyright 2018, 2019 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -35,7 +35,7 @@ import json
 from optparse import OptionParser
 from nltools  import misc
 
-PROC_TITLE        = 'mailabs_to_vf'
+PROC_TITLE        = 'import_mailabs'
 DEFAULT_NUM_CPUS  = 12
 
 GENDERS           = set(['male', 'female'])
