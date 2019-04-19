@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -lt 2 ] ; then
-    echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
+    echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>|w2l <experiment>]"
     exit 1
 fi
 
@@ -30,7 +30,7 @@ WHAT=$2
 if [ $WHAT = "kaldi" ] ; then
 
     if [ $# != 3 ] ; then
-        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>|w2l <experiment>]"
         exit 2
     fi
 
@@ -229,6 +229,46 @@ if [ $WHAT = "voice" ] ; then
 
 fi
 
+if [ $WHAT = "w2l" ] ; then
+
+    if [ $# != 3 ] ; then
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>|w2l <experiment>]"
+        exit 2
+    fi
+
+    DISTDIR=data/dist/asr-models
+    EXPNAME=$3
+
+    AMNAME="w2l-${MODEL}-${REVISION}"
+
+    SRCDIR="data/dst/asr-models/wav2letter/${MODEL}"
+
+    echo "$AMNAME ..."
+
+    rm -rf "$DISTDIR/$AMNAME"
+    mkdir -p "$DISTDIR/$AMNAME"
+
+    lastone=`ls -t ${SRCDIR}/models/${EXPNAME}/*last.bin | head -n 1`
+    echo $lastone
+
+    cp ${lastone}                                      $DISTDIR/$AMNAME/model.bin
+    cp ${SRCDIR}/data/tokens.txt                       $DISTDIR/$AMNAME/
+    cp ${SRCDIR}/data/lexicon.txt                      $DISTDIR/$AMNAME/
+    cp ${SRCDIR}/data/lm.bin                           $DISTDIR/$AMNAME/
+
+    cp README.md "$DISTDIR/$AMNAME"
+    cp LICENSE   "$DISTDIR/$AMNAME"
+    cp AUTHORS   "$DISTDIR/$AMNAME"
+
+    pushd $DISTDIR
+    rm -f "$AMNAME.tar" "$AMNAME.tar.xz"
+    tar cfv "$AMNAME.tar" $AMNAME
+    xz -v -8 -T 12 "$AMNAME.tar"
+    popd
+
+    rm -r "$DISTDIR/$AMNAME"
+
+fi
 #
 # copyright info
 #
