@@ -974,9 +974,30 @@ wav2letter++ models
 Example: train a "generic" german model:
 
 ```bash
-./speech_wav2letter_export.py -l de -v generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
+./wav2letter_export.py -l de -v generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
 pushd data/dst/asr-models/wav2letter/generic-de/
 bash run_train.sh
+```
+
+auto-reviews using wacv2letter
+------------------------------
+
+create auto-review case:
+
+```bash
+./wav2letter_auto_review.py  w2l-generic-de-latest gspv2
+```
+
+run it:
+```bash
+pushd tmp/w2letter_auto_review
+bash run_auto_review.sh
+popd
+```
+
+apply the results:
+```bash
+./wav2letter_apply_review.py
 ```
 
 
