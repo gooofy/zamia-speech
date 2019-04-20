@@ -985,7 +985,7 @@ auto-reviews using wav2letter
 create auto-review case:
 
 ```bash
-./wav2letter_auto_review.py  w2l-generic-de-latest gspv2
+./wav2letter_auto_review.py -l de w2l-generic-de-latest gspv2
 ```
 
 run it:
