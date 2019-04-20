@@ -979,8 +979,8 @@ pushd data/dst/asr-models/wav2letter/generic-de/
 bash run_train.sh
 ```
 
-auto-reviews using wacv2letter
-------------------------------
+auto-reviews using wav2letter
+-----------------------------
 
 create auto-review case:
 
