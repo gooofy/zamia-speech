@@ -20,7 +20,7 @@ time ${W2L_DECODER} --logtostderr=1 --stderrthreshold=0 \
     --lmweight=4 \
     --wordscore=2.2 \
     --beamsize=2500 \
-    --beamscore=100 \
+    --beamscore=40 \
     --silweight=-1 \
     --nthread_decoder=12 \
     --smearing=max \
