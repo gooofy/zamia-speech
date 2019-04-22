@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -lt 2 ] ; then
-    echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>|w2l <experiment>]"
+    echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|lm|voice <epoch>|w2l <experiment>]"
     exit 1
 fi
 
@@ -30,7 +30,7 @@ WHAT=$2
 if [ $WHAT = "kaldi" ] ; then
 
     if [ $# != 3 ] ; then
-        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>|w2l <experiment>]"
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|lm|voice <epoch>|w2l <experiment>]"
         exit 2
     fi
 
@@ -170,14 +170,14 @@ if [ $WHAT = "sphinx_ptm" ] ; then
     rm -r "$DISTDIR/$AMNAME"
 fi
 
-if [ $WHAT = "srilm" ] ; then
+if [ $WHAT = "lm" ] ; then
     #
-    # srilm
+    # KenLM
     #
 
     DISTDIR=data/dist/lm
 
-    LMNAME="srilm-${MODEL}-${REVISION}.arpa"
+    LMNAME="${MODEL}-${REVISION}.arpa"
     echo "$LMNAME ..."
     cp data/dst/lm/${MODEL}/lm.arpa ${DISTDIR}/$LMNAME
     gzip ${DISTDIR}/$LMNAME
@@ -199,7 +199,7 @@ fi
 if [ $WHAT = "voice" ] ; then
 
     if [ $# != 3 ] ; then
-        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|lm|voice <epoch>]"
         exit 2
     fi
 
@@ -232,7 +232,7 @@ fi
 if [ $WHAT = "w2l" ] ; then
 
     if [ $# != 3 ] ; then
-        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>|w2l <experiment>]"
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|lm|voice <epoch>|w2l <experiment>]"
         exit 2
     fi
 

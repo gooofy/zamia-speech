@@ -5,8 +5,8 @@ Models that can be built include:
 
 * CMU Sphinx continous and PTM audio models
 * Kaldi nnet3 chain audio models
-* srilm language model
-* sequitur g2p model
+* KenLM language models in ARPA format
+* sequitur g2p models
 
 *Important*: Please note that these scripts form in no way a complete application ready for end-user consumption.
 However, if you are a developer interested in natural language processing you may find some of them useful.
@@ -157,10 +157,14 @@ Language Models
 
 Our pre-built ARPA language models can be downloaded here: [Language Models](http://goofy.zamia.org/zamia-speech/lm/)
 
-+ SRILM, English, ARPA:
-    + `srilm-generic_en_lang_model`
-+ SRILM, German, ARPA:
-    + `srilm-generic_de_lang_model`
++ KenLM, order 4, English, ARPA:
+    + `generic_en_lang_model_small`
++ KenLM, order 6, English, ARPA:
+    + `generic_en_lang_model_large`
++ KenLM, order 4, German, ARPA:
+    + `generic_de_lang_model_small`
++ KenLM, order 6, German, ARPA:
+    + `generic_de_lang_model_large`
 
 Code
 ----
@@ -375,8 +379,9 @@ Requirements
 
 * Python 2.7 with nltk, numpy, ...
 * CMU Sphinx
-* srilm
+* KenLM
 * kaldi
+* wav2letter
 * py-nltools
 * sox
 
@@ -421,7 +426,6 @@ speech_arc            = /home/bofh/projects/ai/data/speech/arc
 speech_corpora        = /home/bofh/projects/ai/data/speech/corpora
 
 kaldi_root            = /apps/kaldi-cuda
-srilm_root            = /apps/kaldi-cuda/tools/srilm
 
 wav16                 = /home/bofh/projects/ai/data/speech/16kHz
 noise_dir             = /home/bofh/projects/ai/data/speech/corpora/noise
@@ -615,10 +619,16 @@ Prerequisites:
 - text corpora `europarl_en`, `cornell_movie_dialogs`, `web_questions`, and `yahoo_answers` are installed, sentences extracted (see instructions above).
 - sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`
 
-To train an English language model using SRILM for use in both sphinx and kaldi builds run:
+To train a small, pruned English language model of order 4 using KenLM for use in both kaldi and wav2letter builds run:
 
 ```bash
-./speech_build_lm.py generic_en_lang_model europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en
+./speech_build_lm.py generic_en_lang_model_small europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en
+```
+
+to train a larger model of order 6 with less pruning:
+
+```bash
+./speech_build_lm.py -o 6 -p "0 0 0 0 1" generic_en_lang_model_large europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en
 ```
 
 German
@@ -628,18 +638,15 @@ Prerequisites:
 - text corpora `europarl_de` and `parole_de` are installed, sentences extracted (see instructions above).
 - sentences are extracted from speech corpora `forschergeist`, `gspv2`, `voxforge_de`, `zamia_de`, `m_ailabs_de`, `cv_de`
 
-To train a German language model using SRILM for use in both sphinx and kaldi builds run:
+To train a small, pruned German language model of order 4 using KenLM for use in both kaldi and wav2letter builds run:
 
 ```bash
-./speech_build_lm.py generic_de_lang_model europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
+./speech_build_lm.py generic_de_lang_model_small europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
 ```
+to train a larger model of order 6 with less pruning:
 
-kenlm:
 ```bash
-lmplz --skip_symbols -o 4 -S 70% --prune 0 0 1 --text data/dst/lm/generic_de_lang_model_kenlm/train_all.txt > data/dst/lm/generic_de_lang_model_kenlm/lm4.arpa
-lmplz --skip_symbols -o 5 -S 70% --prune 0 0 0 1 --text data/dst/lm/generic_de_lang_model_kenlm/train_all.txt > data/dst/lm/generic_de_lang_model_kenlm/lm5.arpa
-lmplz --skip_symbols -o 5 -S 70% --prune 0 0 1 2 --text data/dst/lm/generic_de_lang_model_kenlm/train_all.txt > data/dst/lm/generic_de_lang_model_kenlm/lm5p.arpa
-lmplz --skip_symbols -o 6 -S 70% --prune 0 0 0 0 1 --text data/dst/lm/generic_de_lang_model_kenlm/train_all.txt > data/dst/lm/generic_de_lang_model_kenlm/lm6.arpa
+./speech_build_lm.py -o 6 -p "0 0 0 0 1" generic_de_lang_model_large europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
 ```
 
 
