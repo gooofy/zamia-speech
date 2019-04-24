@@ -180,7 +180,7 @@ if [ $WHAT = "lm" ] ; then
     LMNAME="${MODEL}-${REVISION}.arpa"
     echo "$LMNAME ..."
     cp data/dst/lm/${MODEL}/lm.arpa ${DISTDIR}/$LMNAME
-    gzip ${DISTDIR}/$LMNAME
+    xz -9 -v ${DISTDIR}/$LMNAME
 fi
 
 if [ $WHAT = "sequitur" ] ; then
