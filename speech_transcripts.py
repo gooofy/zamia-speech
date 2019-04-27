@@ -95,10 +95,10 @@ class Transcripts(object):
                 with codecs.open(spk_test_fn, 'w', 'utf8') as f:
                     pass
 
-        self.spk_test = []
+        self.spk_test = set()
         with codecs.open(spk_test_fn, 'r', 'utf8') as f:
             for line in f:
-                self.spk_test.append(line.strip())
+                self.spk_test.add(line.strip())
 
 
     def keys(self):
