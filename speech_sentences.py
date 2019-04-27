@@ -83,6 +83,8 @@ SPEECH_CORPORA = {
         lambda: proc_transcripts("m_ailabs_de"),
     "m_ailabs_en":
         lambda: proc_transcripts("m_ailabs_en"),
+    "tedlium3":
+        lambda: proc_transcripts("tedlium3"),
     "voxforge_de":
         lambda: proc_transcripts("voxforge_de"),
     "voxforge_en":

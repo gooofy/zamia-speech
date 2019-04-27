@@ -509,6 +509,13 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `./import_mailabs.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/m_ailabs_en` and `<~/.speechrc:speech_corpora>/m_ailabs_de`.
 
+- [TED-LIUM Release 3 (English, 210 hours)](https://www.openslr.org/51/):
+    + Download `TEDLIUM_release-3.tgz`
+    + Unpack the archive such that the directory `TEDLIUM_release-3` is a direct 
+      subdirectory of `<~/.speechrc:speech_arc>`. 
+    + Then run run the script `./import_tedlium3.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/tedlium3`. 
+
 - [VoxForge (English, 75 hours)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_en` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/voxforge_en`
@@ -600,6 +607,7 @@ Sentences can also be extracted from our speech corpora. To do that, run:
     + `./speech_sentences.py cv_corpus_v1`
     + `./speech_sentences.py ljspeech`
     + `./speech_sentences.py m_ailabs_en`
+    + `./speech_sentences.py tedlium3`
 
 - German Speech Corpora
     + `./speech_sentences.py forschergeist`
@@ -617,18 +625,18 @@ English
 
 Prerequisites: 
 - text corpora `europarl_en`, `cornell_movie_dialogs`, `web_questions`, and `yahoo_answers` are installed, sentences extracted (see instructions above).
-- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`
+- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`, `tedlium3`
 
 To train a small, pruned English language model of order 4 using KenLM for use in both kaldi and wav2letter builds run:
 
 ```bash
-./speech_build_lm.py generic_en_lang_model_small europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en
+./speech_build_lm.py generic_en_lang_model_small europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
 ```
 
 to train a larger model of order 6 with less pruning:
 
 ```bash
-./speech_build_lm.py -o 6 -p "0 0 0 0 1" generic_en_lang_model_large europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en
+./speech_build_lm.py -o 6 -p "0 0 0 0 1" generic_en_lang_model_large europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
 ```
 
 German
@@ -773,7 +781,7 @@ The following recipe trains Kaldi models for English.
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
 - language model `generic_en_lang_model` built
-- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en` and `zamia_en` are installed, converted and scanned.
+- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`, `tedlium3` and `zamia_en` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_en_noisy`, `voxforge_en_phone`, `librispeech_en_noisy`, `librispeech_en_phone`, `cv_corpus_v1_noisy`, `cv_corpus_v1_phone`, `zamia_en_noisy` and `zamia_en_phone`
 
 ```bash
@@ -786,7 +794,7 @@ cd data/dst/asr-models/kaldi/generic-en-small
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en tedlium3 zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
 ```
 
 German NNet3 Chain Models
@@ -903,7 +911,7 @@ complete export run (without noise augmented corpora):
 complete export run with noise augmented corpora included for an English model:
 
 ```bash
-./speech_sphinx_export.py -l en generic-en dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en cv_corpus_v1 ljspeech m_ailabs_en 
+./speech_sphinx_export.py -l en generic-en dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
 ```
 
 For resource constrained applications, PTM models can be trained:
