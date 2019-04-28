@@ -254,7 +254,6 @@ if [ $WHAT = "w2l" ] ; then
     cp ${lastone}                                      $DISTDIR/$AMNAME/model.bin
     cp ${SRCDIR}/data/tokens.txt                       $DISTDIR/$AMNAME/
     cp ${SRCDIR}/data/lexicon.txt                      $DISTDIR/$AMNAME/
-    cp ${SRCDIR}/data/lm.bin                           $DISTDIR/$AMNAME/
 
     cp README.md "$DISTDIR/$AMNAME"
     cp LICENSE   "$DISTDIR/$AMNAME"
