@@ -103,6 +103,10 @@ wav16_dir        = config.get("speech", "wav16")
 # create basic work dir structure
 #
 
+cmd = 'rm -rf %s' % work_dir
+logging.info(cmd)
+os.system(cmd)
+
 misc.mkdirs('%s/valid' % data_dir)
 misc.mkdirs('%s/train' % data_dir)
 
@@ -126,6 +130,7 @@ misc.copy_file('%s/lm.arpa' % language_model_dir, '%s/lm.arpa' % data_dir)
 #
 
 misc.render_template('data/src/speech/w2l_run_train.sh.template', '%s/run_train.sh' % work_dir, w2l_env_activate=w2l_env_activate, w2l_train=w2l_train)
+misc.render_template('data/src/speech/w2l_run_decode.sh.template', '%s/run_decode.sh' % work_dir, w2l_env_activate=w2l_env_activate, w2l_train=w2l_train)
 misc.mkdirs('%s/config/conv_glu' % work_dir)
 misc.render_template('data/src/speech/w2l_config_conv_glu_train.cfg.template', '%s/config/conv_glu/train.cfg' % work_dir, runname=model_name)
 misc.copy_file('data/src/speech/w2l_config_conv_glu_network.arch', '%s/config/conv_glu/network.arch' % work_dir)
@@ -134,29 +139,41 @@ misc.copy_file('data/src/speech/w2l_config_conv_glu_network.arch', '%s/config/co
 # export audio
 #
 
+cnt = 0
+
 def export_audio (train_val, tsdict):
 
-    global data_dir, utt_num, options
+    global data_dir, utt_num, options, cnt
 
     destdirfn = '%s/%s' % (data_dir, train_val)
 
+    lcnt = 0
+
+
     for utt_id in tsdict:
+
+        ts = tsdict[utt_id]
+
+        tokens = tokenize(ts['ts'], lang=options.lang)
+        covered_by_lex = True
+        for token in tokens:
+            if not (token in lex):
+                logging.error(u'token %s missing from dict!' % token)
+                logging.error(u'utt_id: %s' % utt_id)
+                logging.error(u'ts: %s' % ts['ts'])
+                covered_by_lex = False
+                break
+
+        if not covered_by_lex:
+            continue
 
         with codecs.open('%s/%09d.id'  % (destdirfn, utt_num[train_val]), 'w', 'utf8') as idf,   \
              codecs.open('%s/%09d.tkn' % (destdirfn, utt_num[train_val]), 'w', 'utf8') as tknf,  \
              codecs.open('%s/%09d.wrd' % (destdirfn, utt_num[train_val]), 'w', 'utf8') as wrdf   :
 
-            ts = tsdict[utt_id]
-
             tkn = u''
             wrd = u''
-            for token in tokenize(ts['ts'], lang=options.lang):
-
-                if not (token in lex):
-                    logging.error(u'token %s missing from dict!' % token)
-                    logging.error(u'utt_id: %s' % utt_id)
-                    logging.error(u'ts: %s' % ts['ts'])
-                    sys.exit(1)
+            for token in tokens:
 
                 ipas = lex[token]['ipa'] 
                 xsr = ipa2xsampa(token, ipas, spaces=True)
@@ -175,14 +192,21 @@ def export_audio (train_val, tsdict):
                 
             tknf.write('%s\n' % tkn)
             wrdf.write('%s\n' % wrd)
+            idf.write('utt_id\t%s\ncorpus\t%s\nlang\t%s\n' % (utt_id, ts['corpus_name'], options.lang))
 
-            cmd = 'ln -s %s/%s/%s.wav %s/%09d.wav' % (wav16_dir, ts['corpus_name'], utt_id, destdirfn, utt_num[train_val])
-            logging.debug(cmd)
-            os.system(cmd)
+            os.symlink('%s/%s/%s.wav' % (wav16_dir, ts['corpus_name'], utt_id), '%s/%09d.wav' % (destdirfn, utt_num[train_val]))
+            # cmd = 'ln -s %s/%s/%s.wav %s/%09d.wav' % (wav16_dir, ts['corpus_name'], utt_id, destdirfn, utt_num[train_val])
+            # logging.debug(cmd)
+            # os.system(cmd)
 
             # utt2spkf.write('%s %s\n' % (utt_id, ts['spk']))
 
             utt_num[train_val] = utt_num[train_val] + 1
+
+        cnt  += 1
+        lcnt += 1
+        if cnt % 1000 == 0:
+            logging.info ('%6d audio files linked from %s [%s] (%6d/%6d)...' % (cnt, ts['corpus_name'], train_val, lcnt, len(tsdict)))
 
 utt_num = { 'train': 0, 'valid': 0 }
 

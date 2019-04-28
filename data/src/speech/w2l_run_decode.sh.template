@@ -1,0 +1,46 @@
+#!/bin/bash
+
+if [ $# != 3 ] ; then
+
+    echo "usage: $0 lm.bin model.bin casename"
+    echo
+    exit 1
+
+fi
+
+LM=$1
+MODEL=$2
+CASENAME=$3
+
+LOGDIR="logs/${CASENAME}"
+
+mkdir -p ${LOGDIR}
+
+W2L_ENV_ACTIVATE={{w2l_env_activate}}
+W2L_TRAIN={{w2l_train}}
+
+source ${W2L_ENV_ACTIVATE}
+
+export CUDA_VISIBLE_DEVICES=1
+
+time ${W2L_DECODE} --logtostderr=1 --stderrthreshold=0 \
+    --datadir=data/valid \
+    --tokensdir=data \
+    --tokens=tokens.txt \
+    --lexicon=data/lexicon.txt \
+    --am=${MODEL} \
+    --lm=${LM} \
+    --sclite=${LOGDIR} \
+    --lmweight=4 \
+    --wordscore=2.2 \
+    --beamsize=2500 \
+    --beamscore=40 \
+    --silweight=-1 \
+    --nthread_decoder=12 \
+    --smearing=max \
+    --show \
+    --showletters
+
+#     --beamsize=2500 \
+#     --beamscore=100 \
+

@@ -984,12 +984,20 @@ http://goofy.zamia.org/voxforge/misc/sphinx-example.tgz
 wav2letter++ models
 ===================
 
-*NOTE*: experimental.
-
-Example: train a "generic" german model:
+English Wav2letter Models
+-------------------------
 
 ```bash
-./wav2letter_export.py -l de -v generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
+./wav2letter_export.py -l en -v generic-en dict-en.ipa generic_en_lang_model_large voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en tedlium3 zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+pushd data/dst/asr-models/wav2letter/generic-en/
+bash run_train.sh
+```
+
+German Wav2letter Models
+------------------------
+
+```bash
+./wav2letter_export.py -l de -v generic-de dict-de.ipa generic_de_lang_model_large voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
 pushd data/dst/asr-models/wav2letter/generic-de/
 bash run_train.sh
 ```
