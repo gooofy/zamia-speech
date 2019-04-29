@@ -639,6 +639,11 @@ to train a larger model of order 6 with less pruning:
 ./speech_build_lm.py -o 6 -p "0 0 0 0 1" generic_en_lang_model_large europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
 ```
 
+to train a medium size model of order 5:
+
+```bash
+./speech_build_lm.py -o 5 -p "0 0 1 2" generic_en_lang_model_large europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
+```
 German
 ------
 
@@ -657,6 +662,11 @@ to train a larger model of order 6 with less pruning:
 ./speech_build_lm.py -o 6 -p "0 0 0 0 1" generic_de_lang_model_large europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
 ```
 
+to train a medium size model of order 5:
+
+```bash
+./speech_build_lm.py -o 5 -p "0 0 1 2" generic_de_lang_model_medium europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
+```
 
 Submission Review and Transcription
 ===================================
