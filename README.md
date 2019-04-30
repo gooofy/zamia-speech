@@ -790,12 +790,12 @@ The following recipe trains Kaldi models for English.
 
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
-- language model `generic_en_lang_model` built
+- language model `generic_en_lang_model_small` built
 - some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`, `tedlium3` and `zamia_en` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_en_noisy`, `voxforge_en_phone`, `librispeech_en_noisy`, `librispeech_en_phone`, `cv_corpus_v1_noisy`, `cv_corpus_v1_phone`, `zamia_en_noisy` and `zamia_en_phone`
 
 ```bash
-./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en 
+./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model_small voxforge_en librispeech zamia_en 
 cd data/dst/asr-models/kaldi/generic-en-small
 ./run-lm.sh
 ./run-chain.sh
@@ -804,7 +804,7 @@ cd data/dst/asr-models/kaldi/generic-en-small
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en tedlium3 zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model_small voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en tedlium3 zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
 ```
 
 German NNet3 Chain Models
@@ -814,12 +814,12 @@ The following recipe trains Kaldi models for German.
 
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
-- language model `generic_de_lang_model` built
+- language model `generic_de_lang_model_small` built
 - some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist`, `zamia_de`, `m_ailabs_de`, `cv_de` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
-./speech_kaldi_export.py generic-de-small dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+./speech_kaldi_export.py generic-de-small dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 [ forschergeist zamia_de ...]
 cd data/dst/asr-models/kaldi/generic-de-small
 ./run-lm.sh
 ./run-chain.sh
@@ -828,7 +828,7 @@ cd data/dst/asr-models/kaldi/generic-de-small
 complete export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
+./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
 ```
 
 Model Adaptation
@@ -902,12 +902,12 @@ The following recipe trains a continuous CMU Sphinx model for German.
 
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
-- language model `generic_de_lang_model` built
+- language model `generic_de_lang_model_small` built
 - some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
-./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 [ forschergeist zamia_de ...]
 cd data/dst/asr-models/cmusphinx_cont/generic-de
 ./sphinx-run.sh
 ```
@@ -915,19 +915,19 @@ cd data/dst/asr-models/cmusphinx_cont/generic-de
 complete export run (without noise augmented corpora):
 
 ```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de m_ailabs_de
+./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 forschergeist zamia_de m_ailabs_de
 ```
 
 complete export run with noise augmented corpora included for an English model:
 
 ```bash
-./speech_sphinx_export.py -l en generic-en dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
+./speech_sphinx_export.py -l en generic-en dict-en.ipa generic_en_lang_model_small voxforge_en librispeech zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
 ```
 
 For resource constrained applications, PTM models can be trained:
 
 ```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 [ forschergeist zamia_de ...]
 cd data/dst/asr-models/cmusphinx_ptm/generic-de
 ./sphinx-run.sh
 ```
