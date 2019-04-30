@@ -98,7 +98,16 @@ if len(args) < 2:
 language_model = args[0]
 text_corpora   = args[1:]
 
+#
+# re-create output dir
+#
+
 outdir = '%s/%s' % (LANGUAGE_MODELS_DIR, language_model)
+logging.info('cleaning output dir %s' % outdir)
+cmd = 'rm -rf %s' % outdir
+logging.debug(cmd)
+os.system(cmd)
+logging.debug('mkdirs %s' % outdir)
 mkdirs(outdir)
 
 #
@@ -127,8 +136,7 @@ with codecs.open(str(train_fn), 'w', 'utf8') as dstf:
                     logging.info('%8d sentences.' % num_sentences)
 
                 if options.debug > 0 and num_sentences >= options.debug:
-                    logging.warning(
-                        'stopping because sentence debug limit is reached.')
+                    logging.warning('stopping because sentence debug limit is reached.')
                     break
 
 logging.info('done. %s written, %d sentences.' % (train_fn, num_sentences))
