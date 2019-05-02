@@ -797,11 +797,10 @@ Before running it, make sure all prerequisites are met (see above for instructio
 ```bash
 ./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model_small voxforge_en librispeech zamia_en 
 cd data/dst/asr-models/kaldi/generic-en-small
-./run-lm.sh
 ./run-chain.sh
 ```
 
-complete export run with noise augmented corpora included:
+export run with noise augmented corpora included:
 
 ```bash
 ./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model_small voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en tedlium3 zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
@@ -821,11 +820,10 @@ Before running it, make sure all prerequisites are met (see above for instructio
 ```bash
 ./speech_kaldi_export.py generic-de-small dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 [ forschergeist zamia_de ...]
 cd data/dst/asr-models/kaldi/generic-de-small
-./run-lm.sh
 ./run-chain.sh
 ```
 
-complete export run with noise augmented corpora included:
+export run with noise augmented corpora included:
 
 ```bash
 ./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
