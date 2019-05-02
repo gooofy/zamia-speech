@@ -3,10 +3,10 @@
 Python scripts to compute audio and language models from voxforge.org speech data and many sources.
 Models that can be built include:
 
-* CMU Sphinx continous and PTM audio models
 * Kaldi nnet3 chain audio models
 * KenLM language models in ARPA format
 * sequitur g2p models
+* wav2letter++ models
 
 *Important*: Please note that these scripts form in no way a complete application ready for end-user consumption.
 However, if you are a developer interested in natural language processing you may find some of them useful.
@@ -56,8 +56,6 @@ Table of Contents
   * [English NNet3 Chain Models](#english-nnet3-chain-models)
   * [German NNet3 Chain Models](#german-nnet3-chain-models)
   * [Model Adaptation](#model-adaptation)
-* [CMU Sphinx Models](#cmu-sphinx-models)
-  * [Running pocketsphinx](#running-pocketsphinx)
 * [wav2letter\+\+ models](#wav2letter-models)
 * [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
   * [(0/3) Convert Audio to WAVE Format](#03-convert-audio-to-wave-format)
@@ -105,25 +103,17 @@ Our pre-built ASR models can be downloaded here: [ASR Models](http://goofy.zamia
     + `kaldi-generic-en-tri2b_chain`
       GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
 + Kaldi ASR, German:
-    + `kaldi-generic-de-tdnn_sp`
-      Large nnet3-chain model, trained on ~260 hours of audio. Has decent background noise resistance and can
+    + `kaldi-generic-de-tdnn_f`
+      Large nnet3-chain model, trained on ~400 hours of audio. Has decent background noise resistance and can
       also be used on phone recordings.
     + `kaldi-generic-de-tdnn_250`
       Same as the large model but less resource intensive, suitable for use in embedded applications (e.g. a RaspberryPi 3).
     + `kaldi-generic-de-tri2b_chain`
       GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
-+ CMU Sphinx, English:
-    + `cmusphinx-cont-generic-en`
-      Large model, trained on ~800 hours of audio. Has decent background noise resistance and can
++ wav2letter++, German:
+    + `w2l-generic-de`
+      Large model, trained on ~400 hours of audio. Has decent background noise resistance and can
       also be used on phone recordings.
-    + `cmusphinx-ptm-generic-en`
-      Same as the large model but less resource intensive, suitable for use in embedded applications.
-+ CMU Sphinx, German:
-    + `cmusphinx-ptm-generic-de`
-      Large model, trained on ~260 hours of audio. Has decent background noise resistance and can
-      also be used on phone recordings.
-    + `cmusphinx-cont-generic-de`
-      Same as the large model but less resource intensive, suitable for use in embedded applications.
 
 *NOTE*: It is important to realize that these models can and should be adapted to your application domain. See 
         [Model Adaptation](#model-adaptation) for details.
@@ -378,36 +368,11 @@ Requirements
 *Note*: probably incomplete.
 
 * Python 2.7 with nltk, numpy, ...
-* CMU Sphinx
 * KenLM
 * kaldi
-* wav2letter
+* wav2letter++
 * py-nltools
 * sox
-
-To set up a Conda environment named `gooofy-speech` with all Python
-dependencies installed, run
-
-    $ conda env create -f environment.yml
-
-To activate the environment, run
-
-    $ source activate gooofy-speech
-
-To deactivate the environment, run
-
-    $ source deactivate
-
-*Note*: The Conda environment was created on a Linux machine, so maybe it won't
-work on other machines.
-
-While the environment is activated, you may want to install additional packages
-with `conda install` or `pip install`. After doing so, update `environment.yml`
-with
-
-    $ ./update_conda_env.sh
-
-Afterwards you can commit the changes to the repository.
 
 Setup Notes
 ===========
@@ -891,102 +856,6 @@ finally, you can create a tarball from the newly created model:
 cd ../../../../..
 ./speech_dist.sh control-en kaldi adapt
 ```
-
-
-CMU Sphinx Models
-=================
-
-The following recipe trains a continuous CMU Sphinx model for German. 
-
-Before running it, make sure all prerequisites are met (see above for instructions on these):
-
-- language model `generic_de_lang_model_small` built
-- some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
-- optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
-
-```bash
-./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 [ forschergeist zamia_de ...]
-cd data/dst/asr-models/cmusphinx_cont/generic-de
-./sphinx-run.sh
-```
-
-complete export run (without noise augmented corpora):
-
-```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 forschergeist zamia_de m_ailabs_de
-```
-
-complete export run with noise augmented corpora included for an English model:
-
-```bash
-./speech_sphinx_export.py -l en generic-en dict-en.ipa generic_en_lang_model_small voxforge_en librispeech zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
-```
-
-For resource constrained applications, PTM models can be trained:
-
-```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 [ forschergeist zamia_de ...]
-cd data/dst/asr-models/cmusphinx_ptm/generic-de
-./sphinx-run.sh
-```
-
-
-Running pocketsphinx
---------------------
-
-*IMPORTANT*: In order to use our pre-built models you have to use up-to-date CMU Sphinx. Unfortunately, at the time
-             of this writing even the latest "5prealpha" release is outdated. Until the CMU Sphinx project has a new release,
-             we highly recommend to check out and build it yourself from their github repository.
-
-Here are some sample invocations for pocketsphinx which should help get you started using our models:
-
-```bash
-pocketsphinx_continuous -lw 10 -fwdflatlw 10 -bestpathlw 10 -beam 1e-80 \
-                        -wbeam 1e-40 -fwdflatbeam 1e-80 -fwdflatwbeam 1e-40 \
-                        -pbeam 1e-80 -lpbeam 1e-80 -lponlybeam 1e-80 \
-                        -wip 0.2 -agc none -varnorm no -cmn current \
-                        -lowerf 130 -upperf 6800 -nfilt  25 \
-                        -transform dct -lifter 22 -ncep   13 \
-                        -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_8000 \
-                        -dict ${MODELDIR}/etc/voxforge.dic \
-                        -lm ${MODELDIR}/etc/voxforge.lm.bin \
-                        -infile $WAVFILE 
-
-
-sphinx_fe -c fileids -di wav -do mfcc \
-          -part 1 -npart 1 -ei wav -eo mfc -nist no -raw no -mswav yes \
-          -samprate 16000 -lowerf 130 -upperf 6800 -nfilt 25 -transform dct -lifter 22
-
-pocketsphinx_batch -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_8000 \
-                   -feat 1s_c_d_dd \
-                   -ceplen 13 \
-                   -ncep 13 \
-                   -lw 10 \
-                   -fwdflatlw 10 \
-                   -bestpathlw 10 \
-                   -beam 1e-80 \
-                   -wbeam 1e-40 \
-                   -fwdflatbeam 1e-80 \
-                   -fwdflatwbeam 1e-40 \
-                   -pbeam 1e-80 \
-                   -lpbeam 1e-80 \
-                   -lponlybeam 1e-80 \
-                   -dict ${MODELDIR}/etc/voxforge.dic \
-                   -wip 0.2 \
-                   -ctl fileids \
-                   -cepdir ./mfcc \
-                   -cepext .mfc \
-                   -hyp test_batch.match \
-                   -logfn test_batch.log \
-                   -agc none -varnorm no -cmn current -lm ${MODELDIR}/etc/voxforge.lm.bin
-```
-
-You can download a complete tarball with example scripts and WAV files here:
-
-http://goofy.zamia.org/voxforge/misc/sphinx-example.tgz
-
-*NOTE*: According to https://github.com/cmusphinx/pocketsphinx/issues/116 
-        pocketsphinx\_continuous will have worse results compared to pocketsphinx\_batch using the same model and parameters.
 
 
 wav2letter++ models
