@@ -1,0 +1,30 @@
+#!/bin/bash
+
+W2L_ENV_ACTIVATE={{w2l_env_activate}}
+W2L_DECODER={{w2l_decoder}}
+
+mkdir logs
+
+source ${W2L_ENV_ACTIVATE}
+
+export CUDA_VISIBLE_DEVICES={{cuda_device}}
+
+time ${W2L_DECODER} --logtostderr=1 --stderrthreshold=0 \
+    --datadir=data/test \
+    --tokensdir={{w2l_tokensdir}} \
+    --tokens={{w2l_tokens}} \
+    --lexicon={{w2l_lexicon}} \
+    --am={{w2l_am}} \
+    --lm={{w2l_lm}} \
+    --sclite=logs \
+    --lmweight=4 \
+    --wordscore=2.2 \
+    --beamsize=2500 \
+    --beamscore=40 \
+    --silweight=-1 \
+    --nthread_decoder=12 \
+    --smearing=max \
+    --show \
+    --showletters
+
+

@@ -48,7 +48,7 @@ SEQUITUR_MODEL  = 'data/models/sequitur-dict-de.ipa-latest'
 DEFAULT_DICT    = 'dict-de.ipa'
 DEFAULT_WRT     = 'data/src/wrt/librivox_de.csv'
 
-PUNCTUATION = set([',','.','\'','!','?','"','-',':'])
+PUNCTUATION = set([',','.','\'','!','?','"','-',':','/'])
 
 def tokwrt (ts):
 

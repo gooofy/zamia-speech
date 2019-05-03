@@ -41,16 +41,6 @@ SEQUITUR_MODEL_DIR  = 'data/models/sequitur'
 LANGUAGE_MODELS_DIR = 'data/dst/lm'
 ASR_MODELS_DIR      = 'data/dst/asr-models'
 
-def concat_sort_write(src_paths, dst_path):
-    lines = []
-    for src_path in src_paths:
-        with open(src_path) as f:
-            lines += [line for line in f]
-
-    with open(dst_path, "wt") as f:
-        for line in sorted(lines):
-            f.write(line)
-
 def export_kaldi_data (wav16_dir, audio_corpora, destdirfn, tsdict):
     logging.info ( "Exporting kaldi data to %s..." % destdirfn)
 
@@ -69,12 +59,6 @@ def export_kaldi_data (wav16_dir, audio_corpora, destdirfn, tsdict):
                                                  ts['corpus_name'], utt_id))
 
             utt2spkf.write('%s %s\n' % (utt_id, ts['spk']))
-
-    # concat_sort_write(
-    #     ['data/src/speech/%s/spk2gender' % audio_corpus
-    #      for audio_corpus in audio_corpora],
-    #     '%s/spk2gender' % destdirfn)
-
 
 def add_missing_words(transcripts, lex, sequitur_model_path):
     logging.info("looking for missing words...")
@@ -240,40 +224,18 @@ def create_training_data_for_language_model(transcript_objs, utt_dict, data_dir)
 
 
 def copy_scripts_and_config_files(work_dir, kaldi_root):
-    misc.copy_file('data/src/speech/kaldi-run-lm.sh', '%s/run-lm.sh' % work_dir)
-    # misc.copy_file ('data/src/speech/kaldi-run-am.sh', '%s/run-am.sh' % work_dir)
-    # misc.copy_file ('data/src/speech/kaldi-run-nnet3.sh', '%s/run-nnet3.sh' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-run-chain.sh',
-                   '%s/run-chain.sh' % work_dir)
-    # misc.copy_file('data/src/speech/kaldi-run-chain-wrapper.sh',
-    #                '%s/run-chain-wrapper.sh' % work_dir)
-    # misc.copy_file('data/src/speech/kaldi-run-chain-cfg.sh',
-    #                '%s/run-chain-cfg.sh' % work_dir)
-    # misc.copy_file('data/src/speech/kaldi-run-chain-cpu.sh',
-    #                '%s/run-chain-cpu.sh' % work_dir)
-    # misc.copy_file('data/src/speech/kaldi-run-chain-cpu-wrapper.sh',
-    #                '%s/run-chain-cpu-wrapper.sh' % work_dir)
-    # misc.copy_file('data/src/speech/kaldi-run-chain-gpu.sh',
-    #                '%s/run-chain-gpu.sh' % work_dir)
-    # misc.copy_file('data/src/speech/kaldi-run-chain-gpu-wrapper.sh',
-    #                '%s/run-chain-gpu-wrapper.sh' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-cmd.sh', '%s/cmd.sh' % work_dir)
-    misc.render_template('data/src/speech/kaldi-path.sh.template',
-                         '%s/path.sh' % work_dir, kaldi_root=kaldi_root)
+    misc.copy_file('data/src/speech/kaldi-run-chain.sh',           '%s/run-chain.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-run-adapt-lm.sh',        '%s/run-adapt-lm.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-cmd.sh',                 '%s/cmd.sh' % work_dir)
+    misc.render_template('data/src/speech/kaldi-path.sh.template', '%s/path.sh' % work_dir, kaldi_root=kaldi_root)
     misc.mkdirs('%s/conf' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-mfcc.conf',
-                   '%s/conf/mfcc.conf' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-mfcc-hires.conf',
-                   '%s/conf/mfcc_hires.conf' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-online-cmvn.conf',
-                   '%s/conf/online_cmvn.conf' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-mfcc.conf',              '%s/conf/mfcc.conf' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-mfcc-hires.conf',        '%s/conf/mfcc_hires.conf' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-online-cmvn.conf',       '%s/conf/online_cmvn.conf' % work_dir)
     misc.mkdirs('%s/local' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-score.sh',
-                   '%s/local/score.sh' % work_dir)
+    misc.copy_file('data/src/speech/kaldi-score.sh',               '%s/local/score.sh' % work_dir)
     misc.mkdirs('%s/local/nnet3' % work_dir)
-    misc.copy_file('data/src/speech/kaldi-run-ivector-common.sh',
-                   '%s/local/nnet3/run_ivector_common.sh' % work_dir)
-
+    misc.copy_file('data/src/speech/kaldi-run-ivector-common.sh',  '%s/local/nnet3/run_ivector_common.sh' % work_dir)
 
 misc.init_app('speech_kaldi_export')
 
@@ -370,7 +332,6 @@ for audio_corpus in audio_corpora:
     transcripts = Transcripts(corpus_name=audio_corpus)
 
     ts_all_, ts_train_, ts_test_ = transcripts.split(limit=options.debug, add_all=add_all)
-
 
     ts_all.update(ts_all_)
     ts_train.update(ts_train_)

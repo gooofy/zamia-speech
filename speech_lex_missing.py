@@ -111,11 +111,11 @@ if options.wiktionaryfn:
             wiktionary.add(line.strip().lower())
     logging.info ('%d words loaded from wiktionary' % len(wiktionary))
 
-logging.info("loading lexicon...")
+logging.info("loading lexicon %s ..." % lex_name)
 lex = Lexicon(file_name=lex_name)
 logging.info("loading lexicon...done.")
 
-logging.info("loading transcripts...")
+logging.info("loading transcripts from %s ..." % corpus_name)
 transcripts = Transcripts(corpus_name=corpus_name)
 logging.info("loading transcripts...done.")
 

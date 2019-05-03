@@ -1,0 +1,11 @@
+#!/bin/bash
+
+W2L_ENV_ACTIVATE={{w2l_env_activate}}
+W2L_TRAIN={{w2l_train}}
+
+source ${W2L_ENV_ACTIVATE}
+
+mkdir -p models
+
+${W2L_TRAIN} train --flagsfile=config/conv_glu/train.cfg --logtostderr=1 --stderrthreshold=0 2>&1 | tee train.log
+

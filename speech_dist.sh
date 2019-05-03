@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -lt 2 ] ; then
-    echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
+    echo "usage: $0 [-c] <model> [kaldi <experiment>|sequitur|lm|voice <epoch>|w2l <experiment>]"
     exit 1
 fi
 
@@ -30,7 +30,7 @@ WHAT=$2
 if [ $WHAT = "kaldi" ] ; then
 
     if [ $# != 3 ] ; then
-        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sequitur|lm|voice <epoch>|w2l <experiment>]"
         exit 2
     fi
 
@@ -112,75 +112,17 @@ if [ $WHAT = "kaldi" ] ; then
 
 fi
 
-if [ $WHAT = "sphinx_cont" ] ; then
-
+if [ $WHAT = "lm" ] ; then
     #
-    # cont sphinx model
-    #
-
-    DISTDIR=data/dist/asr-models
-
-    AMNAME="cmusphinx-cont-${MODEL}-${REVISION}"
-    echo "$AMNAME ..."
-
-    mkdir -p "$DISTDIR/$AMNAME"
-    mkdir -p "$DISTDIR/$AMNAME/model_parameters"
-
-    cp -r data/dst/asr-models/cmusphinx_cont/${MODEL}/model_parameters/voxforge.cd_cont_* "$DISTDIR/$AMNAME/model_parameters"
-    cp -r data/dst/asr-models/cmusphinx_cont/${MODEL}/etc "$DISTDIR/$AMNAME"
-    cp    data/dst/asr-models/cmusphinx_cont/${MODEL}/voxforge.html "$DISTDIR/$AMNAME"
-    cp README.md "$DISTDIR/$AMNAME"
-    cp LICENSE   "$DISTDIR/$AMNAME"
-    cp AUTHORS   "$DISTDIR/$AMNAME"
-
-    pushd $DISTDIR
-    tar cfv "$AMNAME.tar" $AMNAME
-    xz -v -8 -T 12 "$AMNAME.tar"
-    popd
-
-    rm -r "$DISTDIR/$AMNAME"
-fi
-
-if [ $WHAT = "sphinx_ptm" ] ; then
-
-    #
-    # ptm sphinx model
-    #
-
-    DISTDIR=data/dist/asr-models
-
-    AMNAME="cmusphinx-ptm-${MODEL}-${REVISION}"
-    echo "$AMNAME ..."
-
-    mkdir -p "$DISTDIR/$AMNAME"
-    mkdir -p "$DISTDIR/$AMNAME/model_parameters"
-
-    cp -r data/dst/asr-models/cmusphinx_ptm/${MODEL}/model_parameters/voxforge.cd_ptm_5000 "$DISTDIR/$AMNAME/model_parameters"
-    cp -r data/dst/asr-models/cmusphinx_ptm/${MODEL}/etc "$DISTDIR/$AMNAME"
-    cp    data/dst/asr-models/cmusphinx_ptm/${MODEL}/voxforge.html "$DISTDIR/$AMNAME"
-    cp README.md "$DISTDIR/$AMNAME"
-    cp LICENSE   "$DISTDIR/$AMNAME"
-    cp AUTHORS   "$DISTDIR/$AMNAME"
-
-    pushd $DISTDIR
-    tar cfv "$AMNAME.tar" $AMNAME
-    xz -v -8 -T 12 "$AMNAME.tar"
-    popd
-
-    rm -r "$DISTDIR/$AMNAME"
-fi
-
-if [ $WHAT = "srilm" ] ; then
-    #
-    # srilm
+    # KenLM
     #
 
     DISTDIR=data/dist/lm
 
-    LMNAME="srilm-${MODEL}-${REVISION}.arpa"
+    LMNAME="${MODEL}-${REVISION}.arpa"
     echo "$LMNAME ..."
     cp data/dst/lm/${MODEL}/lm.arpa ${DISTDIR}/$LMNAME
-    gzip ${DISTDIR}/$LMNAME
+    xz -9 -v ${DISTDIR}/$LMNAME
 fi
 
 if [ $WHAT = "sequitur" ] ; then
@@ -199,7 +141,7 @@ fi
 if [ $WHAT = "voice" ] ; then
 
     if [ $# != 3 ] ; then
-        echo "usage: $0 [-c] <model> [kaldi <experiment>|sphinx_cont|sphinx_ptm|sequitur|srilm|voice <epoch>]"
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sequitur|lm|voice <epoch>]"
         exit 2
     fi
 
@@ -229,6 +171,45 @@ if [ $WHAT = "voice" ] ; then
 
 fi
 
+if [ $WHAT = "w2l" ] ; then
+
+    if [ $# != 3 ] ; then
+        echo "usage: $0 [-c] <model> [kaldi <experiment>|sequitur|lm|voice <epoch>|w2l <experiment>]"
+        exit 2
+    fi
+
+    DISTDIR=data/dist/asr-models
+    EXPNAME=$3
+
+    AMNAME="w2l-${MODEL}-${REVISION}"
+
+    SRCDIR="data/dst/asr-models/wav2letter/${MODEL}"
+
+    echo "$AMNAME ..."
+
+    rm -rf "$DISTDIR/$AMNAME"
+    mkdir -p "$DISTDIR/$AMNAME"
+
+    lastone=`ls -t ${SRCDIR}/models/${EXPNAME}/*last.bin | head -n 1`
+    echo $lastone
+
+    cp ${lastone}                                      $DISTDIR/$AMNAME/model.bin
+    cp ${SRCDIR}/data/tokens.txt                       $DISTDIR/$AMNAME/
+    cp ${SRCDIR}/data/lexicon.txt                      $DISTDIR/$AMNAME/
+
+    cp README.md "$DISTDIR/$AMNAME"
+    cp LICENSE   "$DISTDIR/$AMNAME"
+    cp AUTHORS   "$DISTDIR/$AMNAME"
+
+    pushd $DISTDIR
+    rm -f "$AMNAME.tar" "$AMNAME.tar.xz"
+    tar cfv "$AMNAME.tar" $AMNAME
+    xz -v -8 -T 12 "$AMNAME.tar"
+    popd
+
+    rm -r "$DISTDIR/$AMNAME"
+
+fi
 #
 # copyright info
 #

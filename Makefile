@@ -7,11 +7,6 @@ kaldi:
 	./speech_kaldi_export.py
 	pushd data/dst/speech/de/kaldi && ./run.sh && popd
 
-sphinx:
-	rm -rf data/dst/speech/de/cmusphinx
-	./speech_sphinx_export.py 
-	pushd data/dst/speech/de/cmusphinx && ./sphinx-run.sh && popd
-	
 sequitur:
 	rm -rf data/dst/speech/de/sequitur/
 	./speech_sequitur_export.py

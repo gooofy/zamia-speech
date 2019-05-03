@@ -3,10 +3,10 @@
 Python scripts to compute audio and language models from voxforge.org speech data and many sources.
 Models that can be built include:
 
-* CMU Sphinx continous and PTM audio models
 * Kaldi nnet3 chain audio models
-* srilm language model
-* sequitur g2p model
+* KenLM language models in ARPA format
+* sequitur g2p models
+* wav2letter++ models
 
 *Important*: Please note that these scripts form in no way a complete application ready for end-user consumption.
 However, if you are a developer interested in natural language processing you may find some of them useful.
@@ -56,8 +56,7 @@ Table of Contents
   * [English NNet3 Chain Models](#english-nnet3-chain-models)
   * [German NNet3 Chain Models](#german-nnet3-chain-models)
   * [Model Adaptation](#model-adaptation)
-* [CMU Sphinx Models](#cmu-sphinx-models)
-  * [Running pocketsphinx](#running-pocketsphinx)
+* [wav2letter\+\+ models](#wav2letter-models)
 * [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
   * [(0/3) Convert Audio to WAVE Format](#03-convert-audio-to-wave-format)
   * [(1/3) Convert Audio to 16kHz mono](#13-convert-audio-to-16khz-mono)
@@ -104,25 +103,17 @@ Our pre-built ASR models can be downloaded here: [ASR Models](http://goofy.zamia
     + `kaldi-generic-en-tri2b_chain`
       GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
 + Kaldi ASR, German:
-    + `kaldi-generic-de-tdnn_sp`
-      Large nnet3-chain model, trained on ~260 hours of audio. Has decent background noise resistance and can
+    + `kaldi-generic-de-tdnn_f`
+      Large nnet3-chain model, trained on ~400 hours of audio. Has decent background noise resistance and can
       also be used on phone recordings.
     + `kaldi-generic-de-tdnn_250`
       Same as the large model but less resource intensive, suitable for use in embedded applications (e.g. a RaspberryPi 3).
     + `kaldi-generic-de-tri2b_chain`
       GMM Model, trained on the same data as the above two models - meant for auto segmentation tasks.
-+ CMU Sphinx, English:
-    + `cmusphinx-cont-generic-en`
-      Large model, trained on ~800 hours of audio. Has decent background noise resistance and can
++ wav2letter++, German:
+    + `w2l-generic-de`
+      Large model, trained on ~400 hours of audio. Has decent background noise resistance and can
       also be used on phone recordings.
-    + `cmusphinx-ptm-generic-en`
-      Same as the large model but less resource intensive, suitable for use in embedded applications.
-+ CMU Sphinx, German:
-    + `cmusphinx-ptm-generic-de`
-      Large model, trained on ~260 hours of audio. Has decent background noise resistance and can
-      also be used on phone recordings.
-    + `cmusphinx-cont-generic-de`
-      Same as the large model but less resource intensive, suitable for use in embedded applications.
 
 *NOTE*: It is important to realize that these models can and should be adapted to your application domain. See 
         [Model Adaptation](#model-adaptation) for details.
@@ -156,10 +147,14 @@ Language Models
 
 Our pre-built ARPA language models can be downloaded here: [Language Models](http://goofy.zamia.org/zamia-speech/lm/)
 
-+ SRILM, English, ARPA:
-    + `srilm-generic_en_lang_model`
-+ SRILM, German, ARPA:
-    + `srilm-generic_de_lang_model`
++ KenLM, order 4, English, ARPA:
+    + `generic_en_lang_model_small`
++ KenLM, order 6, English, ARPA:
+    + `generic_en_lang_model_large`
++ KenLM, order 4, German, ARPA:
+    + `generic_de_lang_model_small`
++ KenLM, order 6, German, ARPA:
+    + `generic_de_lang_model_large`
 
 Code
 ----
@@ -373,35 +368,11 @@ Requirements
 *Note*: probably incomplete.
 
 * Python 2.7 with nltk, numpy, ...
-* CMU Sphinx
-* srilm
+* KenLM
 * kaldi
+* wav2letter++
 * py-nltools
 * sox
-
-To set up a Conda environment named `gooofy-speech` with all Python
-dependencies installed, run
-
-    $ conda env create -f environment.yml
-
-To activate the environment, run
-
-    $ source activate gooofy-speech
-
-To deactivate the environment, run
-
-    $ source deactivate
-
-*Note*: The Conda environment was created on a Linux machine, so maybe it won't
-work on other machines.
-
-While the environment is activated, you may want to install additional packages
-with `conda install` or `pip install`. After doing so, update `environment.yml`
-with
-
-    $ ./update_conda_env.sh
-
-Afterwards you can commit the changes to the repository.
 
 Setup Notes
 ===========
@@ -420,7 +391,6 @@ speech_arc            = /home/bofh/projects/ai/data/speech/arc
 speech_corpora        = /home/bofh/projects/ai/data/speech/corpora
 
 kaldi_root            = /apps/kaldi-cuda
-srilm_root            = /apps/kaldi-cuda/tools/srilm
 
 wav16                 = /home/bofh/projects/ai/data/speech/16kHz
 noise_dir             = /home/bofh/projects/ai/data/speech/corpora/noise
@@ -465,7 +435,7 @@ The following list contains speech corpora supported by this script collection.
 - [German Speechdata Package Version 2 (German, 148 hours)](http://www.repository.voxforge1.org/downloads/de/german-speechdata-package-v2.tar.gz):
     + Unpack the archive such that the directories `dev`, `test`, and `train` are
       direct subdirectories of `<~/.speechrc:speech_arc>/gspv2`. 
-    + Then run run the script `./gspv2_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_gspv2.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/gspv2`. 
 
 - [Noise](http://goofy.zamia.org/zamia-speech/corpora/noise.tar.xz):
@@ -476,28 +446,28 @@ The following list contains speech corpora supported by this script collection.
     + Download the set of 360 hours "clean" speech tarball
     + Unpack the archive such that the directory `LibriSpeech` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
-    + Then run run the script `./librispeech_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_librispeech.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/librispeech`. 
 
 - [The LJ Speech Dataset (English, 24 hours)](https://keithito.com/LJ-Speech-Dataset/):
     + Download the tarball
     + Unpack the archive such that the directory `LJSpeech-1.1` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
-    + Then run run the script `ljspeech_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `import_ljspeech.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/lindajohnson-11`. 
 
 - [Mozilla Common Voice German (German, 140 hours)](https://voice.mozilla.org/en/datasets):
     + Download `de.tar.gz`
     + Unpack the archive such that the directory `cv_de` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
-    + Then run run the script `./mozde_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_mozde.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_de`. 
 
 - [Mozilla Common Voice V1 (English, 252 hours)](https://voice.mozilla.org/en/data):
     + Download `cv_corpus_v1.tar.gz`
     + Unpack the archive such that the directory `cv_corpus_v1` is a direct 
       subdirectory of `<~/.speechrc:speech_arc>`. 
-    + Then run run the script `./mozcv1_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_mozcv1.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_corpus_v1`. 
 
 - [Munich Artificial Intelligence Laboratories GmbH (M-AILABS) Speech Dataset (English, 147 hours, German, 237 hours, French, 190 hours)](http://www.m-ailabs.bayern/en/):
@@ -505,8 +475,15 @@ The following list contains speech corpora supported by this script collection.
     + Create a subdirectory `m_ailabs` in `<~/.speechrc:speech_arc>`
     + Unpack the downloaded tarbals inside the `m_ailabs` subdirectory
     + For French, create a directory `by_book` and move `male` and `female` directories in it as the archive does not follow exactly English and German structures
-    + Then run run the script `./mailabs_to_vf.py` to convert the corpus to the VoxForge
+    + Then run run the script `./import_mailabs.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/m_ailabs_en`, `<~/.speechrc:speech_corpora>/m_ailabs_de` and `<~/.speechrc:speech_corpora>/m_ailabs_fr`.
+
+- [TED-LIUM Release 3 (English, 210 hours)](https://www.openslr.org/51/):
+    + Download `TEDLIUM_release-3.tgz`
+    + Unpack the archive such that the directory `TEDLIUM_release-3` is a direct 
+      subdirectory of `<~/.speechrc:speech_arc>`. 
+    + Then run run the script `./import_tedlium3.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/tedlium3`. 
 
 - [VoxForge (English, 75 hours)](http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/voxforge_en` 
@@ -607,6 +584,7 @@ Sentences can also be extracted from our speech corpora. To do that, run:
     + `./speech_sentences.py cv_corpus_v1`
     + `./speech_sentences.py ljspeech`
     + `./speech_sentences.py m_ailabs_en`
+    + `./speech_sentences.py tedlium3`
 
 - German Speech Corpora
     + `./speech_sentences.py forschergeist`
@@ -624,14 +602,25 @@ English
 
 Prerequisites: 
 - text corpora `europarl_en`, `cornell_movie_dialogs`, `web_questions`, and `yahoo_answers` are installed, sentences extracted (see instructions above).
-- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`
+- sentences are extracted from speech corpora `librispeech`, `voxforge_en`, `zamia_en`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`, `tedlium3`
 
-To train an English language model using SRILM for use in both sphinx and kaldi builds run:
+To train a small, pruned English language model of order 4 using KenLM for use in both kaldi and wav2letter builds run:
 
 ```bash
-./speech_build_lm.py generic_en_lang_model europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en
+./speech_build_lm.py generic_en_lang_model_small europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
 ```
 
+to train a larger model of order 6 with less pruning:
+
+```bash
+./speech_build_lm.py -o 6 -p "0 0 0 0 1" generic_en_lang_model_large europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
+```
+
+to train a medium size model of order 5:
+
+```bash
+./speech_build_lm.py -o 5 -p "0 0 1 2" generic_en_lang_model_medium europarl_en cornell_movie_dialogs web_questions yahoo_answers librispeech voxforge_en zamia_en cv_corpus_v1 ljspeech m_ailabs_en tedlium3
+```
 German
 ------
 
@@ -639,10 +628,21 @@ Prerequisites:
 - text corpora `europarl_de` and `parole_de` are installed, sentences extracted (see instructions above).
 - sentences are extracted from speech corpora `forschergeist`, `gspv2`, `voxforge_de`, `zamia_de`, `m_ailabs_de`, `cv_de`
 
-To train a German language model using SRILM for use in both sphinx and kaldi builds run:
+To train a small, pruned German language model of order 4 using KenLM for use in both kaldi and wav2letter builds run:
 
 ```bash
-./speech_build_lm.py generic_de_lang_model europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
+./speech_build_lm.py generic_de_lang_model_small europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
+```
+to train a larger model of order 6 with less pruning:
+
+```bash
+./speech_build_lm.py -o 6 -p "0 0 0 0 1" generic_de_lang_model_large europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
+```
+
+to train a medium size model of order 5:
+
+```bash
+./speech_build_lm.py -o 5 -p "0 0 1 2" generic_de_lang_model_medium europarl_de parole_de forschergeist gspv2 voxforge_de zamia_de m_ailabs_de cv_de
 ```
 
 French
@@ -779,21 +779,20 @@ The following recipe trains Kaldi models for English.
 
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
-- language model `generic_en_lang_model` built
-- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en` and `zamia_en` are installed, converted and scanned.
+- language model `generic_en_lang_model_small` built
+- some or all speech corpora of `voxforge_en`, `librispeech`, `cv_corpus_v1`, `ljspeech`, `m_ailabs_en`, `tedlium3` and `zamia_en` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_en_noisy`, `voxforge_en_phone`, `librispeech_en_noisy`, `librispeech_en_phone`, `cv_corpus_v1_noisy`, `cv_corpus_v1_phone`, `zamia_en_noisy` and `zamia_en_phone`
 
 ```bash
-./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en 
+./speech_kaldi_export.py generic-en-small dict-en.ipa generic_en_lang_model_small voxforge_en librispeech zamia_en 
 cd data/dst/asr-models/kaldi/generic-en-small
-./run-lm.sh
 ./run-chain.sh
 ```
 
-complete export run with noise augmented corpora included:
+export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+./speech_kaldi_export.py generic-en dict-en.ipa generic_en_lang_model_small voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en tedlium3 zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
 ```
 
 German NNet3 Chain Models
@@ -803,21 +802,20 @@ The following recipe trains Kaldi models for German.
 
 Before running it, make sure all prerequisites are met (see above for instructions on these):
 
-- language model `generic_de_lang_model` built
+- language model `generic_de_lang_model_small` built
 - some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist`, `zamia_de`, `m_ailabs_de`, `cv_de` are installed, converted and scanned.
 - optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
 
 ```bash
-./speech_kaldi_export.py generic-de-small dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
+./speech_kaldi_export.py generic-de-small dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 [ forschergeist zamia_de ...]
 cd data/dst/asr-models/kaldi/generic-de-small
-./run-lm.sh
 ./run-chain.sh
 ```
 
-complete export run with noise augmented corpora included:
+export run with noise augmented corpora included:
 
 ```bash
-./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
+./speech_kaldi_export.py generic-de dict-de.ipa generic_de_lang_model_small voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
 ```
 
 Model Adaptation
@@ -884,100 +882,47 @@ cd ../../../../..
 ```
 
 
-CMU Sphinx Models
-=================
+wav2letter++ models
+===================
 
-The following recipe trains a continuous CMU Sphinx model for German. 
-
-Before running it, make sure all prerequisites are met (see above for instructions on these):
-
-- language model `generic_de_lang_model` built
-- some or all speech corpora of `voxforge_de`, `gspv2`, `forschergeist` and `zamia_de` are installed, converted and scanned.
-- optionally noise augmented corpora: `voxforge_de_noisy`, `voxforge_de_phone`, `zamia_de_noisy` and `zamia_de_phone`
+English Wav2letter Models
+-------------------------
 
 ```bash
-./speech_sphinx_export.py generic-de2 dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
-cd data/dst/asr-models/cmusphinx_cont/generic-de
-./sphinx-run.sh
+./wav2letter_export.py -l en -v generic-en dict-en.ipa generic_en_lang_model_large voxforge_en cv_corpus_v1 librispeech ljspeech m_ailabs_en tedlium3 zamia_en voxforge_en_noisy librispeech_noisy cv_corpus_v1_noisy cv_corpus_v1_phone zamia_en_noisy voxforge_en_phone librispeech_phone zamia_en_phone
+pushd data/dst/asr-models/wav2letter/generic-en/
+bash run_train.sh
 ```
 
-complete export run (without noise augmented corpora):
+German Wav2letter Models
+------------------------
 
 ```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 forschergeist zamia_de m_ailabs_de
+./wav2letter_export.py -l de -v generic-de dict-de.ipa generic_de_lang_model_large voxforge_de gspv2 forschergeist zamia_de voxforge_de_noisy voxforge_de_phone zamia_de_noisy zamia_de_phone m_ailabs_de cv_de
+pushd data/dst/asr-models/wav2letter/generic-de/
+bash run_train.sh
 ```
 
-complete export run with noise augmented corpora included for an English model:
+auto-reviews using wav2letter
+-----------------------------
+
+create auto-review case:
 
 ```bash
-./speech_sphinx_export.py -l en generic-en dict-en.ipa generic_en_lang_model voxforge_en librispeech zamia_en cv_corpus_v1 ljspeech m_ailabs_en 
+./wav2letter_auto_review.py -l de w2l-generic-de-latest gspv2
 ```
 
-For resource constrained applications, PTM models can be trained:
-
+run it:
 ```bash
-./speech_sphinx_export.py generic-de dict-de.ipa generic_de_lang_model voxforge_de gspv2 [ forschergeist zamia_de ...]
-cd data/dst/asr-models/cmusphinx_ptm/generic-de
-./sphinx-run.sh
+pushd tmp/w2letter_auto_review
+bash run_auto_review.sh
+popd
 ```
 
-
-Running pocketsphinx
---------------------
-
-*IMPORTANT*: In order to use our pre-built models you have to use up-to-date CMU Sphinx. Unfortunately, at the time
-             of this writing even the latest "5prealpha" release is outdated. Until the CMU Sphinx project has a new release,
-             we highly recommend to check out and build it yourself from their github repository.
-
-Here are some sample invocations for pocketsphinx which should help get you started using our models:
-
+apply the results:
 ```bash
-pocketsphinx_continuous -lw 10 -fwdflatlw 10 -bestpathlw 10 -beam 1e-80 \
-                        -wbeam 1e-40 -fwdflatbeam 1e-80 -fwdflatwbeam 1e-40 \
-                        -pbeam 1e-80 -lpbeam 1e-80 -lponlybeam 1e-80 \
-                        -wip 0.2 -agc none -varnorm no -cmn current \
-                        -lowerf 130 -upperf 6800 -nfilt  25 \
-                        -transform dct -lifter 22 -ncep   13 \
-                        -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_8000 \
-                        -dict ${MODELDIR}/etc/voxforge.dic \
-                        -lm ${MODELDIR}/etc/voxforge.lm.bin \
-                        -infile $WAVFILE 
-
-
-sphinx_fe -c fileids -di wav -do mfcc \
-          -part 1 -npart 1 -ei wav -eo mfc -nist no -raw no -mswav yes \
-          -samprate 16000 -lowerf 130 -upperf 6800 -nfilt 25 -transform dct -lifter 22
-
-pocketsphinx_batch -hmm ${MODELDIR}/model_parameters/voxforge.cd_cont_8000 \
-                   -feat 1s_c_d_dd \
-                   -ceplen 13 \
-                   -ncep 13 \
-                   -lw 10 \
-                   -fwdflatlw 10 \
-                   -bestpathlw 10 \
-                   -beam 1e-80 \
-                   -wbeam 1e-40 \
-                   -fwdflatbeam 1e-80 \
-                   -fwdflatwbeam 1e-40 \
-                   -pbeam 1e-80 \
-                   -lpbeam 1e-80 \
-                   -lponlybeam 1e-80 \
-                   -dict ${MODELDIR}/etc/voxforge.dic \
-                   -wip 0.2 \
-                   -ctl fileids \
-                   -cepdir ./mfcc \
-                   -cepext .mfc \
-                   -hyp test_batch.match \
-                   -logfn test_batch.log \
-                   -agc none -varnorm no -cmn current -lm ${MODELDIR}/etc/voxforge.lm.bin
+./wav2letter_apply_review.py
 ```
-
-You can download a complete tarball with example scripts and WAV files here:
-
-http://goofy.zamia.org/voxforge/misc/sphinx-example.tgz
-
-*NOTE*: According to https://github.com/cmusphinx/pocketsphinx/issues/116 
-        pocketsphinx\_continuous will have worse results compared to pocketsphinx\_batch using the same model and parameters.
 
 
 Audiobook Segmentation and Transcription (Manual)
@@ -1192,4 +1137,5 @@ Authors
 
 * Guenter Bartsch <guenter@zamia.org>
 * Marc Puels <marc@zamia.org>
+* Paul Guyot <pguyot@kallisys.net>
 
