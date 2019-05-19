@@ -31,6 +31,7 @@ Table of Contents
 * [Get Started with our Pre\-Trained Models](#get-started-with-our-pre-trained-models)
   * [Installation](#installation)
     * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
+    * [Raspberry Pi Zero](#raspberry-pi-zero)
     * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
     * [CentOS 7 (amd64)](#centos-7-amd64)
   * [Run Example Applications](#run-example-applications)
@@ -47,6 +48,7 @@ Table of Contents
 * [Language Model](#language-model)
   * [English](#english)
   * [German](#german)
+  * [French](#french)
 * [Submission Review and Transcription](#submission-review-and-transcription)
 * [Lexica/Dictionaries](#lexicadictionaries)
   * [Sequitur G2P](#sequitur-g2p)
@@ -57,6 +59,9 @@ Table of Contents
   * [German NNet3 Chain Models](#german-nnet3-chain-models)
   * [Model Adaptation](#model-adaptation)
 * [wav2letter\+\+ models](#wav2letter-models)
+  * [English Wav2letter Models](#english-wav2letter-models)
+  * [German Wav2letter Models](#german-wav2letter-models)
+  * [auto\-reviews using wav2letter](#auto-reviews-using-wav2letter)
 * [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
   * [(0/3) Convert Audio to WAVE Format](#03-convert-audio-to-wave-format)
   * [(1/3) Convert Audio to 16kHz mono](#13-convert-audio-to-16khz-mono)
@@ -193,6 +198,13 @@ wget -qO - http://goofy.zamia.org/repo-ai/raspbian/stretch/armhf/bofh.asc | sudo
 apt-get update
 apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
 ```
+
+### Raspberry Pi Zero
+
+Paul Guyot has built kaldi for the rpi zero along with our python wrappers:
+
+https://github.com/pguyot/kaldi/releases
+https://github.com/pguyot/py-kaldi-asr/releases/tag/v0.5.2
 
 ### Debian 9 (stretch, amd64)
 
