@@ -201,6 +201,7 @@ Setup apt-source and install packages:
 ```bash
 # execute with root permissions (sudo -i):
 
+apt-get install apt-transport-https
 echo "deb http://goofy.zamia.org/repo-ai/debian/stretch/amd64/ ./" >/etc/apt/sources.list.d/zamia-ai.list
 wget -qO - http://goofy.zamia.org/repo-ai/debian/stretch/amd64/bofh.asc | sudo apt-key add -
 apt-get update
