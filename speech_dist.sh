@@ -58,6 +58,8 @@ if [ $WHAT = "kaldi" ] ; then
     cp $EXPDIR/$EXPNAME/splice_opts                             $DISTDIR/$AMNAME/model/ 2>/dev/null
     cp $EXPDIR/$EXPNAME/cmvn_opts                               $DISTDIR/$AMNAME/model/ 2>/dev/null 
     cp $EXPDIR/$EXPNAME/tree                                    $DISTDIR/$AMNAME/model/ 2>/dev/null 
+    cp $EXPDIR/$EXPNAME/den.fst                                 $DISTDIR/$AMNAME/model/ 2>/dev/null 
+    cp $EXPDIR/$EXPNAME/normalization.fst                       $DISTDIR/$AMNAME/model/ 2>/dev/null 
 
     mkdir -p "$DISTDIR/$AMNAME/model/graph"
 
