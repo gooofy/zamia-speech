@@ -1110,7 +1110,7 @@ Finally, we can retrieve the segmentation result in voxforge format:
 Training Voices for Zamia-TTS
 =============================
 
-Zamia-TTS is an experimental project that tries to train TTS voices based on (reviewed) Zamia-Speech data. Downloads hereL
+Zamia-TTS is an experimental project that tries to train TTS voices based on (reviewed) Zamia-Speech data. Downloads here:
 
 https://goofy.zamia.org/zamia-speech/tts/
 
