@@ -20,65 +20,65 @@ contribute support for those.
 Table of Contents
 =================
 
-* [Zamia Speech](#zamia-speech)
-* [Table of Contents](#table-of-contents)
-* [Download](#download)
-  * [ASR Models](#asr-models)
-  * [IPA Dictionaries (Lexicons)](#ipa-dictionaries-lexicons)
-  * [G2P Models](#g2p-models)
-  * [Language Models](#language-models)
-  * [Code](#code)
-* [Get Started with our Pre\-Trained Models](#get-started-with-our-pre-trained-models)
-  * [Installation](#installation)
-    * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
-    * [Raspberry Pi Zero](#raspberry-pi-zero)
-    * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
-    * [CentOS 7 (amd64)](#centos-7-amd64)
-  * [Run Example Applications](#run-example-applications)
-    * [Wave File Decoding Demo](#wave-file-decoding-demo)
-    * [Live Mic Demo](#live-mic-demo)
-* [Get Started with a Demo STT Service Packaged in Docker](#get-started-with-a-demo-stt-service-packaged-in-docker)
-* [Requirements](#requirements)
-* [Setup Notes](#setup-notes)
-  * [~/\.speechrc](#speechrc)
-  * [tmp directory](#tmp-directory)
-* [Speech Corpora](#speech-corpora)
-  * [Adding Artificial Noise or Other Effects](#adding-artificial-noise-or-other-effects)
-* [Text Corpora](#text-corpora)
-* [Language Model](#language-model)
-  * [English](#english)
-  * [German](#german)
-  * [French](#french)
-* [Submission Review and Transcription](#submission-review-and-transcription)
-* [Lexica/Dictionaries](#lexicadictionaries)
-  * [Sequitur G2P](#sequitur-g2p)
-  * [Manual Editing](#manual-editing)
-  * [Wiktionary](#wiktionary)
-* [Kaldi Models (recommended)](#kaldi-models-recommended)
-  * [English NNet3 Chain Models](#english-nnet3-chain-models)
-  * [German NNet3 Chain Models](#german-nnet3-chain-models)
-  * [Model Adaptation](#model-adaptation)
-* [wav2letter\+\+ models](#wav2letter-models)
-  * [English Wav2letter Models](#english-wav2letter-models)
-  * [German Wav2letter Models](#german-wav2letter-models)
-  * [auto\-reviews using wav2letter](#auto-reviews-using-wav2letter)
-* [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
-  * [(0/3) Convert Audio to WAVE Format](#03-convert-audio-to-wave-format)
-  * [(1/3) Convert Audio to 16kHz mono](#13-convert-audio-to-16khz-mono)
-  * [(2/3) Split Audio into Segments](#23-split-audio-into-segments)
-  * [(3/3) Transcribe Audio](#33-transcribe-audio)
-* [Audiobook Segmentation and Transcription (kaldi)](#audiobook-segmentation-and-transcription-kaldi)
-  * [Directory Layout](#directory-layout)
-  * [(1/4) Preprocess the Transcript](#14-preprocess-the-transcript)
-  * [(2/4) Model adaptation](#24-model-adaptation)
-  * [(3/4) Auto\-Segment using Kaldi](#34-auto-segment-using-kaldi)
-  * [(4/4) Retrieve Segmentation Result](#44-retrieve-segmentation-result)
-* [Training Voices for Zamia\-TTS](#training-voices-for-zamia-tts)
-  * [(1/2) Prepare a Training Data Set](#12-prepare-a-training-data-set)
-  * [(2/2) Run the Training](#22-run-the-training)
-* [Model Distribution](#model-distribution)
-* [License](#license)
-* [Authors](#authors)
+   * [Zamia Speech](#zamia-speech)
+   * [Table of Contents](#table-of-contents)
+   * [Download](#download)
+      * [ASR Models](#asr-models)
+      * [IPA Dictionaries (Lexicons)](#ipa-dictionaries-lexicons)
+      * [G2P Models](#g2p-models)
+      * [Language Models](#language-models)
+      * [Code](#code)
+   * [Get Started with our Pre-Trained Models](#get-started-with-our-pre-trained-models)
+      * [Installation](#installation)
+         * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
+         * [Raspberry Pi Zero](#raspberry-pi-zero)
+         * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
+         * [CentOS 7 (amd64)](#centos-7-amd64)
+      * [Run Example Applications](#run-example-applications)
+         * [Wave File Decoding Demo](#wave-file-decoding-demo)
+         * [Live Mic Demo](#live-mic-demo)
+   * [Get Started with a Demo STT Service Packaged in Docker](#get-started-with-a-demo-stt-service-packaged-in-docker)
+   * [Requirements](#requirements)
+   * [Setup Notes](#setup-notes)
+      * [~/.speechrc](#speechrc)
+      * [tmp directory](#tmp-directory)
+   * [Speech Corpora](#speech-corpora)
+      * [Adding Artificial Noise or Other Effects](#adding-artificial-noise-or-other-effects)
+   * [Text Corpora](#text-corpora)
+   * [Language Model](#language-model)
+      * [English](#english)
+      * [German](#german)
+      * [French](#french)
+   * [Submission Review and Transcription](#submission-review-and-transcription)
+   * [Lexica/Dictionaries](#lexicadictionaries)
+      * [Sequitur G2P](#sequitur-g2p)
+      * [Manual Editing](#manual-editing)
+      * [Wiktionary](#wiktionary)
+   * [Kaldi Models (recommended)](#kaldi-models-recommended)
+      * [English NNet3 Chain Models](#english-nnet3-chain-models)
+      * [German NNet3 Chain Models](#german-nnet3-chain-models)
+      * [Model Adaptation](#model-adaptation)
+   * [wav2letter   models](#wav2letter-models)
+      * [English Wav2letter Models](#english-wav2letter-models)
+      * [German Wav2letter Models](#german-wav2letter-models)
+      * [auto-reviews using wav2letter](#auto-reviews-using-wav2letter)
+   * [Audiobook Segmentation and Transcription (Manual)](#audiobook-segmentation-and-transcription-manual)
+      * [(0/3) Convert Audio to WAVE Format](#03-convert-audio-to-wave-format)
+      * [(1/3) Convert Audio to 16kHz mono](#13-convert-audio-to-16khz-mono)
+      * [(2/3) Split Audio into Segments](#23-split-audio-into-segments)
+      * [(3/3) Transcribe Audio](#33-transcribe-audio)
+   * [Audiobook Segmentation and Transcription (kaldi)](#audiobook-segmentation-and-transcription-kaldi)
+      * [Directory Layout](#directory-layout)
+      * [(1/4) Preprocess the Transcript](#14-preprocess-the-transcript)
+      * [(2/4) Model adaptation](#24-model-adaptation)
+      * [(3/4) Auto-Segment using Kaldi](#34-auto-segment-using-kaldi)
+      * [(4/4) Retrieve Segmentation Result](#44-retrieve-segmentation-result)
+   * [Training Voices for Zamia-TTS](#training-voices-for-zamia-tts)
+      * [Tacotron 2](#tacotron-2)
+      * [Tacotron](#tacotron)
+   * [Model Distribution](#model-distribution)
+   * [License](#license)
+   * [Authors](#authors)
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
@@ -1110,15 +1110,81 @@ Finally, we can retrieve the segmentation result in voxforge format:
 Training Voices for Zamia-TTS
 =============================
 
-(1/2) Prepare a Training Data Set
----------------------------------
+Tacotron 2
+----------
+
+This section describes how to train voices for [NVIDIA's Tacotron 2 implementation](https://github.com/NVIDIA/tacotron2). 
+The resulting voices will have a sample rate of 16kHz as that is the default
+sample rate used for Zamia Speech ASR model training. This means that you will have to use a 16kHz waveglow model which you can find, along with pretrained voices and sample wavs here:
+
+https://goofy.zamia.org/zamia-speech/tts/tacotron2/
+
+now with that out of the way, Tacotron 2 model training is pretty straightforward. First step is to export filelists for the voice you'd like to train, e.g.:
+
+```bash
+./speech_tacotron2_export.py -l en -o ../torch/tacotron2/filelists m_ailabs_en mailabselliotmiller
+```
+next, change into your Tacotron 2 training directory
+
+```bash
+cd ../torch/tacotron2
+```
+
+and specify file lists, sampling rate and batch size in ''hparams.py'':
+
+```
+diff --git a/hparams.py b/hparams.py
+index 8886f18..75e89c9 100644
+--- a/hparams.py
++++ b/hparams.py
+@@ -25,15 +25,19 @@ def create_hparams(hparams_string=None, verbose=False):
+         # Data Parameters             #
+         ################################
+         load_mel_from_disk=False,
+-        training_files='filelists/ljs_audio_text_train_filelist.txt',
+-        validation_files='filelists/ljs_audio_text_val_filelist.txt',
+-        text_cleaners=['english_cleaners'],
++        training_files='filelists/mailabselliotmiller_train_filelist.txt',
++        validation_files='filelists/mailabselliotmiller_val_filelist.txt',
++        text_cleaners=['basic_cleaners'],
+ 
+         ################################
+         # Audio Parameters             #
+         ################################
+         max_wav_value=32768.0,
+-        sampling_rate=22050,
++        #sampling_rate=22050,
++        sampling_rate=16000,
+         filter_length=1024,
+         hop_length=256,
+         win_length=1024,
+@@ -81,7 +85,8 @@ def create_hparams(hparams_string=None, verbose=False):
+         learning_rate=1e-3,
+         weight_decay=1e-6,
+         grad_clip_thresh=1.0,
+-        batch_size=64,
++        # batch_size=64,
++        batch_size=16,
+         mask_padding=True  # set model's padded outputs to padded values
+     )
+```
+
+and start the training:
+
+```bash
+python train.py --output_directory=elliot --log_directory=elliot/logs
+```
+
+Tacotron
+--------
+
+* (1/2) Prepare a training data set
 
 ```bash
 ./ztts_prepare.py -l en m_ailabs_en mailabselliotmiller elliot
 ```
 
-(2/2) Run the Training
-----------------------
+* (2/2) Run the training
 
 ```bash
 ./ztts_train.py -v elliot 2>&1 | tee train_elliot.log
