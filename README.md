@@ -405,6 +405,11 @@ speech_corpora        = /home/bofh/projects/ai/data/speech/corpora
 
 kaldi_root            = /apps/kaldi-cuda
 
+; facebook's wav2letter++
+w2l_env_activate      = /home/bofh/projects/ai/w2l/bin/activate
+w2l_train             = /home/bofh/projects/ai/w2l/src/wav2letter/build/Train
+w2l_decoder           = /home/bofh/projects/ai/w2l/src/wav2letter/build/Decoder
+
 wav16                 = /home/bofh/projects/ai/data/speech/16kHz
 noise_dir             = /home/bofh/projects/ai/data/speech/corpora/noise
 
