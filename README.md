@@ -446,6 +446,34 @@ Speech Corpora
 
 The following list contains speech corpora supported by this script collection.
 
+- [CFPP2000, Corpus de Français Parlé Parisien des années 2000 (French, 47 hours)](http://cfpp2000.univ-paris3.fr/Corpus.html):
+    + Download `.mp3` or `.wav` files as well as `.trs` files.
+    + Rename files so that each `.trs` file has the same basename of
+      corresponding `.wav` or `.mp3` file
+    + Put audio and transcription files in subdirectory `cfpp2000` of
+      `<~/.speechrc:speech_arc>`.
+    + Then run run the script `./import_trs.py cfpp2000` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cfpp2000`.
+
+- [CLAPI, Corpus de LAngue Parlée en Interaction (French, 7 hours)](http://clapi.ish-lyon.cnrs.fr/):
+    + Download `.wav` files as well as `.trs` files (favor "orthographe standard" trs files).
+      At least two trs files are bogus and should not be used
+      ("Boulangerie rurale C21-C41 orthographe standa -trs (trs)" and "Bureau CPE - bagarre -trs (trs)")
+    + Rename files so that each `.trs` file has the same basename of
+      corresponding `.wav` file
+    + Put audio and transcription files in subdirectory `clapi` of
+      `<~/.speechrc:speech_arc>`.
+    + Then run run the script `./import_trs.py clapi` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/clapi`.
+
+- [ESLO-MD, Enquêtes Socio-Linguistiques à Orléans : Corpus Micro-Diachronie (French, 70 hours)](http://eslo.huma-num.fr/):
+    + Download corpus from [ORTLOLANG](https://www.ortolang.fr/market/corpora/eslo-md)
+      Three audio files are missing (ESLO1\_ENT\_141, ESLO2\_DIA\_1221 and ESLO2\_ENT\_1029),
+      download them from the [main website](http://eslo.huma-num.fr/).
+    + Move `.wav`/`.mp4` and `.trs` files in a subdirectory `elso-md` of `<~/.speechrc:speech_arc>`.
+    + Then run run the script `./import_trs.py elso-md` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/elso-md`.
+
 - [Forschergeist (German, 2 hours)](http://goofy.zamia.org/zamia-speech/corpora/forschergeist/):
     + Download all .tgz files into the directory `<~/.speechrc:speech_arc>/forschergeist` 
     + unpack them into the directory `<~/.speechrc:speech_corpora>/forschergeist`
@@ -474,6 +502,13 @@ The following list contains speech corpora supported by this script collection.
     + Then run run the script `import_ljspeech.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/lindajohnson-11`. 
 
+- [Mozilla Common Voice French (French, 173 hours)](https://voice.mozilla.org/fr/datasets):
+    + Download `fr.tar.gz`
+    + Unpack the archive such that the directory `cv_fr` is a direct
+      subdirectory of `<~/.speechrc:speech_arc>`.
+    + Then run run the script `./import_mozfr.py` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cv_fr`.
+
 - [Mozilla Common Voice German (German, 140 hours)](https://voice.mozilla.org/en/datasets):
     + Download `de.tar.gz`
     + Unpack the archive such that the directory `cv_de` is a direct 
@@ -495,6 +530,12 @@ The following list contains speech corpora supported by this script collection.
     + For French, create a directory `by_book` and move `male` and `female` directories in it as the archive does not follow exactly English and German structures
     + Then run run the script `./import_mailabs.py` to convert the corpus to the VoxForge
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/m_ailabs_en`, `<~/.speechrc:speech_corpora>/m_ailabs_de` and `<~/.speechrc:speech_corpora>/m_ailabs_fr`.
+
+- [TCOF, Traitement de Corpus Oraux en Français (French, 99 hours)](https://www.cnrtl.fr/corpus/tcof/):
+    + Download corpus files (`.wav` and `.trs`).
+    + Place all directories in a subdirectory `tcof` of `<~/.speechrc:speech_arc>`.
+    + Then run run the script `./import_trs.py tcof` to convert the corpus to the VoxForge
+      format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/tcof`.
 
 - [TED-LIUM Release 3 (English, 210 hours)](https://www.openslr.org/51/):
     + Download `TEDLIUM_release-3.tgz`
@@ -536,6 +577,9 @@ Once you have downloaded and, if necessary, converted a corpus you need to run
 ```
 
 on it. This will add missing prompts to the CSV databases and convert audio files to 16kHz mono WAVE format.
+
+*Technical note*: Please review new entries added by this script to CSV databases or revert the files to only
+use entries we validated.
 
 Adding Artificial Noise or Other Effects
 ----------------------------------------

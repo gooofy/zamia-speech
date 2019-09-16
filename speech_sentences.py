@@ -71,12 +71,18 @@ TEXT_CORPORA = {
 }
 
 SPEECH_CORPORA = {
+    "cfpp2000":
+        lambda: proc_transcripts("cfpp2000"),
+    "clapi":
+        lambda: proc_transcripts("clapi"),
     "cv_corpus_v1":
         lambda: proc_transcripts("cv_corpus_v1"),
     "cv_de":
         lambda: proc_transcripts("cv_de"),
     "cv_fr":
         lambda: proc_transcripts("cv_fr"),
+    "eslo-md":
+        lambda: proc_transcripts("eslo-md"),
     "forschergeist":
         lambda: proc_transcripts("forschergeist"),
     "gspv2":
@@ -91,6 +97,8 @@ SPEECH_CORPORA = {
         lambda: proc_transcripts("m_ailabs_en"),
     "m_ailabs_fr":
         lambda: proc_transcripts("m_ailabs_fr"),
+    "tcof":
+        lambda: proc_transcripts("tcof"),
     "tedlium3":
         lambda: proc_transcripts("tedlium3"),
     "voxforge_de":
