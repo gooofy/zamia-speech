@@ -112,10 +112,11 @@ def extract_wav(recording, volume, wav, startTime, endTime):
     startTimeFormatted=seconds_to_ffmpeg_ts(startTimeF)
     durationFormatted=seconds_to_ffmpeg_ts(duration)
     cmd='ffmpeg -y -hide_banner -loglevel panic -i {recording} -ss {startTimeFormatted} -t {durationFormatted} -filter:a "volume={volume}dB" -ac 1 -ar 16k {wav}'.format(recording=recording, startTimeFormatted=startTimeFormatted, durationFormatted=durationFormatted, volume=volume, wav=wav)
+    logging.debug('{cmd}'.format(cmd=cmd))
     os.system(cmd)
 
 def find_recording(dir, root_filename):
-    for suffix in ['.wav', '.WAV', '.mp3', '-v2.wav', '-v2.mp3']:
+    for suffix in ['.wav', '.WAV', '.mp3', '.mp4', '-v2.wav', '-v2.mp3']:
         recording='{dir}/{root_filename}{suffix}'.format(dir=dir, root_filename=root_filename, suffix=suffix)
         if os.path.isfile(recording):
             return recording

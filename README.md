@@ -456,9 +456,10 @@ The following list contains speech corpora supported by this script collection.
       format. The resulting corpus will be written to `<~/.speechrc:speech_corpora>/cfpp2000`.
 
 - [CLAPI, Corpus de LAngue Parlée en Interaction (French, 7 hours)](http://clapi.ish-lyon.cnrs.fr/):
-    + Download `.wav` files as well as `.trs` files (favor "orthographe standard" trs files).
+    + Download `.mp4`/`.wav` files as well as `.trs` files (favor "orthographe standard" trs files).
       At least two trs files are bogus and should not be used
       ("Boulangerie rurale C21-C41 orthographe standa -trs (trs)" and "Bureau CPE - bagarre -trs (trs)")
+      At least three `.wav` files are corrupt, prefer `.mp4` videos.
     + Rename files so that each `.trs` file has the same basename of
       corresponding `.wav` file
     + Put audio and transcription files in subdirectory `clapi` of
