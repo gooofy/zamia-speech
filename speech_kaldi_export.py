@@ -113,16 +113,16 @@ def export_dictionary(ts_all, lex, dictfn2, prompt_words):
                 if token in utt_dict:
                     continue
 
-                if not token in lex.dictionary:
+                if not token in lex:
                     logging.error(
                         "*** ERROR: missing token in dictionary: '%s' (tsd=%s, tokens=%s)" % (
                         token, repr(tsd), repr(tokens)))
                     sys.exit(1)
 
-                utt_dict[token] = lex.dictionary[token]['ipa']
+                utt_dict[token] = lex.get_multi(token)
     else:
         for token in lex:
-            utt_dict[token] = lex.dictionary[token]['ipa']
+            utt_dict[token] = lex.get_multi(token)
 
     ps = {}
     with open(dictfn2, 'w') as dictf:
@@ -130,30 +130,30 @@ def export_dictionary(ts_all, lex, dictfn2, prompt_words):
         dictf.write('!SIL SIL\n')
 
         for token in sorted(utt_dict):
+            for form in utt_dict[token]:
+                ipa = utt_dict[token][form]['ipa']
+                xsr = ipa2xsampa(token, ipa, spaces=True)
 
-            ipa = utt_dict[token]
-            xsr = ipa2xsampa(token, ipa, spaces=True)
+                xs = (xsr.replace('-', '')
+                         .replace('\' ', '\'')
+                         .replace('  ', ' ')
+                         .replace('#', 'nC'))
 
-            xs = (xsr.replace('-', '')
-                     .replace('\' ', '\'')
-                     .replace('  ', ' ')
-                     .replace('#', 'nC'))
+                dictf.write((u'%s %s\n' % (token, xs)).encode('utf8'))
 
-            dictf.write((u'%s %s\n' % (token, xs)).encode('utf8'))
+                for p in xs.split(' '):
 
-            for p in xs.split(' '):
+                    if len(p) < 1:
+                        logging.error(
+                            u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s', token: '%s')" % (
+                            xs, xsr, ipa, token))
 
-                if len(p) < 1:
-                    logging.error(
-                        u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s', token: '%s')" % (
-                        xs, xsr, ipa, token))
+                    pws = p[1:] if p[0] == '\'' else p
 
-                pws = p[1:] if p[0] == '\'' else p
-
-                if not pws in ps:
-                    ps[pws] = {p}
-                else:
-                    ps[pws].add(p)
+                    if not pws in ps:
+                        ps[pws] = {p}
+                    else:
+                        ps[pws].add(p)
     logging.info("%s written." % dictfn2)
     logging.info("Exporting dictionary ... done.")
 

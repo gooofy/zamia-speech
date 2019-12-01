@@ -113,25 +113,26 @@ with open (dictfn2, 'w') as dictf:
     dictf.write('!SIL SIL\n')
 
     for token in sorted(lex):
+        multi = lex.get_multi(token)
+        for form in multi:
+            ipa = multi[form]['ipa']
+            xsr = ipa2xsampa (token, ipa, spaces=True)
 
-        ipa = lex[token]['ipa']
-        xsr = ipa2xsampa (token, ipa, spaces=True)
+            xs = xsr.replace('-','').replace('\' ', '\'').replace('  ', ' ').replace('#', 'nC')
 
-        xs = xsr.replace('-','').replace('\' ', '\'').replace('  ', ' ').replace('#', 'nC')
+            dictf.write((u'%s %s\n' % (token, xs)).encode('utf8'))
 
-        dictf.write((u'%s %s\n' % (token, xs)).encode('utf8'))
+            for p in xs.split(' '):
 
-        for p in xs.split(' '):
+                if len(p)<1:
+                    logging.error ( u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s', token: '%s')" % (xs, xsr, ipa, token) )
 
-            if len(p)<1:
-                logging.error ( u"****ERROR: empty phoneme in : '%s' ('%s', ipa: '%s', token: '%s')" % (xs, xsr, ipa, token) )
+                pws = p[1:] if p[0] == '\'' else p
 
-            pws = p[1:] if p[0] == '\'' else p
-
-            if not pws in ps:
-                ps[pws] = set([p])
-            else:
-                ps[pws].add(p)
+                if not pws in ps:
+                    ps[pws] = set([p])
+                else:
+                    ps[pws].add(p)
 
 logging.info ( "%s written." % dictfn2 )
 
