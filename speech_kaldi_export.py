@@ -32,7 +32,7 @@ from optparse               import OptionParser
 from nltools                import misc
 from nltools.tokenizer      import tokenize
 from nltools.phonetics      import ipa2xsampa
-from nltools.sequiturclient import sequitur_gen_ipa
+from nltools.sequiturclient import sequitur_gen_ipa_multi
 
 from speech_lexicon         import Lexicon
 from speech_transcripts     import Transcripts
@@ -82,13 +82,12 @@ def add_missing_words(transcripts, lex, sequitur_model_path):
             else:
                 missing[word] = 1
     cnt = 0
-    for item in reversed(sorted(missing.items(), key=lambda x: x[1])):
-        lex_base = item[0]
-
-        ipas = sequitur_gen_ipa(sequitur_model_path, lex_base)
-
+    missing_tokens = [ item[0] for item in reversed(sorted(missing.items(), key=lambda x: x[1])) ]
+    ipa_map = sequitur_gen_ipa_multi(sequitur_model_path, missing_tokens)
+    for lex_base in ipa_map:
+        ipas = ipa_map[lex_base]
         logging.info(u"%5d/%5d Adding missing word : %s [ %s ]" % (
-        cnt, len(missing), item[0], ipas))
+        cnt, len(missing), lex_base, ipas))
 
         lex_entry = {'ipa': ipas}
         lex[lex_base] = lex_entry
