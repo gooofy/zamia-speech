@@ -30,8 +30,10 @@ from htmlentitydefs import name2codepoint
 from nltools.misc import compress_ws
 from nltools.tokenizer import tokenize
 
+from pathlib2 import Path
+
 SENTENCES_STATS = 1000
-PUNKT_PICKLEFN  = 'data/dst/tokenizers/punkt-de.pickle'
+PUNKT_PICKLEFN  = Path('data/dst/tokenizers/punkt-de.pickle')
 
 class ParoleParser(HTMLParser):
 
@@ -155,7 +157,7 @@ class ApplyPunktWrapper:
 
 def load_punkt_tokenizer():
     try:
-        with open(PUNKT_PICKLEFN, mode='rb') as f:
+        with open(str(PUNKT_PICKLEFN), mode='rb') as f:
             return pickle.load(f)
     except IOError as e:
         print(
