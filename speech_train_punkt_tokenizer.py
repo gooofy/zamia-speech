@@ -3,7 +3,7 @@
 
 #
 # Copyright 2018 Marc Puels
-# Copyright 2013, 2014, 2016, 2017 Guenter Bartsch
+# Copyright 2013, 2014, 2016, 2017, 2019 Guenter Bartsch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -25,56 +25,72 @@
 
 import logging
 import pickle
-
+import os
 import nltk
-import plac
+
+from optparse     import OptionParser
 
 import parole
 
-from nltools.misc import init_app, load_config
+from nltools.misc import init_app, load_config, mkdirs
+
+#
+# init 
+#
+
+init_app ('speech_train_punkt_tokenizer')
+
+config = load_config ('.speechrc')
+
+parole_path = config.get("speech", "parole_de")
+
+#
+# command line
+#
+
+parser = OptionParser("usage: %prog [options]")
+
+parser.add_option ("-l", "--sgm-limit", dest="debug_sgm_limit", type="int", default=0,
+                   help="Limit number of sgm files for debugging purposes (default: no limit)")
+
+parser.add_option ("-v", "--verbose", action="store_true", dest="verbose", 
+                   help="enable debug output")
+
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
 
 
-@plac.annotations(
-    verbose=("Enable verbose logging", "flag", "v"),
-    debug_sgm_limit=("Limit number of sgm files for debugging purposes",
-                     "option", None, int))
-def main(verbose=False, debug_sgm_limit=0):
-    """Train the Punkt tokenizer on the German Parole corpus"""
-    init_app('speech_sentences')
+#
+# main
+#
 
-    if verbose:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
+logging.info("training punkt...")
 
-    config = load_config('.speechrc')
+punkt_trainer = nltk.tokenize.punkt.PunktTrainer()
 
-    parole_path = config.get("speech", "parole_de")
+train_punkt_wrapper = parole.TrainPunktWrapper(punkt_trainer)
 
-    logging.info("training punkt...")
+parole.parole_crawl(parole_path, train_punkt_wrapper.train_punkt,
+                    options.debug_sgm_limit)
 
-    punkt_trainer = nltk.tokenize.punkt.PunktTrainer()
+logging.info("finalizing punkt training...")
+punkt_trainer.finalize_training(verbose=True)
+logging.info("punkt training done. %d text segments."
+             % train_punkt_wrapper.punkt_count)
 
-    train_punkt_wrapper = parole.TrainPunktWrapper(punkt_trainer)
+params = punkt_trainer.get_params()
+# print "Params: %s" % repr(params)
 
-    parole.parole_crawl(parole_path, train_punkt_wrapper.train_punkt,
-                        debug_sgm_limit)
+mkdirs(os.path.dirname(parole.PUNKT_PICKLEFN))
 
-    logging.info("finalizing punkt training...")
-    punkt_trainer.finalize_training(verbose=True)
-    logging.info("punkt training done. %d text segments."
-                 % train_punkt_wrapper.punkt_count)
+tokenizer = nltk.tokenize.punkt.PunktSentenceTokenizer(params)
+with open(str(parole.PUNKT_PICKLEFN), mode='wb') as f:
+        pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-    params = punkt_trainer.get_params()
-    # print "Params: %s" % repr(params)
-
-    parole.PUNKT_PICKLEFN.parent.mkdir(parents=True, exist_ok=True)
-    tokenizer = nltk.tokenize.punkt.PunktSentenceTokenizer(params)
-    with open(str(parole.PUNKT_PICKLEFN), mode='wb') as f:
-            pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
-
-    logging.info('%s written.' % parole.PUNKT_PICKLEFN)
+logging.info('%s written.' % parole.PUNKT_PICKLEFN)
 
 
-if __name__ == "__main__":
-    plac.call(main)
