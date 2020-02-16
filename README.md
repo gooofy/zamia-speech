@@ -29,11 +29,6 @@ Table of Contents
       * [Language Models](#language-models)
       * [Code](#code)
    * [Get Started with our Pre-Trained Models](#get-started-with-our-pre-trained-models)
-      * [Installation](#installation)
-         * [Raspbian 9 (stretch) on a Raspberry Pi 2/3](#raspbian-9-stretch-on-a-raspberry-pi-23)
-         * [Raspberry Pi Zero](#raspberry-pi-zero)
-         * [Debian 9 (stretch, amd64)](#debian-9-stretch-amd64)
-         * [CentOS 7 (amd64)](#centos-7-amd64)
       * [Run Example Applications](#run-example-applications)
          * [Wave File Decoding Demo](#wave-file-decoding-demo)
          * [Live Mic Demo](#live-mic-demo)
@@ -182,59 +177,6 @@ Code
 
 Get Started with our Pre-Trained Models 
 =======================================
-
-Installation
-------------
-
-### Raspbian 9 (stretch) on a Raspberry Pi 2/3
-
-Setup apt-source and install packages:
-
-```bash
-# execute with root permissions (sudo -i):
-
-echo "deb http://goofy.zamia.org/repo-ai/raspbian/stretch/armhf/ ./" >/etc/apt/sources.list.d/zamia-ai.list
-wget -qO - http://goofy.zamia.org/repo-ai/raspbian/stretch/armhf/bofh.asc | sudo apt-key add -
-apt-get update
-apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
-```
-
-### Raspberry Pi Zero
-
-Paul Guyot has built kaldi for the rpi zero along with our python wrappers:
-
-https://github.com/pguyot/kaldi/releases
-https://github.com/pguyot/py-kaldi-asr/releases/tag/v0.5.2
-
-### Debian 9 (stretch, amd64)
-
-Setup apt-source and install packages:
-
-```bash
-# execute with root permissions (sudo -i):
-
-apt-get install apt-transport-https
-echo "deb http://goofy.zamia.org/repo-ai/debian/stretch/amd64/ ./" >/etc/apt/sources.list.d/zamia-ai.list
-wget -qO - http://goofy.zamia.org/repo-ai/debian/stretch/amd64/bofh.asc | sudo apt-key add -
-apt-get update
-apt-get install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
-```
-
-### CentOS 7 (amd64)
-
-Setup yum repo and install packages:
-
-```bash
-# execute with root permissions (sudo -i):
-
-cd /etc/yum.repos.d
-wget http://goofy.zamia.org/zamia-speech/misc/zamia-ai-centos.repo
-yum install kaldi-chain-zamia-speech-de kaldi-chain-zamia-speech-en python-kaldiasr python-nltools pulseaudio-utils pulseaudio
-```
-
-alternatively you can download RPMs manually here:
-* [x86\_64](http://goofy.zamia.org/repo-ai/centos/7/x86_64/)
-* [SRPMS](http://goofy.zamia.org/repo-ai/centos/7/SRPMS/)
 
 Run Example Applications
 ------------------------
