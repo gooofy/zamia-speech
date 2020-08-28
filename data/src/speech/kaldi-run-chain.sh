@@ -566,7 +566,6 @@ EOF
 
     steps/nnet3/decode.sh --num-threads 1 --nj $nDecodeJobs --cmd "$decode_cmd" \
                           --acwt 1.0 --post-decode-acwt 10.0 \
-                          --online-ivector-dir exp/nnet3${nnet3_affix}/ivectors_test_hires \
                           --scoring-opts "--min-lmwt 5 " \
                           $dir/graph data/test_hires $dir/decode_test || exit 1;
 
