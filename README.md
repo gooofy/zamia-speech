@@ -328,6 +328,17 @@ Requirements
 * wav2letter++
 * py-nltools
 * sox
+* ffmpeg
+
+*Dependencies installation example for Debian*: 
+
+    apt-get install build-essential pkg-config python-pip python-dev python-setuptools python-wheel ffmpeg sox libatlas-base-dev
+    
+    # Create a symbolic link because one of the pip packages expect atlas in this location: 
+    ln -s /usr/include/x86_64-linux-gnu/atlas /usr/include/atlas
+    
+    pip install numpy nltk cython
+    pip install py-kaldi-asr py-nltools
 
 Setup Notes
 ===========
