@@ -625,7 +625,7 @@ Prerequisites:
 
 To train a French language model using KenLM run:
 ```bash
-./speech_build_lm.py -k generic_fr_lang_model europarl_fr est_republicain voxforge_fr m_ailabs_fr
+./speech_build_lm.py generic_fr_lang_model europarl_fr est_republicain voxforge_fr m_ailabs_fr
 ```
 
 Submission Review and Transcription
